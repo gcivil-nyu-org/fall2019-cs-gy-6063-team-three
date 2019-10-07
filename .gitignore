@@ -1,3 +1,6 @@
 __pychache__
 *.pyc
 staticfiles
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/dictionary/*.xml
