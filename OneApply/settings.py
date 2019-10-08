@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'landingpage',
     'logIn.apps.LogInConfig',
     'register.apps.RegisterConfig',
     'django.contrib.admin',
@@ -38,8 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'landingpage'
+    'django.contrib.staticfiles'
+    
 ]
 
 MIDDLEWARE = [
