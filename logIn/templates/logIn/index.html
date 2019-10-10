@@ -18,7 +18,11 @@
                         <label for={{ field.id_for_label }}>{{ field.label }}</label>
                     </div>
                 {% endfor %}
+                {% if login_error %}
+                    <p class="errorlist" style="color: red">Invalid credentials</p>
+                {% endif %}
                 <input class="btn btn-lg btn-primary btn-block" type="submit" value="Login"/>
+
             </form>
         </div>
         <div class="col-md-4 right-pane">

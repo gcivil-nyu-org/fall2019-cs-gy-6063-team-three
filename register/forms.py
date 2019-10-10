@@ -23,7 +23,7 @@ class RegisterForm(ModelForm):
 
     def clean_input_password(self):
         input_password = self.cleaned_data['input_password']
-        reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{8,20}$"
+        reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&_-]{8,20}$"
         pattern = re.compile(reg)
         if re.search(pattern,input_password):
             return input_password
