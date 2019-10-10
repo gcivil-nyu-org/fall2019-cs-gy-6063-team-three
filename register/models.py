@@ -22,3 +22,4 @@ class User(models.Model):
     current_school = models.CharField(max_length=100, null = True, blank = True)
     borough = models.CharField(max_length=2)
     password = models.CharField(max_length=256)
+
