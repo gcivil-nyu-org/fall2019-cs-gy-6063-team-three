@@ -1,1 +1,1 @@
-web: gunicorn swe1.wsgi
+web: gunicorn OneApply.wsgi
