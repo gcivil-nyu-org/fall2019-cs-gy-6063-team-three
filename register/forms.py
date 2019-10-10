@@ -1,10 +1,9 @@
 from django.forms import ValidationError
-from .models import User
 from django.forms import ModelForm
 from django import forms
 from django.utils.translation import gettext_lazy as _
-from django.core.validators import RegexValidator
 import re
+from .models import User
 
 BOROUGH_CHOICES = [('', 'Borough'), ('MN', 'Manhattan'), ('BK', 'Brooklyn'), ('QN', 'Queens'), ('BX', 'The Bronx'),
                    ('SI', 'Staten Island')]

@@ -23,6 +23,7 @@ class Migration(migrations.Migration):
                 ('current_school', models.CharField(blank=True, max_length=100, null=True)),
                 ('borough', models.CharField(choices=[('MN', 'Manhattan'), ('BK', 'Brooklyn'), ('QN', 'Queens'), ('BX', 'The Bronx'), ('SI', 'Staten Island')], max_length=2)),
                 ('password', models.CharField(max_length=256)),
+
             ],
         ),
     ]
