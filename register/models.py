@@ -14,10 +14,11 @@ def auto_str(cls):
 
 @auto_str
 class Register(models.Model):
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    email_address = models.CharField(max_length=200)
-    current_school = models.CharField(max_length=100)
+    username = models.CharField(max_length=20, null = True, blank = False)
+    first_name = models.CharField(max_length=50, null = True, blank = True)
+    last_name = models.CharField(max_length=50, null = True, blank = True)
+    email_address = models.CharField(max_length=200, null = True, blank = False)
+    current_school = models.CharField(max_length=100, null = True, blank = True)
     borough = models.CharField(max_length=20)
-    password = models.CharField(max_length=8)
+    password = models.CharField(max_length=256)
 
