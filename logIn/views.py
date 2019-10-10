@@ -6,7 +6,7 @@ from django.forms import ValidationError
 
 
 def login_user(request):
-    template_name = 'login/index.html'
+    template_name = 'logIn/index.html'
     login_error = False
     if request.method == 'POST':
         form = LoginForm(request.POST)
