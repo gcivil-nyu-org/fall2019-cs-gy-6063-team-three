@@ -8,6 +8,7 @@ from .models import User
 BOROUGH_CHOICES = [('', 'Borough'), ('MN', 'Manhattan'), ('BK', 'Brooklyn'), ('QN', 'Queens'), ('BX', 'The Bronx'),
                    ('SI', 'Staten Island')]
 
+REG_EX = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&_-]{8,20}$"
 
 class RegisterForm(ModelForm):
     input_password = forms.CharField(widget=forms.PasswordInput, required=True)
@@ -23,8 +24,7 @@ class RegisterForm(ModelForm):
 
     def clean_input_password(self):
         input_password = self.cleaned_data['input_password']
-        reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&_-]{8,20}$"
-        pattern = re.compile(reg)
+        pattern = re.compile(REG_EX)
         if re.search(pattern,input_password):
             return input_password
         else:

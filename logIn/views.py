@@ -1,12 +1,10 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .forms import LoginForm
 from register.models import User
-from django.forms import ValidationError
+from .forms import LoginForm
 
 
 def login_user(request):
-    template_name = 'logIn/index.html'
     login_error = False
     if request.method == 'POST':
         form = LoginForm(request.POST)
@@ -21,6 +19,6 @@ def login_user(request):
                 login_error = True
     else:
         form = LoginForm()
-    return render(request,template_name,{'form': form, 'login_error': login_error})
+    return render(request, 'logIn/index.html', {'form': form, 'login_error': login_error})
 
 

@@ -1,13 +1,6 @@
-<<<<<<< HEAD
-__pychache__
+_pychache__
 *.pyc
 staticfiles
 .idea/
 venv/
-=======
-__pychache__
-*.pyc
-staticfiles
-.idea/
-venv/
->>>>>>> origin/develop
+
