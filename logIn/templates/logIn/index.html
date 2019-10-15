@@ -1,0 +1,39 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'logIn/css/login.css' %}">
+
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8 left-pane">
+            <form action="{% url 'logIn:login_user' %}" method="post" class="form-signin" style="padding-top: 100px;">
+                {% csrf_token %}
+                <div class="text-center mb-4">
+                    <h1 class="h3 mb-3 font-weight-normal">Hello again...</h1>
+                    <h4 class="h5 mb-3 font-weight-light">to continue, login with your</h4>
+                </div>
+                {% for field in form %}
+                    <div class="form-label-group">
+                        {{ field }}
+                        <label for={{ field.id_for_label }}>{{ field.label }}</label>
+                    </div>
+                {% endfor %}
+                {% if login_error %}
+                    <p class="errorlist" style="color: red">Invalid credentials</p>
+                {% endif %}
+                <input class="btn btn-lg btn-primary btn-block" type="submit" value="Login"/>
+            </form>
+        </div>
+        <div class="col-md-4 right-pane">
+            <div class="blur-bg"></div>
+            <div class="text-center mb-4 right-pane-container">
+                <h1 class="h3 font-weight-normal" style="margin-bottom: 20px;">New here?</h1>
+                <h4 class="h5 font-weight-light" style="text-align: justify;margin: 40px 10px 20px 10px;">If you're a high school kid (or a concerned guardian) starting your application process for the upcoming High School admission window and do not want the hassle of a big-yellow-book ...start with OneApply.</h4>
+                <h4 class="h5 font-weight-light" style="text-align: justify;margin: 40px 10px 40px 10px;">OneApply is a one stop application portal which provides you with cool features like - sorting your high schools by boroughs, by their programs, their locations, adding them to the cart, one-click apply and more.</h4>
+                <button class="btn btn-outline-light mt-3" onclick="location.href={% url 'register:register_user' %}">Explore</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>

@@ -36,21 +36,24 @@
     <div class="carousel-inner" role="listbox">
         <div class="carousel-item active">
             <img class="first-slide"
-                 src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
+                 src="{% static 'landingpage/images/bg_1.jpg' %}"
                  alt="First slide">
+{#            <div class="blur-bg"></div>#}
             <div class="container">
                 <div class="carousel-caption d-none d-md-block text-left">
                     <h1>Student/Parent</h1>
                     <p>In search of your dream high school? Start now.</p>
-                    <p><a class="btn btn-lg btn-primary" onclick="" role="button">Begin here</a></p>
+                    <p><a class="btn btn-lg btn-primary" onclick="location.href={% url 'logIn:login_user' %}" role="button">Begin here</a></p>
                 </div>
             </div>
         </div>
 
         <div class="carousel-item">
+{#            TODO - add a background image url#}
             <img class="third-slide"
-                 src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
+                 src=""
                  alt="Third slide">
+{#            <div class="blur-bg"></div>#}
             <div class="container">
                 <div class="carousel-caption d-none d-md-block text-left">
                     <h1>Admission Staff</h1>
