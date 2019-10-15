@@ -1,4 +1,4 @@
-_pychache__
+__pychache__
 *.pyc
 staticfiles
 .idea/
