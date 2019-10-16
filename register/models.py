@@ -36,6 +36,6 @@ class Student(User):
     borough = models.CharField(max_length=2)
 
 @auto_str
-class AdminStaff(User):
+class Admin_Staff(User):
     school = models.CharField(max_length=100, null=True, blank=True)
     supervisor_email = models.EmailField(max_length=100, null=True, blank=True)

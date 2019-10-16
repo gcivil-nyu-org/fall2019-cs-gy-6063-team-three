@@ -21,8 +21,13 @@
             </div>
         </div>
         <div class="col-md-8 right-pane">
-            <form action="{% url 'register:register_user' user_type%}" method="post" class="form-signup" style="padding-top: 100px;">
+        {% if user_type == "student" %}
+             <form action="{% url 'register:register_user' 'student' %}" method="post" class="form-signup" style="padding-top: 100px;">
                 {% csrf_token %}
+        {% elif user_type == "admin_staff" %}
+            <form action="{% url 'register:register_user' 'admin_staff' %}" method="post" class="form-signup" style="padding-top: 100px;">
+                {% csrf_token %}
+        {% endif %}
                 <div class="text-center mb-4">
                     <h1 class="h3 mb-3 font-weight-normal">Let's get you started...</h1>
                     <h4 class="h5 mb-3 font-weight-light">to continue, we'll require your</h4>

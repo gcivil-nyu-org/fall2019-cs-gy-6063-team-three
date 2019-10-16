@@ -14,13 +14,13 @@ def login_user(request, user_type):
             if user_type == "student":
                 user = Student.objects.filter(username=username, password=password)
                 if user:
-                    return HttpResponse("Yay! We do remember you...")
+                    return HttpResponse("Yay! We do remember you... (Student)")
                 else:
                     login_error = True
             elif user_type == "admin_staff":
                 user = AdminStaff.objects.filter(username=username, password=password)
                 if user:
-                    return HttpResponse("Yay! We do remember you...")
+                    return HttpResponse("Yay! We do remember you... (Admin Staff)")
                 else:
                     login_error = True
     else:
