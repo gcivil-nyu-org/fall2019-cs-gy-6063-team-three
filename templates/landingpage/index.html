@@ -43,7 +43,7 @@
                 <div class="carousel-caption d-none d-md-block text-left">
                     <h1>Student/Parent</h1>
                     <p>In search of your dream high school? Start now.</p>
-                    <p><a class="btn btn-lg btn-primary" onclick="location.href={% url 'logIn:login_user' %}" role="button">Begin here</a></p>
+                    <p><a class="btn btn-lg btn-primary" onclick="location.href=('{% url 'logIn:login_user' 'Student' %}')" role="button">Begin here</a></p>
                 </div>
             </div>
         </div>
