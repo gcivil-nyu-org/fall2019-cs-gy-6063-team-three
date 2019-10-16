@@ -4,7 +4,7 @@ from django.forms import ModelForm
 from django import forms
 from django.utils.translation import gettext_lazy as _
 import re
-from .models import Student
+from .models import Student, AdminStaff
 
 BOROUGH_CHOICES = [('', 'Borough'), ('MN', 'Manhattan'), ('BK', 'Brooklyn'), ('QN', 'Queens'), ('BX', 'The Bronx'),
                    ('SI', 'Staten Island')]
@@ -60,7 +60,6 @@ class StudentRegisterForm(ModelForm):
 class AdminStaffRegisterForm(ModelForm):
     input_password = forms.CharField(widget=forms.PasswordInput, required=True)
     confirm_password = forms.CharField(widget=forms.PasswordInput, required=True)
-    supervisor_email = forms.EmailField(required=True, validators=[validators.validate_email])
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -71,7 +70,7 @@ class AdminStaffRegisterForm(ModelForm):
     def clean_input_password(self):
         input_password = self.cleaned_data['input_password']
         pattern = re.compile(REG_EX)
-        if re.search(pattern,input_password):
+        if re.search(pattern, input_password):
             return input_password
         else:
             raise ValidationError('The password should be minimum 8 characters long and should contain at least 1 of each\n'
@@ -88,12 +87,11 @@ class AdminStaffRegisterForm(ModelForm):
         return confirm_password
 
     class Meta:
-        model = User
-        fields = ('username', 'first_name', 'last_name', 'email_address', 'current_school', 'supervisor_email',
+        model = AdminStaff
+        fields = ('username', 'first_name', 'last_name', 'email_address', 'school', 'supervisor_email',
                   'input_password', 'confirm_password')
         exclude = ['password']
         labels = {
-            'current_school': _('School'),
             'supervisor_email': _('Supervisor\'s Email'),
             'input_password': _('Password'),
             'confirm_password': _('Password (once more please)')

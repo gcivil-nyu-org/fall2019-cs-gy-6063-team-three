@@ -6,11 +6,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-8 left-pane">
-<<<<<<< HEAD
-            <form action="{% url 'logIn:login_user' user_type%}" method="post" class="form-signin" style="padding-top: 100px;">
-=======
-            <form action="{% url 'logIn:login_user' 'Student' %}" method="post" class="form-signin" style="padding-top: 100px;">
->>>>>>> develop
+            <form action="{% url 'logIn:login_user' 'student' %}" method="post" class="form-signin" style="padding-top: 100px;">
                 {% csrf_token %}
                 <div class="text-center mb-4">
                     <h1 class="h3 mb-3 font-weight-normal">Hello again...</h1>

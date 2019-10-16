@@ -34,3 +34,8 @@ class User(models.Model):
 class Student(User):
     current_school = models.CharField(max_length=100, null=True, blank=True)
     borough = models.CharField(max_length=2)
+
+@auto_str
+class AdminStaff(User):
+    school = models.CharField(max_length=100, null=True, blank=True)
+    supervisor_email = models.EmailField(max_length=100, null=True, blank=True)

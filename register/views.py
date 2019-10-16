@@ -18,9 +18,9 @@ def register_user(request, user_type):
             f.save()
             return HttpResponse("Registered Successfully!")
     else:
-        if user_type == "Student":
+        if user_type == "student":
             form = StudentRegisterForm()
-        elif user_type == "AdminStaff":
+        elif user_type == "admin_staff":
             form = AdminStaffRegisterForm()
     return render(request, template_name, {'form': form, 'user_type': user_type})
 

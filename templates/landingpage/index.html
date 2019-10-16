@@ -43,7 +43,7 @@
                 <div class="carousel-caption d-none d-md-block text-left">
                     <h1>Student/Parent</h1>
                     <p>In search of your dream high school? Start now.</p>
-                    <a href="{% url 'logIn:login_user' 0 %}"><button class="btn btn-lg btn-primary">Begin Here</button></a>
+                    <a href="{% url 'logIn:login_user' 'student' %}"><button class="btn btn-lg btn-primary">Begin Here</button></a>
                 </div>
             </div>
         </div>
@@ -51,7 +51,7 @@
         <div class="carousel-item">
 {#            TODO - add a background image url#}
             <img class="third-slide"
-                 src=""
+                 src="{% static 'landingpage/images/bg_4.jpg' %}"
                  alt="Third slide">
 {#            <div class="blur-bg"></div>#}
             <div class="container">
@@ -59,7 +59,7 @@
                     <h1>Admission Staff</h1>
                     <p>Looking to manage millions of applications? Start now.</p>
 {#                    <p>#}
-                    <a href="{% url 'logIn:login_user' 1 %}"><button class="btn btn-lg btn-primary">Begin Here</button></a>
+                    <a href="{% url 'logIn:login_user' 'admin_staff' %}"><button class="btn btn-lg btn-primary">Begin Here</button></a>
 {#                    <a class="btn btn-lg btn-primary" onclick="location.href={% url 'logIn:login_user' 1 %}" role="button">Begin here</a>#}
 {#                    </p>#}
                 </div>

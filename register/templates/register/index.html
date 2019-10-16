@@ -12,7 +12,7 @@
                 {% if user_type == "student" %}
                     <h4 class="h5 font-weight-light" style="text-align: justify;margin: 40px 10px 20px 10px;">If you're a high school kid (or a concerned guardian) starting your application process for the upcoming High School admission window and do not want the hassle of a big-yellow-book ...start with OneApply.</h4>
                     <h4 class="h5 font-weight-light" style="text-align: justify;margin: 40px 10px 40px 10px;">OneApply is a one stop application portal which provides you with cool features like - sorting your high schools by boroughs, by their programs, their locations, adding them to the cart, one-click apply and more.</h4>
-                {% elif user_type == "adminstaff"  %}
+                {% elif user_type == "admin_staff"  %}
                     <h4 class="h5 font-weight-light" style="text-align: justify;margin: 40px 10px 20px 10px;">If you're in charge (or an employee of) of your High School's admission department and want to avoid assessing the 1000s of applications manually... start with OneApply.</h4>
                     <h4 class="h5 font-weight-light" style="text-align: justify;margin: 40px 10px 40px 10px;">OneApply is a one stop application portal which provides you with cool features like - a central access location for all the electronically received applications, sorting through the applications based on various programs, student's current school, their grades, adding them to the accepted-cart and rejected-cart, one-click notifications to students and more.</h4>
                 {% endif %}
@@ -62,7 +62,7 @@
                         {% endif %}
                     </div>
                 </div>
-                {% if user_type == 0 %}
+                {% if user_type == "student" %}
                     {#                 school and borough blocks - Student or Parent user #}
                     <div class="form-row">
                         <div class="form-label-group col-md-6">
@@ -80,14 +80,14 @@
                             {% endif %}
                         </div>
                     </div>
-                {% elif user_type == 1 %}
+                {% elif user_type == "admin_staff" %}
                     {#                 school and supervisor's email block - Admission staff user #}
                     <div class="form-row">
                         <div class="form-label-group col-md-6">
-                            {{ form.current_school }}
-                            <label for={{ form.current_school.id_for_label }}>{{ form.current_school.label }}</label>
-                            {% if form.current_school.help_text %}
-                            <p class="help">{{ form.current_school.help_text|safe }}</p>
+                            {{ form.school }}
+                            <label for={{ form.school.id_for_label }}>{{ form.school.label }}</label>
+                            {% if form.school.help_text %}
+                            <p class="help">{{ form.school.help_text|safe }}</p>
                             {% endif %}
                         </div>
                         <div class="form-label-group col-md-6">
