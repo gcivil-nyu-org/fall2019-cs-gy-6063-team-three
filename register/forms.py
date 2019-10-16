@@ -4,7 +4,7 @@ from django.forms import ModelForm
 from django import forms
 from django.utils.translation import gettext_lazy as _
 import re
-from .models import Student, AdminStaff
+from .models import Student, Admin_Staff
 
 BOROUGH_CHOICES = [('', 'Borough'), ('MN', 'Manhattan'), ('BK', 'Brooklyn'), ('QN', 'Queens'), ('BX', 'The Bronx'),
                    ('SI', 'Staten Island')]
@@ -87,7 +87,7 @@ class AdminStaffRegisterForm(ModelForm):
         return confirm_password
 
     class Meta:
-        model = AdminStaff
+        model = Admin_Staff
         fields = ('username', 'first_name', 'last_name', 'email_address', 'school', 'supervisor_email',
                   'input_password', 'confirm_password')
         exclude = ['password']

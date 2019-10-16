@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .forms import LoginForm
-from register.models import Student, AdminStaff
+from register.models import Student, Admin_Staff
 
 
 def login_user(request, user_type):
@@ -18,7 +18,7 @@ def login_user(request, user_type):
                 else:
                     login_error = True
             elif user_type == "admin_staff":
-                user = AdminStaff.objects.filter(username=username, password=password)
+                user = Admin_Staff.objects.filter(username=username, password=password)
                 if user:
                     return HttpResponse("Yay! We do remember you... (Admin Staff)")
                 else:
