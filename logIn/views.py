@@ -4,7 +4,7 @@ from register.models import User
 from .forms import LoginForm
 
 
-def login_user(request):
+def login_user(request, user_type):
     login_error = False
     if request.method == 'POST':
         form = LoginForm(request.POST)
@@ -19,6 +19,6 @@ def login_user(request):
                 login_error = True
     else:
         form = LoginForm()
-    return render(request, 'logIn/index.html', {'form': form, 'login_error': login_error})
+    return render(request, 'logIn/index.html', {'form': form, 'login_error': login_error, 'user_type': user_type})
 
 

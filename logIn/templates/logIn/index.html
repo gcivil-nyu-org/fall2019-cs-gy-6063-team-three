@@ -6,7 +6,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-8 left-pane">
-            <form action="{% url 'logIn:login_user' %}" method="post" class="form-signin" style="padding-top: 100px;">
+            <form action="{% url 'logIn:login_user' user_type%}" method="post" class="form-signin" style="padding-top: 100px;">
                 {% csrf_token %}
                 <div class="text-center mb-4">
                     <h1 class="h3 mb-3 font-weight-normal">Hello again...</h1>
@@ -26,12 +26,24 @@
         </div>
         <div class="col-md-4 right-pane">
             <div class="blur-bg"></div>
+
+            {% if user_type == 1 %}
             <div class="text-center mb-4 right-pane-container">
                 <h1 class="h3 font-weight-normal" style="margin-bottom: 20px;">New here?</h1>
                 <h4 class="h5 font-weight-light" style="text-align: justify;margin: 40px 10px 20px 10px;">If you're a high school kid (or a concerned guardian) starting your application process for the upcoming High School admission window and do not want the hassle of a big-yellow-book ...start with OneApply.</h4>
                 <h4 class="h5 font-weight-light" style="text-align: justify;margin: 40px 10px 40px 10px;">OneApply is a one stop application portal which provides you with cool features like - sorting your high schools by boroughs, by their programs, their locations, adding them to the cart, one-click apply and more.</h4>
-                <button class="btn btn-outline-light mt-3" onclick="location.href={% url 'register:register_user' %}">Explore</button>
+                <button class="btn btn-outline-light mt-3" onclick="location.href={% url 'register:register_user' %}">Sign Up</button>
             </div>
+            {% endif %}
+
+            {% if user_type == 2 %}
+            <div class="text-center mb-4 right-pane-container">
+                <h1 class="h3 font-weight-normal" style="margin-bottom: 20px;">New here?</h1>
+                <h4 class="h5 font-weight-light" style="text-align: justify;margin: 40px 10px 20px 10px;">Text for Admission staff here.</h4>
+                <h4 class="h5 font-weight-light" style="text-align: justify;margin: 40px 10px 40px 10px;">OneApply is a one stop application portal which provides you with cool features like - sorting your high schools by boroughs, by their programs, their locations, adding them to the cart, one-click apply and more.</h4>
+                <button class="btn btn-outline-light mt-3" onclick="location.href={% url 'register:register_user' %}">Sign Up</button>
+            </div>
+            {% endif %}
         </div>
     </div>
 </div>
