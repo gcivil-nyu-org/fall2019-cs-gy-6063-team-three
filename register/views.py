@@ -1,23 +1,18 @@
+from django.http import HttpResponse, Http404
 from django.shortcuts import render
 from .forms import RegisterForm
-from django.http import HttpResponse
 
 
-# Create your views here.
-def index(request):
-    return HttpResponse("THIS IS THE REGISTRATION PAGE")
-
-
-
-def register(response):
-    if response.method == "POST":
-        form = RegisterForm(response.POST)
+def register_user(request):
+    template_name = 'register/index.html'
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
         if form.is_valid():
-            form.save()
-
-            return HttpResponse("Successfully Registered!")
+            password = form.cleaned_data['input_password']
+            f = form.save(commit=False)
+            f.password = password
+            f.save()
+            return HttpResponse("Registered Successfully!")
     else:
         form = RegisterForm()
-
-    return render(response, "register/register.html", {"form": form})
-
+    return render(request, template_name, {'form': form})
