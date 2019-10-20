@@ -6,11 +6,11 @@ from register.models import Student, Admin_Staff
 
 def login_user(request, user_type):
     login_error = False
-    if request.method == 'POST':
+    if request.method == "POST":
         form = LoginForm(request.POST)
         if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
+            username = form.cleaned_data["username"]
+            password = form.cleaned_data["password"]
             if user_type == "student":
                 user = Student.objects.filter(username=username, password=password)
                 if user:
@@ -25,6 +25,8 @@ def login_user(request, user_type):
                     login_error = True
     else:
         form = LoginForm()
-    return render(request, 'logIn/index.html', {'form': form, 'user_type': user_type, 'login_error': login_error})
-
-
+    return render(
+        request,
+        "logIn/index.html",
+        {"form": form, "user_type": user_type, "login_error": login_error},
+    )

@@ -6,29 +6,51 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('register', '0002_auto_20191010_1659'),
-    ]
+    dependencies = [("register", "0002_auto_20191010_1659")]
 
     operations = [
         migrations.CreateModel(
-            name='Student',
+            name="Student",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('first_name', models.CharField(blank=True, max_length=50, null=True)),
-                ('last_name', models.CharField(blank=True, max_length=50, null=True)),
-                ('email_address', models.EmailField(max_length=200, null=True, validators=[django.core.validators.EmailValidator()])),
-                ('phoneNumber', models.CharField(max_length=15, validators=[django.core.validators.RegexValidator("r'^([0-9]{3}) [0-9]{3}-[0-9]{4}$'")])),
-                ('username', models.CharField(max_length=20, null=True)),
-                ('password', models.CharField(max_length=256)),
-                ('current_school', models.CharField(blank=True, max_length=100, null=True)),
-                ('borough', models.CharField(max_length=2)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("first_name", models.CharField(blank=True, max_length=50, null=True)),
+                ("last_name", models.CharField(blank=True, max_length=50, null=True)),
+                (
+                    "email_address",
+                    models.EmailField(
+                        max_length=200,
+                        null=True,
+                        validators=[django.core.validators.EmailValidator()],
+                    ),
+                ),
+                (
+                    "phoneNumber",
+                    models.CharField(
+                        max_length=15,
+                        validators=[
+                            django.core.validators.RegexValidator(
+                                "r'^([0-9]{3}) [0-9]{3}-[0-9]{4}$'"
+                            )
+                        ],
+                    ),
+                ),
+                ("username", models.CharField(max_length=20, null=True)),
+                ("password", models.CharField(max_length=256)),
+                (
+                    "current_school",
+                    models.CharField(blank=True, max_length=100, null=True),
+                ),
+                ("borough", models.CharField(max_length=2)),
             ],
-            options={
-                'abstract': False,
-            },
+            options={"abstract": False},
         ),
-        migrations.DeleteModel(
-            name='User',
-        ),
+        migrations.DeleteModel(name="User"),
     ]
