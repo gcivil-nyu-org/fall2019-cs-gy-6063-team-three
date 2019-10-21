@@ -9,10 +9,10 @@
             <div class="blur-bg"></div>
             <div class="text-center mb-4 left-pane-container">
                 <h1 class="h3 font-weight-normal" style="margin-bottom: 20px;">Do we know you?</h1>
-                {% if user_type == "student" %}
+                {% if user_type == constant_ut_student %}
                     <h4 class="h5 font-weight-light" style="text-align: justify;margin: 40px 10px 20px 10px;">If you're a high school kid (or a concerned guardian) starting your application process for the upcoming High School admission window and do not want the hassle of a big-yellow-book ...start with OneApply.</h4>
                     <h4 class="h5 font-weight-light" style="text-align: justify;margin: 40px 10px 40px 10px;">OneApply is a one stop application portal which provides you with cool features like - sorting your high schools by boroughs, by their programs, their locations, adding them to the cart, one-click apply and more.</h4>
-                {% elif user_type == "admin_staff"  %}
+                {% elif user_type == constant_ut_adminStaff  %}
                     <h4 class="h5 font-weight-light" style="text-align: justify;margin: 40px 10px 20px 10px;">If you're in charge (or an employee of) of your High School's admission department and want to avoid assessing the 1000s of applications manually... start with OneApply.</h4>
                     <h4 class="h5 font-weight-light" style="text-align: justify;margin: 40px 10px 40px 10px;">OneApply is a one stop application portal which provides you with cool features like - a central access location for all the electronically received applications, sorting through the applications based on various programs, student's current school, their grades, adding them to the accepted-cart and rejected-cart, one-click notifications to students and more.</h4>
                 {% endif %}
@@ -21,11 +21,11 @@
             </div>
         </div>
         <div class="col-md-8 right-pane">
-        {% if user_type == "student" %}
-             <form action="{% url 'register:register_user' 'student' %}" method="post" class="form-signup" style="padding-top: 100px;">
+        {% if user_type == constant_ut_student %}
+             <form action="{% url 'register:register_user' constant_ut_student %}" method="post" class="form-signup" style="padding-top: 100px;">
                 {% csrf_token %}
-        {% elif user_type == "admin_staff" %}
-            <form action="{% url 'register:register_user' 'admin_staff' %}" method="post" class="form-signup" style="padding-top: 100px;">
+        {% elif user_type == constant_ut_adminStaff %}
+            <form action="{% url 'register:register_user' constant_ut_adminStaff %}" method="post" class="form-signup" style="padding-top: 100px;">
                 {% csrf_token %}
         {% endif %}
                 <div class="text-center mb-4">
@@ -67,7 +67,7 @@
                         {% endif %}
                     </div>
                 </div>
-                {% if user_type == "student" %}
+                {% if user_type == constant_ut_student %}
                     {#                 school and borough blocks - Student or Parent user #}
                     <div class="form-row">
                         <div class="form-label-group col-md-6">
@@ -85,7 +85,7 @@
                             {% endif %}
                         </div>
                     </div>
-                {% elif user_type == "admin_staff" %}
+                {% elif user_type == constant_ut_adminStaff %}
                     {#                 school and supervisor's email block - Admission staff user #}
                     <div class="form-row">
                         <div class="form-label-group col-md-6">
