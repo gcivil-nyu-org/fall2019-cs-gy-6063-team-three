@@ -9,14 +9,25 @@
             <div class="blur-bg"></div>
             <div class="text-center mb-4 left-pane-container">
                 <h1 class="h3 font-weight-normal" style="margin-bottom: 20px;">Do we know you?</h1>
-                <h4 class="h5 font-weight-light" style="text-align: justify;margin: 40px 10px 20px 10px;">If you're a high school kid (or a concerned guardian) starting your application process for the upcoming High School admission window and do not want the hassle of a big-yellow-book ...start with OneApply.</h4>
-                <h4 class="h5 font-weight-light" style="text-align: justify;margin: 40px 10px 40px 10px;">OneApply is a one stop application portal which provides you with cool features like - sorting your high schools by boroughs, by their programs, their locations, adding them to the cart, one-click apply and more.</h4>
-                <button class="btn btn-outline-light mt-3" onclick="location.href={% url 'logIn:login_user' 1%}">Your account</button>
+                {% if user_type == constant_ut_student %}
+                    <h4 class="h5 font-weight-light" style="text-align: justify;margin: 40px 10px 20px 10px;">If you're a high school kid (or a concerned guardian) starting your application process for the upcoming High School admission window and do not want the hassle of a big-yellow-book ...start with OneApply.</h4>
+                    <h4 class="h5 font-weight-light" style="text-align: justify;margin: 40px 10px 40px 10px;">OneApply is a one stop application portal which provides you with cool features like - sorting your high schools by boroughs, by their programs, their locations, adding them to the cart, one-click apply and more.</h4>
+                {% elif user_type == constant_ut_adminStaff  %}
+                    <h4 class="h5 font-weight-light" style="text-align: justify;margin: 40px 10px 20px 10px;">If you're in charge (or an employee of) of your High School's admission department and want to avoid assessing the 1000s of applications manually... start with OneApply.</h4>
+                    <h4 class="h5 font-weight-light" style="text-align: justify;margin: 40px 10px 40px 10px;">OneApply is a one stop application portal which provides you with cool features like - a central access location for all the electronically received applications, sorting through the applications based on various programs, student's current school, their grades, adding them to the accepted-cart and rejected-cart, one-click notifications to students and more.</h4>
+                {% endif %}
+                <a href="{% url 'logIn:login_user' user_type %}"><button class="btn btn-outline-light mt-3">Your account</button></a>
+{#                <button class="btn btn-outline-light mt-3" onclick="location.href={% url 'logIn:login_user' user_type %}">Your account</button>#}
             </div>
         </div>
         <div class="col-md-8 right-pane">
-            <form action="{% url 'register:register_user' %}" method="post" class="form-signup" style="padding-top: 100px;">
+        {% if user_type == constant_ut_student %}
+             <form action="{% url 'register:register_user' constant_ut_student %}" method="post" class="form-signup" style="padding-top: 100px;">
                 {% csrf_token %}
+        {% elif user_type == constant_ut_adminStaff %}
+            <form action="{% url 'register:register_user' constant_ut_adminStaff %}" method="post" class="form-signup" style="padding-top: 100px;">
+                {% csrf_token %}
+        {% endif %}
                 <div class="text-center mb-4">
                     <h1 class="h3 mb-3 font-weight-normal">Let's get you started...</h1>
                     <h4 class="h5 mb-3 font-weight-light">to continue, we'll require your</h4>
@@ -44,8 +55,8 @@
                         {{ form.email_address.errors }}
                         {{ form.email_address }}
                         <label for={{ form.email_address.id_for_label }}>{{ form.email_address.label }}</label>
-                        {% if form.email_address.help_text %}
-                        <p class="help">{{ form.email_address.help_text|safe }}</p>
+                        {% if form.email_address.errors %}
+                        {{ form.email_address.errors }}
                         {% endif %}
                     </div>
                     <div class="form-label-group col-md-6">
@@ -56,37 +67,57 @@
                         {% endif %}
                     </div>
                 </div>
-{#                 school and borough blocks#}
-                <div class="form-row">
-                    <div class="form-label-group col-md-6">
-                        {{ form.current_school }}
-                        <label for={{ form.current_school.id_for_label }}>{{ form.current_school.label }}</label>
-                        {% if form.current_school.help_text %}
-                        <p class="help">{{ form.current_school.help_text|safe }}</p>
-                        {% endif %}
+                {% if user_type == constant_ut_student %}
+                    {#                 school and borough blocks - Student or Parent user #}
+                    <div class="form-row">
+                        <div class="form-label-group col-md-6">
+                            {{ form.current_school }}
+                            <label for={{ form.current_school.id_for_label }}>{{ form.current_school.label }}</label>
+                            {% if form.current_school.help_text %}
+                            <p class="help">{{ form.current_school.help_text|safe }}</p>
+                            {% endif %}
+                        </div>
+                        <div class="col-auto my-1 col-md-6">
+                            {{ form.borough }}
+                            <label class="mr-sm-2 sr-only" for={{ form.borough.id_for_label }}>{{ form.borough.label }}</label>
+                            {% if form.borough.help_text %}
+                            <p class="help">{{ form.borough.help_text|safe }}</p>
+                            {% endif %}
+                        </div>
                     </div>
-                    <div class="col-auto my-1 col-md-6">
-                        {{ form.borough }}
-                        <label class="mr-sm-2 sr-only" for={{ form.borough.id_for_label }}>{{ form.borough.label }}</label>
-                        {% if form.borough.help_text %}
-                        <p class="help">{{ form.borough.help_text|safe }}</p>
-                        {% endif %}
+                {% elif user_type == constant_ut_adminStaff %}
+                    {#                 school and supervisor's email block - Admission staff user #}
+                    <div class="form-row">
+                        <div class="form-label-group col-md-6">
+                            {{ form.school }}
+                            <label for={{ form.school.id_for_label }}>{{ form.school.label }}</label>
+                            {% if form.school.help_text %}
+                            <p class="help">{{ form.school.help_text|safe }}</p>
+                            {% endif %}
+                        </div>
+                        <div class="form-label-group col-md-6">
+                            {{ form.supervisor_email }}
+                            <label for={{ form.supervisor_email.id_for_label }}>{{ form.supervisor_email.label }}</label>
+                            {% if form.supervisor_email.errors %}
+                                {{ form.supervisor_email.errors }}
+                            {% endif %}
+                        </div>
                     </div>
-                </div>
+                {% endif %}
 {#                 input and confirm password blocks#}
                 <div class="form-row">
                     <div class="form-label-group col-md-6">
                         {{ form.input_password }}
                         <label for={{ form.input_password.id_for_label }}>{{ form.input_password.label }}</label>
                         {% if form.input_password.errors %}
-                        {{ form.input_password.errors }}
+                            {{ form.input_password.errors }}
                         {% endif %}
                     </div>
                     <div class="form-label-group col-md-6">
                         {{ form.confirm_password }}
                         <label for={{ form.confirm_password.id_for_label }}>{{ form.confirm_password.label }}</label>
                         {% if form.confirm_password.errors %}
-                        {{ form.confirm_password.errors }}
+                            {{ form.confirm_password.errors }}
                         {% endif %}
                     </div>
                 </div>
