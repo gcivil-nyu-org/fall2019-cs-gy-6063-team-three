@@ -5,3 +5,7 @@ six==1.12.0
 sqlparse==0.3.0
 gunicorn
 django-heroku
+flake8
+black
+coverage
+coveralls
