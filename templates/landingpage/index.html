@@ -9,7 +9,7 @@
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
 
-    <title>One Apply</title>
+    <title>OneApply</title>
 
     <!-- Bootstrap core CSS -->
     <link href="{% static '/css/bootstrap.min.css' %}" rel="stylesheet">
@@ -32,6 +32,7 @@
     <ol class="carousel-indicators">
         <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
         <li data-target="#myCarousel" data-slide-to="1"></li>
+        <li data-target="#myCarousel" data-slide-to="2"></li>
     </ol>
     <div class="carousel-inner" role="listbox">
         <div class="carousel-item active">
@@ -40,7 +41,7 @@
                  alt="First slide">
 {#            <div class="blur-bg"></div>#}
             <div class="container">
-                <div class="carousel-caption d-none d-md-block text-left">
+                <div class="carousel-caption justify-content-center d-flex h-50 d-md-block text-left">
                     <h1>Student/Parent</h1>
                     <p>In search of your dream high school? Start now.</p>
                     <a href="{% url 'logIn:login_user' constant_ut_student %}"><button class="btn btn-lg btn-primary">Begin Here</button></a>
@@ -55,9 +56,26 @@
                  alt="Third slide">
 {#            <div class="blur-bg"></div>#}
             <div class="container">
-                <div class="carousel-caption d-none d-md-block text-left">
+                <div class="carousel-caption justify-content-center d-flex h-50 d-md-block text-left">
                     <h1>Admission Staff</h1>
                     <p>Looking to manage millions of applications? Start now.</p>
+{#                    <p>#}
+                    <a href="{% url 'logIn:login_user' constant_ut_adminStaff %}"><button class="btn btn-lg btn-primary">Begin Here</button></a>
+{#                    <a class="btn btn-lg btn-primary" onclick="location.href={% url 'logIn:login_user' 1 %}" role="button">Begin here</a>#}
+{#                    </p>#}
+                </div>
+            </div>
+        </div>
+         <div class="carousel-item">
+{#            TODO - add a background image url#}
+            <img class="third-slide"
+                 src="{% static 'landingpage/images/bg_4.jpg' %}"
+                 alt="Third slide">
+{#            <div class="blur-bg"></div>#}
+            <div class="container">
+                <div class="carousel-caption justify-content-center d-flex h-50 d-md-block text-left">
+                    <h1>Teacher and Mentor</h1>
+                    <p>Submit your letter now</p>
 {#                    <p>#}
                     <a href="{% url 'logIn:login_user' constant_ut_adminStaff %}"><button class="btn btn-lg btn-primary">Begin Here</button></a>
 {#                    <a class="btn btn-lg btn-primary" onclick="location.href={% url 'logIn:login_user' 1 %}" role="button">Begin here</a>#}
@@ -90,16 +108,16 @@
 
     <!--<hr class="featurette-divider">-->
 
-    <div class="row featurette">
+    <div class="row featurette ">
         <div class="col-md-7">
-            <h2 class="featurette-heading">Student <span class="text-muted"></span></h2>
+            <h2 class="featurette-heading">Student</h2>
             <p class="lead">As a student, you will be able to search for high schools using various filters such as
                 location, safety, programs offered, school performance and much more. By filling out a simple
                 application form, you will be able to apply to as many schools as you wish to with just one click of a
                 button.</p>
         </div>
         <div class="col-md-5">
-            <img class="featurette-image img-fluid mx-auto" src="{% static '/landingpage/students.jpeg' %}"
+            <img class="featurette-image img-fluid mx-auto justify-content-center d-flex h-100" src="{% static '/landingpage/students.jpeg' %}"
                  alt="Generic placeholder image">
         </div>
     </div>
@@ -114,7 +132,7 @@
                 you from managing applications to updating the number of seats available to enroll students.</p>
         </div>
         <div class="col-md-5">
-            <img class="featurette-image img-fluid mx-auto" src="{% static '/landingpage/teacher.jpeg' %}"
+            <img class="featurette-image img-fluid mx-auto justify-content-center d-flex h-100" src="{% static '/landingpage/teacher.jpeg' %}"
                  alt="Generic placeholder image">
         </div>
     </div>
@@ -125,11 +143,14 @@
 
 
     <!-- FOOTER -->
-    <footer>
-        <p class="float-right"><a href="#">Back to top</a></p>
-        <p>&copy; 2017 Company, Inc. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
-    </footer>
+	<footer class="page-footer font-small blue">
 
+
+  		<div class="footer-copyright text-center py-5">
+  		</div>
+  <!-- Copyright -->
+
+	</footer>
 </div><!-- /.container -->
 
 
