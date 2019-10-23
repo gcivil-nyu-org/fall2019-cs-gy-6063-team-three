@@ -4,3 +4,4 @@ staticfiles
 .idea/
 venv/
 db.sqlite3
+.coverage
