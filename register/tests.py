@@ -1,8 +1,7 @@
-from django.test import RequestFactory, TestCase
+from django.test import TestCase
 from django.urls import reverse
 
 from .models import Student
-from .views import register_user
 from .forms import StudentRegisterForm
 from OneApply.constants import UserType
 
@@ -33,7 +32,7 @@ class StudentModelTest(TestCase):
         self.assertTrue(response.username, student.username)
 
     def test_delete(self):
-        student = self.create_student()
+        self.create_student()
         response = Student.objects.filter(username="hritik").delete()
         self.assertIsNotNone(response)
 

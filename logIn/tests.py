@@ -1,7 +1,6 @@
-from django.test import RequestFactory, TestCase
+from django.test import TestCase
 from django.urls import reverse
 
-from .views import login_user
 from .forms import LoginForm
 from OneApply.constants import UserType
 from register.models import Student
