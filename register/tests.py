@@ -46,8 +46,7 @@ class AdmissionStaffViewTest(TestCase):
 
 
 class AdmissionStaffModelTest(TestCase):
-    @staticmethod
-    def create_admission_staff():
+    def create_admission_staff(self):
         return Admin_Staff.objects.create(
             username="jwang",
             first_name="Jenny",
