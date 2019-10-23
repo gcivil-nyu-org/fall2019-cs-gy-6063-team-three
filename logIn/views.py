@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.core.exceptions import ObjectDoesNotExist
 from .forms import LoginForm
 from register.models import Student, Admin_Staff
 from OneApply.constants import UserType
@@ -14,13 +15,17 @@ def login_user(request, user_type):
             username = form.cleaned_data["username"]
             password = form.cleaned_data["password"]
             if user_type == UserType.STUDENT:
-                user = Student.objects.get(username=username)
-                if not user.is_active:
-                    valid_error = True
-                elif user.password != password:
+                try:
+                    user = Student.objects.get(username=username)
+                except ObjectDoesNotExist:
                     login_error = True
                 else:
-                    return HttpResponse("Yay! We do remember you... (Student)")
+                    if not user.is_active:
+                        valid_error = True
+                    elif user.password != password:
+                        login_error = True
+                    else:
+                        return HttpResponse("Yay! We do remember you... (Student)")
             elif user_type == UserType.ADMIN_STAFF:
                 user = Admin_Staff.objects.filter(username=username, password=password)
                 if user:

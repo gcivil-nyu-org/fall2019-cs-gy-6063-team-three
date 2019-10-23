@@ -10,8 +10,8 @@ urlpatterns = [
     path("register/", include("register.urls")),
     path("admin/", admin.site.urls),
     url(
-        r"^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$",  # noqa: E501
-        views.activate,
-        name="activate",
+        r"^activate_user_account/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$",  # noqa: E501
+        views.activate_user_account,
+        name="activate_user_account",
     ),
 ]

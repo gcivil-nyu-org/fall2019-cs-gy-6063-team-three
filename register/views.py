@@ -19,7 +19,6 @@ def register_user(request, user_type):
             if form is not None and form.is_valid():
                 password = form.cleaned_data["input_password"]
                 f = form.save(commit=False)
-                f.is_active = False
                 f.password = password
                 f.save()
                 current_site = get_current_site(request)
@@ -61,15 +60,15 @@ def register_user(request, user_type):
     return render(request, "register/index.html", context)
 
 
-def activate(request, uidb64, token):
+def activate_user_account(request, uidb64, token):
     try:
         uid = force_text(urlsafe_base64_decode(uidb64))
         user = Student.objects.get(id=uid)
     except (TypeError, ValueError, OverflowError, user.DoesNotExist):
         user = None
-    if user is not None and account_activation_token.check_token(user, token):
+        return HttpResponse("invalid token")
+    if account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
         return HttpResponse("Thank you for confirming your email. You can now login.")
-    else:
-        return HttpResponse("invalid token")
+
