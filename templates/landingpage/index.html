@@ -35,11 +35,12 @@
         <li data-target="#myCarousel" data-slide-to="2"></li>
     </ol>
     <div class="carousel-inner" role="listbox">
+    	<div class="blur-bg"></div>
         <div class="carousel-item active">
             <img class="first-slide"
                  src="{% static 'landingpage/images/bg_1.jpg' %}"
                  alt="First slide">
-{#            <div class="blur-bg"></div>#}
+    		
             <div class="container">
                 <div class="carousel-caption justify-content-center d-flex h-50 d-md-block text-left">
                     <h1>Student/Parent</h1>
@@ -50,24 +51,20 @@
         </div>
 
         <div class="carousel-item">
-{#            TODO - add a background image url#}
             <img class="third-slide"
                  src="{% static 'landingpage/images/bg_4.jpg' %}"
                  alt="Third slide">
-{#            <div class="blur-bg"></div>#}
+			<div class="blur-bg"></div>
             <div class="container">
                 <div class="carousel-caption justify-content-center d-flex h-50 d-md-block text-left">
                     <h1>Admission Staff</h1>
                     <p>Looking to manage millions of applications? Start now.</p>
-{#                    <p>#}
+
                     <a href="{% url 'logIn:login_user' constant_ut_adminStaff %}"><button class="btn btn-lg btn-primary">Begin Here</button></a>
-{#                    <a class="btn btn-lg btn-primary" onclick="location.href={% url 'logIn:login_user' 1 %}" role="button">Begin here</a>#}
-{#                    </p>#}
                 </div>
             </div>
         </div>
          <div class="carousel-item">
-{#            TODO - add a background image url#}
             <img class="third-slide"
                  src="{% static 'landingpage/images/bg_4.jpg' %}"
                  alt="Third slide">
@@ -76,10 +73,7 @@
                 <div class="carousel-caption justify-content-center d-flex h-50 d-md-block text-left">
                     <h1>Teacher and Mentor</h1>
                     <p>Submit your letter now</p>
-{#                    <p>#}
                     <a href="{% url 'logIn:login_user' constant_ut_adminStaff %}"><button class="btn btn-lg btn-primary">Begin Here</button></a>
-{#                    <a class="btn btn-lg btn-primary" onclick="location.href={% url 'logIn:login_user' 1 %}" role="button">Begin here</a>#}
-{#                    </p>#}
                 </div>
             </div>
         </div>
@@ -137,19 +131,10 @@
         </div>
     </div>
 
-    <!--<hr class="featurette-divider">-->
-
-    <!-- /END THE FEATURETTES -->
-
-
     <!-- FOOTER -->
 	<footer class="page-footer font-small blue">
-
-
   		<div class="footer-copyright text-center py-5">
   		</div>
-  <!-- Copyright -->
-
 	</footer>
 </div><!-- /.container -->
 

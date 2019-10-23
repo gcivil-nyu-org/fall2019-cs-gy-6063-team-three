@@ -161,6 +161,16 @@ body {
 }
 
 
+.blur-bg{
+  height: 100%;
+  background-color: black;
+  opacity: 0.38;
+  filter: blur(2px);
+  margin-left: -15px;
+  margin-right: -15px;
+}
+
+
 /* RESPONSIVE CSS
 -------------------------------------------------- */
 
