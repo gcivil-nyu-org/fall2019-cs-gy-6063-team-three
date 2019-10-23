@@ -71,4 +71,3 @@ def activate_user_account(request, uidb64, token):
         user.is_active = True
         user.save()
         return HttpResponse("Thank you for confirming your email. You can now login.")
-
