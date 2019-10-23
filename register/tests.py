@@ -49,20 +49,21 @@ class AdmissionStaffViewTest(TestCase):
         Admin_Staff.objects.all().delete()
 
 
-class AdmissionStaffModelTest(TestCase):
-    def create_admission_staff(self):
-        return Admin_Staff.objects.create(
-            username="jwang",
-            first_name="Jenny",
-            last_name="Wang",
-            email_address="jenny.wang@gmail.com",
-            school="NYU",
-            supervisor_email="jack.w@nyu.edu",
-            password="Jenny@1234",
-        )
+def create_admission_staff():
+    return Admin_Staff.objects.create(
+        username="jwang",
+        first_name="Jenny",
+        last_name="Wang",
+        email_address="jenny.wang@gmail.com",
+        school="NYU",
+        supervisor_email="jack.w@nyu.edu",
+        password="Jenny@1234",
+    )
 
+
+class AdmissionStaffModelTest(TestCase):
     def test_create_admission(self):
-        admissions_staff = self.create_admission_staff()
+        admissions_staff = create_admission_staff()
         self.assertEqual(isinstance(admissions_staff, Admin_Staff), True)
         self.assertEqual(admissions_staff.username, "jwang")
         self.assertEqual(admissions_staff.first_name, "Jenny")
@@ -72,12 +73,12 @@ class AdmissionStaffModelTest(TestCase):
         self.assertEqual(admissions_staff.supervisor_email, "jack.w@nyu.edu")
 
     def test_get_admission(self):
-        admissions_staff = self.create_admission_staff()
+        admissions_staff = create_admission_staff()
         response = Admin_Staff.objects.get(username="jwang")
         self.assertTrue(response.username, admissions_staff.username)
 
     def test_delete_admission(self):
-        self.create_admission_staff()
+        create_admission_staff()
         response = Admin_Staff.objects.filter(username="jwang").delete()
         self.assertIsNotNone(response)
 
@@ -97,7 +98,7 @@ class AdmissionsFormTest(TestCase):
         form = AdminStaffRegisterForm(data=data)
         self.assertTrue(form.is_valid())
 
-    def test_invalid_password(self):
+    def test_admission_staff_invalid_password(self):
         data = {
             "username": "jwang",
             "first_name": "Jenny",
@@ -112,7 +113,7 @@ class AdmissionsFormTest(TestCase):
         self.assertFalse(form.is_valid())
         self.assertFalse("input_password" in form.cleaned_data)
 
-    def test_mismatch_password(self):
+    def test_admission_staff_mismatch_password(self):
         data = {
             "username": "jwang",
             "first_name": "Jenny",
@@ -128,33 +129,34 @@ class AdmissionsFormTest(TestCase):
         self.assertFalse("confirm_password" in form.cleaned_data)
 
 
-class StudentModelTest(TestCase):
-    def create_student(self):
-        return Student.objects.create(
-            first_name="Hritik",
-            last_name="Roshan",
-            email_address="hrx@gmail.com",
-            phoneNumber="9567801234",
-            username="hritik",
-            password="hritikRoshan@10",
-            current_school="NYU",
-            borough="MN",
-        )
+def create_student():
+    return Student.objects.create(
+        first_name="Hritik",
+        last_name="Roshan",
+        email_address="hrx@gmail.com",
+        phoneNumber="9567801234",
+        username="hritik",
+        password="hritikRoshan@10",
+        current_school="NYU",
+        borough="MN",
+    )
 
+
+class StudentModelTest(TestCase):
     def test_create(self):
-        student = self.create_student()
+        student = create_student()
         self.assertTrue(isinstance(student, Student))
         self.assertEqual(student.email_address, "hrx@gmail.com")
         self.assertEqual(student.username, "hritik")
         self.assertEqual(student.password, "hritikRoshan@10")
 
     def test_get(self):
-        student = self.create_student()
+        student = create_student()
         response = Student.objects.get(username="hritik")
         self.assertTrue(response.username, student.username)
 
     def test_delete(self):
-        self.create_student()
+        create_student()
         response = Student.objects.filter(username="hritik").delete()
         self.assertIsNotNone(response)
 
