@@ -1,12 +1,9 @@
-from django.test import RequestFactory
-from django.test import TestCase
+from django.test import RequestFactory, TestCase
 from django.urls import reverse
 
 from OneApply.constants import UserType
-from register.forms import AdminStaffRegisterForm
-from register.models import Admin_Staff
-from .forms import StudentRegisterForm
-from .models import Student
+from .forms import StudentRegisterForm, AdminStaffRegisterForm
+from .models import Student, Admin_Staff
 
 
 class AdmissionStaffViewTest(TestCase):
@@ -49,21 +46,21 @@ class AdmissionStaffViewTest(TestCase):
         Admin_Staff.objects.all().delete()
 
 
-def create_admission_staff():
-    return Admin_Staff.objects.create(
-        username="jwang",
-        first_name="Jenny",
-        last_name="Wang",
-        email_address="jenny.wang@gmail.com",
-        school="NYU",
-        supervisor_email="jack.w@nyu.edu",
-        password="Jenny@1234",
-    )
-
-
 class AdmissionStaffModelTest(TestCase):
+    @staticmethod
+    def create_admission_staff():
+        return Admin_Staff.objects.create(
+            username="jwang",
+            first_name="Jenny",
+            last_name="Wang",
+            email_address="jenny.wang@gmail.com",
+            school="NYU",
+            supervisor_email="jack.w@nyu.edu",
+            password="Jenny@1234",
+        )
+
     def test_create_admission(self):
-        admissions_staff = create_admission_staff()
+        admissions_staff = self.create_admission_staff()
         self.assertEqual(isinstance(admissions_staff, Admin_Staff), True)
         self.assertEqual(admissions_staff.username, "jwang")
         self.assertEqual(admissions_staff.first_name, "Jenny")
@@ -73,12 +70,12 @@ class AdmissionStaffModelTest(TestCase):
         self.assertEqual(admissions_staff.supervisor_email, "jack.w@nyu.edu")
 
     def test_get_admission(self):
-        admissions_staff = create_admission_staff()
+        admissions_staff = self.create_admission_staff()
         response = Admin_Staff.objects.get(username="jwang")
         self.assertTrue(response.username, admissions_staff.username)
 
     def test_delete_admission(self):
-        create_admission_staff()
+        self.create_admission_staff()
         response = Admin_Staff.objects.filter(username="jwang").delete()
         self.assertIsNotNone(response)
 
@@ -129,34 +126,33 @@ class AdmissionsFormTest(TestCase):
         self.assertFalse("confirm_password" in form.cleaned_data)
 
 
-def create_student():
-    return Student.objects.create(
-        first_name="Hritik",
-        last_name="Roshan",
-        email_address="hrx@gmail.com",
-        phoneNumber="9567801234",
-        username="hritik",
-        password="hritikRoshan@10",
-        current_school="NYU",
-        borough="MN",
-    )
-
-
 class StudentModelTest(TestCase):
+    def create_student(self):
+        return Student.objects.create(
+            first_name="Hritik",
+            last_name="Roshan",
+            email_address="hrx@gmail.com",
+            phoneNumber="9567801234",
+            username="hritik",
+            password="hritikRoshan@10",
+            current_school="NYU",
+            borough="MN",
+        )
+
     def test_create(self):
-        student = create_student()
+        student = self.create_student()
         self.assertTrue(isinstance(student, Student))
         self.assertEqual(student.email_address, "hrx@gmail.com")
         self.assertEqual(student.username, "hritik")
         self.assertEqual(student.password, "hritikRoshan@10")
 
     def test_get(self):
-        student = create_student()
+        student = self.create_student()
         response = Student.objects.get(username="hritik")
         self.assertTrue(response.username, student.username)
 
     def test_delete(self):
-        create_student()
+        self.create_student()
         response = Student.objects.filter(username="hritik").delete()
         self.assertIsNotNone(response)
 
