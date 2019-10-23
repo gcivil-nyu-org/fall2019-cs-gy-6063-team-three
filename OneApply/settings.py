@@ -136,3 +136,10 @@ STATICFILES_DIRS = (
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 django_heroku.settings(locals())
+
+# Setup Email Settings
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'UserVerifOneApply@gmail.com'
+EMAIL_HOST_PASSWORD = 'pwd@TeamThree'
+EMAIL_PORT = 587

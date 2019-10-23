@@ -2,6 +2,10 @@
 
 from django.db import models
 from django.core import validators
+from django.core.validators import RegexValidator
+
+
+PHONE_REGEX = "r'^([0-9]{3}) [0-9]{3}-[0-9]{4}$'"
 
 
 def auto_str(cls):
@@ -13,13 +17,21 @@ def auto_str(cls):
     cls.__str__ = __str__
     return cls
 
-@auto_str
-class User(models.Model):
-    first_name = models.CharField(max_length=50, null = True, blank = True)
-    last_name = models.CharField(max_length=50, null = True, blank = True)
-    email_address = models.EmailField(max_length=200, null = True, blank = False, validators=[validators.validate_email])
-    username = models.CharField(max_length=20, null = True, blank = False)
-    current_school = models.CharField(max_length=100, null = True, blank = True)
-    borough = models.CharField(max_length=2)
-    password = models.CharField(max_length=256)
 
+class User(models.Model):
+    first_name = models.CharField(max_length=50, null=True, blank=True)
+    last_name = models.CharField(max_length=50, null=True, blank=True)
+    email_address = models.EmailField(max_length=200, null=True, blank=False, validators=[validators.validate_email])
+    phoneNumber = models.CharField(max_length=15, validators=[RegexValidator(PHONE_REGEX)])
+    username = models.CharField(max_length=20, null=True, blank=False)
+    password = models.CharField(max_length=256)
+    is_active = models.BooleanField(default=False)
+
+    class Meta:
+        abstract = True
+
+
+@auto_str
+class Student(User):
+    current_school = models.CharField(max_length=100, null=True, blank=True)
+    borough = models.CharField(max_length=2)
