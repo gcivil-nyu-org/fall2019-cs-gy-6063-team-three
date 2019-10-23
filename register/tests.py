@@ -1,4 +1,4 @@
-from django.test import RequestFactory, TestCase
+from django.test import TestCase
 from django.urls import reverse
 
 from OneApply.constants import UserType
@@ -8,7 +8,6 @@ from .models import Student, Admin_Staff
 
 class AdmissionStaffViewTest(TestCase):
     def setUp(self):
-        self.factory = RequestFactory()
         self.adminStaff = {
             "username": "jwang",
             "first_name": "Jenny",
