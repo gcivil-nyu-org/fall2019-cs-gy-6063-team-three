@@ -33,7 +33,7 @@ def login_user(request, user_type):
         "form": form,
         "user_type": user_type,
         "login_error": login_error,
-        'valid_error': valid_error,
+        "valid_error": valid_error,
         "constant_ut_student": UserType.STUDENT,
         "constant_ut_adminStaff": UserType.ADMIN_STAFF,
     }
