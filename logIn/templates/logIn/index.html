@@ -6,8 +6,13 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-8 left-pane">
-            <form action="{% url 'logIn:login_user' 'Student' %}" method="post" class="form-signin" style="padding-top: 100px;">
+        {% if user_type == constant_ut_student %}
+            <form action="{% url 'logIn:login_user' constant_ut_student %}" method="post" class="form-signin" style="padding-top: 100px;">
                 {% csrf_token %}
+        {% elif user_type == constant_ut_adminStaff %}
+            <form action="{% url 'logIn:login_user' constant_ut_adminStaff %}" method="post" class="form-signin" style="padding-top: 100px;">
+                {% csrf_token %}
+        {% endif %}
                 <div class="text-center mb-4">
                     <h1 class="h3 mb-3 font-weight-normal">Hello again...</h1>
                     <h4 class="h5 mb-3 font-weight-light">to continue, login with your</h4>
@@ -31,9 +36,16 @@
             <div class="blur-bg"></div>
             <div class="text-center mb-4 right-pane-container">
                 <h1 class="h3 font-weight-normal" style="margin-bottom: 20px;">New here?</h1>
-                <h4 class="h5 font-weight-light" style="text-align: justify;margin: 40px 10px 20px 10px;">If you're a high school kid (or a concerned guardian) starting your application process for the upcoming High School admission window and do not want the hassle of a big-yellow-book ...start with OneApply.</h4>
-                <h4 class="h5 font-weight-light" style="text-align: justify;margin: 40px 10px 40px 10px;">OneApply is a one stop application portal which provides you with cool features like - sorting your high schools by boroughs, by their programs, their locations, adding them to the cart, one-click apply and more.</h4>
-                <button class="btn btn-outline-light mt-3" onclick="location.href=('{% url 'register:register_user' 'Student' %}')">Explore</button>
+                {% if user_type == constant_ut_student %}
+                    <h4 class="h5 font-weight-light" style="text-align: justify;margin: 40px 10px 20px 10px;">If you're a high school kid (or a concerned guardian) starting your application process for the upcoming High School admission window and do not want the hassle of a big-yellow-book ...start with OneApply.</h4>
+                    <h4 class="h5 font-weight-light" style="text-align: justify;margin: 40px 10px 40px 10px;">OneApply is a one stop application portal which provides you with cool features like - sorting your high schools by boroughs, by their programs, their locations, adding them to the cart, one-click apply and more.</h4>
+                {% elif user_type == constant_ut_adminStaff  %}
+                    <h4 class="h5 font-weight-light" style="text-align: justify;margin: 40px 10px 20px 10px;">If you're in charge (or an employee of) of your High School's admission department and want to avoid assessing the 1000s of applications manually... start with OneApply.</h4>
+                    <h4 class="h5 font-weight-light" style="text-align: justify;margin: 40px 10px 40px 10px;">OneApply is a one stop application portal which provides you with cool features like - a central access location for all the electronically received applications, sorting through the applications based on various programs, student's current school, their grades, adding them to the accepted-cart and rejected-cart, one-click notifications to students and more.</h4>
+                {% endif %}
+                <a href="{% url 'register:register_user' user_type %}"><button class="btn btn-outline-light mt-3">Create account</button></a>
+{#                <button class="btn btn-outline-light mt-3" onclick="location.href={% url 'register:register_user' user_type %}">Your account</button>#}
+
             </div>
         </div>
     </div>
