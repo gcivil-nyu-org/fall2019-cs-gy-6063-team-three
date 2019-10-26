@@ -10,3 +10,4 @@ black
 coverage
 coveralls
 PyYAML
+sodapy
