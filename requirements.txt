@@ -11,3 +11,4 @@ coverage
 coveralls
 PyYAML
 sodapy
+djangorestframework

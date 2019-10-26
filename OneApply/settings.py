@@ -35,13 +35,14 @@ INSTALLED_APPS = [
     "landingpage",
     "logIn.apps.LogInConfig",
     "register.apps.RegisterConfig",
-    "high_schools.apps.HighSchoolConfig",
+    "high_school.apps.HighSchoolConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "rest_framework",
 ]
 
 

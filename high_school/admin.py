@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import HighSchools
+from .models import HighSchool
 
 
-admin.site.register(HighSchools)
+admin.site.register(HighSchool)

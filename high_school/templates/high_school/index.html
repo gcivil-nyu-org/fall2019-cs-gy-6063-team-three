@@ -7,36 +7,29 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
 </head>
 <body>
-{{ response }}
-
-<div class="list-group">
-    <a href="#" class="list-group-item list-group-item-action active">
-        <div class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1">List group item heading</h5>
-            <small>3 days ago</small>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-7 left-pane">
+            <div class="list-group">
+                {% for school in high_schools %}
+                    <a href="#" class="list-group-item list-group-item-action active">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">{{ school.school_name }}</h5>
+                            <small>{{ school.start_time }} - {{ school.end_time }}</small>
+                        </div>
+                        <p class="mb-1">{{ school.overview_paragraph }}</p>
+                        <small>{{ school.location }}</small>
+                    </a>
+                    <div class="mb-5"></div>
+                {% endfor %}
+            </div>
         </div>
-        <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget
-            risus varius blandit.</p>
-        <small>Donec id elit non mi porta.</small>
-    </a>
-    <a href="#" class="list-group-item list-group-item-action">
-        <div class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1">List group item heading</h5>
-            <small class="text-muted">3 days ago</small>
+        <div class="col-md-5 right-pane">
         </div>
-        <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget
-            risus varius blandit.</p>
-        <small class="text-muted">Donec id elit non mi porta.</small>
-    </a>
-    <a href="#" class="list-group-item list-group-item-action">
-        <div class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1">List group item heading</h5>
-            <small class="text-muted">3 days ago</small>
-        </div>
-        <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget
-            risus varius blandit.</p>
-        <small class="text-muted">Donec id elit non mi porta.</small>
-    </a>
+    </div>
 </div>
+
+{% block content %}
+{% endblock %}
 </body>
 </html>
