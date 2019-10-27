@@ -15,13 +15,13 @@ def login_user(request, user_type):
             if user_type == UserType.STUDENT:
                 user = Student.objects.filter(username=username, password=password)
                 if user:
-                    return HttpResponse("Yay! We do remember you... (Student)")
+                    return render(request, "dashboard/student.html")
                 else:
                     login_error = True
             elif user_type == UserType.ADMIN_STAFF:
                 user = Admin_Staff.objects.filter(username=username, password=password)
                 if user:
-                    return HttpResponse("Yay! We do remember you... (Admin Staff)")
+                    return render(request, "dashboard/admissionstaff.html")
                 else:
                     login_error = True
     else:
