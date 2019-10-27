@@ -4,22 +4,34 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Application',
+            name="Application",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('application_id', models.IntegerField(blank=True, null=True)),
-                ('first_name', models.CharField(blank=True, max_length=50, null=True)),
-                ('last_name', models.CharField(blank=True, max_length=50, null=True)),
-                ('program_name', models.CharField(blank=True, max_length=50, null=True)),
-                ('date_of_submission', models.DateField(verbose_name='Data of submission')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("application_id", models.IntegerField(blank=True, null=True)),
+                ("first_name", models.CharField(blank=True, max_length=50, null=True)),
+                ("last_name", models.CharField(blank=True, max_length=50, null=True)),
+                (
+                    "program_name",
+                    models.CharField(blank=True, max_length=50, null=True),
+                ),
+                (
+                    "date_of_submission",
+                    models.DateField(verbose_name="Data of submission"),
+                ),
             ],
-        ),
+        )
     ]
