@@ -242,6 +242,7 @@ class StudentViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(Student.objects.filter(username="hritik").count(), 0)
 
+
 class StudentViewActivateTest(TestCase):
     def create_student(self):
         return Student.objects.create(
