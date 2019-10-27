@@ -6,8 +6,10 @@
 <!-- Custom styles for this template -->
 <link href="{% static 'dashboard/blog.css' %}" rel="stylesheet">
 
+<!--script-->
+<script src="//cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
 
-
+<script src="//cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
 
   <nav class="navbar navbar-expand-md navbar-dark bg-primary mb-4">
@@ -27,17 +29,19 @@
  </nav>
 
   <div class="nav-scroller py-1 mb-2">
-    <nav class="nav d-flex">
-      <a class="p-2 text-muted" href="#" >Student Application</a>
-      <a class="p-2 text-muted" href="#">School Information</a>
+    <nav class="nav d-flex justify-content-between">
+      <a class="p-2 text-muted active" href="#student_applications" data-toggle="tab">Student Applications</a>
+      <a class="p-2 text-muted" href="#school_informations" data-toggle="tab">School Informations</a>
     </nav>
   </div>
- 
- <div class = "container">
- 	<h1>Hello, we remember you!
- 	Welcome back!</h1>
- </div>
-
+ <div id="myTabContent" class="tab-content">
+    <div class = "active tab-pane" id="student-applications">
+ 	    <h1>Hello, this is student applications page</h1>
+    </div>
+    <div class = "tab-pane" id="school_informations">
+        <h1>Hello, this is school informations page</h1>
+    </div>
+</div>
 <footer class="blog-footer">
   <p>
     <a href="#">Back to top</a>
