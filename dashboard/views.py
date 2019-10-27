@@ -1,10 +1,6 @@
 from django.shortcuts import render
-from django.http import HttpResponse
-from register import *
 from OneApply.constants import UserType
-from logIn import *
 
-# Create your views here.
 
 def student(request):
     context = {
