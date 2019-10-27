@@ -1,6 +1,5 @@
 from django.test import TestCase
 from django.urls import reverse
-
 from .forms import LoginForm
 from OneApply.constants import UserType
 from register.models import Student

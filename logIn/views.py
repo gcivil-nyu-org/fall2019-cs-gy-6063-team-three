@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from django.http import HttpResponse
 from .forms import LoginForm
 from register.models import Student, Admin_Staff
 from OneApply.constants import UserType
