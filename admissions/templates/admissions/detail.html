@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Show application here</title>
+</head>
+<body>
+
+{% if application %}
+    <ul>
+        <li>{{ application.application_id }}</li>
+        <li>{{ application.first_name }}</li>
+        <li>{{ application.program_name }}</li>
+        <li>{{ application.date_of_submission }}</li>
+    </ul>
+{% else %}
+    <p>No applications are available.</p>
+{% endif %}
+</body>
+</html>

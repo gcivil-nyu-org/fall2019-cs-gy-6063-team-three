@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Display Applications</title>
+</head>
+<body>
+{% if applications %}
+    {% for app in applications %}
+        <a href="{% url 'admissions:detail' app.application_id %}">{{ app.first_name }}</a>
+    {% endfor %}
+{% else %}
+    <p>No applications are available.</p>
+{% endif %}
+</body>
+</html>

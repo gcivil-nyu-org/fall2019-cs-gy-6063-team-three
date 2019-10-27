@@ -34,6 +34,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     "landingpage",
     "logIn.apps.LogInConfig",
+    "admissions.apps.AdmissionsConfig",
     "register.apps.RegisterConfig",
     "django.contrib.admin",
     "django.contrib.auth",
