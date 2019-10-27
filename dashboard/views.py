@@ -5,6 +5,7 @@ from OneApply.constants import UserType
 from logIn import *
 
 # Create your views here.
+
 def student(request):
     context = {
         "constant_ut_student": UserType.STUDENT,
@@ -18,4 +19,4 @@ def admissionstaff(request):
         "constant_ut_student": UserType.STUDENT,
         "constant_ut_adminStaff": UserType.ADMIN_STAFF,
     }
-    return render(request, "dashboard/admissionstaff.html", context)	
+    return render(request, "dashboard/admissionstaff.html", context)
