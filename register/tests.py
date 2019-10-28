@@ -1,9 +1,12 @@
 from django.test import TestCase
 from django.urls import reverse
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
 
 from OneApply.constants import UserType
 from .forms import StudentRegisterForm, AdminStaffRegisterForm
 from .models import Student, Admin_Staff
+from .tokens import account_activation_token
 
 
 class AdmissionStaffViewTest(TestCase):
@@ -238,3 +241,46 @@ class StudentViewTest(TestCase):
         response = self.client.post(url, data=data)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(Student.objects.filter(username="hritik").count(), 0)
+
+
+class StudentViewActivateTest(TestCase):
+    def create_student(self):
+        return Student.objects.create(
+            first_name="Hritik",
+            last_name="Roshan",
+            email_address="hrx@gmail.com",
+            phoneNumber="9567801234",
+            username="hritik",
+            password="hritikRoshan@10",
+            current_school="NYU",
+            borough="MN",
+        )
+
+    def setUp(self):
+        self.student = self.create_student()
+
+    def test_activation_student(self):
+        uid64 = urlsafe_base64_encode(force_bytes(self.student.pk))
+        token = account_activation_token.make_token(self.student)
+        url = reverse("activate_student_account", args=[uid64, token])
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_invalid_id_activation_student(self):
+        uid64 = urlsafe_base64_encode(force_bytes(10000000))
+        token = account_activation_token.make_token(self.student)
+        url = reverse("activate_student_account", args=[uid64, token])
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_invalid_token_activation_student(self):
+        uid64 = urlsafe_base64_encode(force_bytes(self.student.pk))
+        token = account_activation_token.make_token(self.student)
+        token = token[:-3]
+        token += "xyz"
+        url = reverse("activate_student_account", args=[uid64, token])
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, 200)
+
+    def tearDown(self):
+        self.student.delete()
