@@ -27,10 +27,18 @@
             {{ selected_school.overview_paragraph }}
         </div>
         <button class="btn btn-lg btn-primary btn-block"
-                style="margin: 15% 12.5% 5% 12.5%; width: 75%">More Info</button>
+                style="margin: 15% 12.5% 5% 12.5%; width: 75%">More Info
+        </button>
     {% else %}
-        <div style="justify-content: center; font-size: 18px; margin: 45% 12.5%; width: 75%">
-            Please select a high school to get a brief overview
+        <div class="no-school-placeholder">
+            <div style="font-size: 18px;">
+                <span class="mb-3" style="font-size: 42px">
+                    <i class="fa fa-school fa-5x"></i>
+                </span>
+            </div>
+            <p class="mt-5" style="font-size: 18px;">
+                Please select a high school to get a brief overview
+            </p>
         </div>
     {% endif %}
 {% endblock %}
