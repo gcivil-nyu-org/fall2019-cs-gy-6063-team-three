@@ -14,3 +14,4 @@ class HighSchool(models.Model):
     total_students = models.IntegerField()
     start_time = models.CharField(max_length=6)
     end_time = models.CharField(max_length=6)
+    graduation_rate = models.CharField(max_length=5)

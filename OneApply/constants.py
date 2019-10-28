@@ -9,4 +9,5 @@ class ApiInfo:
     API_RESOURCE = "uq7m-95z8"
     APP_TOKEN = "NAGEBEKXZypPeTj4F7DXuGRh1"
     LOCAL_FIELD_LIST = "dbn, school_name,boro,overview_paragraph,neighborhood,location," \
-                       "phone_number,school_email,website,total_students,start_time,end_time "
+                       "phone_number,school_email,website,total_students,start_time,end_time" \
+                       ",graduation_rate "

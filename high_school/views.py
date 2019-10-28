@@ -1,5 +1,5 @@
-from django.shortcuts import render
-from django.views.generic.list import ListView
+from django.shortcuts import render, get_object_or_404
+from django.views.generic import ListView, DetailView
 from sodapy import Socrata
 
 from OneApply.constants import ApiInfo
@@ -41,5 +41,21 @@ class HighSchoolListView(ListView):
     template_name = 'high_school/index.html'
     model = HighSchool
     context_object_name = "high_schools"
-    paginate_by = 5
-    ordering = ['school_name']
+    paginate_by = 10
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.dbn = None
+
+    def get_queryset(self):
+        if 'dbn' in self.kwargs:
+            self.dbn = self.kwargs['dbn']
+        return HighSchool.objects.order_by('school_name')
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(HighSchoolListView, self).get_context_data(**kwargs)
+        if self.dbn:
+            context['selected_school'] = get_object_or_404(HighSchool, dbn=self.dbn)
+            print(context['selected_school'])
+        return context
+

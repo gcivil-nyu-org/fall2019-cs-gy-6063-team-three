@@ -1,0 +1,36 @@
+{% block school_list %}
+    <div>
+        <div class="list-group">
+            {% for school in high_schools %}
+                {% if selected_school and selected_school.dbn == school.dbn %}
+                    <a href="{% url 'high_school:overview' school.dbn %}"
+                   class="list-group-item list-group-item-action active">
+                {% else %}
+                    <a href="{% url 'high_school:overview' school.dbn %}"
+                   class="list-group-item list-group-item-action">
+                {% endif %}
+
+
+                    <div class="d-flex w-100 justify-content-between mb-2">
+                        <h4 class="mb-1" style="width: 75%">{{ school.school_name }}</h4>
+                        <small class="pt-1"
+                               style="width: 25%; text-align: right; vertical-align: middle;">
+                                    <span style="font-size: 14px; padding: 4px;"><i
+                                            class="fa fa-clock-o"></i></span>
+                            {{ school.start_time }} - {{ school.end_time }}
+                        </small>
+                    </div>
+                    {#TODO: change this to school.boro instead and map it to full name#}
+                    <h5 class="mb-2">{{ school.neighborhood }}</h5>
+                    <div class="d-flex w-100 justify-content-between">
+                        <span style="font-size: 14px; padding: 4px;">
+                            <i class="fa fa-graduation-cap mr-2"></i>
+                            {% widthratio school.graduation_rate 1 100 %} %
+                        </span>
+                        <h5 class="mb-0">{{ school.phone_number }}</h5>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
