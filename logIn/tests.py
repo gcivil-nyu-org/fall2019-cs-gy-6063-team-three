@@ -37,14 +37,14 @@ class LoginViewTest(TestCase):
         data = {"username": "hritik", "password": "hritikRoshan@10"}
         url = reverse("logIn:login_user", args=[UserType.STUDENT])
         response = self.client.post(url, data=data)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
         self.assertIsNotNone(Student.objects.get(username="hritik"))
 
     def test_invalid_login_student(self):
         data = {"username": "hritik", "password": "hritikRoshan@230"}
         url = reverse("logIn:login_user", args=[UserType.STUDENT])
         response = self.client.post(url, data=data)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
         self.assertIsNotNone(Student.objects.get(username="hritik"))
 
     def tearDown(self):
