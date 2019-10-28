@@ -1,18 +1,12 @@
 from django.shortcuts import render
 from OneApply.constants import UserType
+from register.models import Student, Admin_Staff
 
 
-def student(request):
+def dashboard(request, user_type):
     context = {
+        "user_type": user_type,
         "constant_ut_student": UserType.STUDENT,
         "constant_ut_adminStaff": UserType.ADMIN_STAFF,
     }
-    return render(request, "dashboard/student.html", context)
-
-
-def admissionstaff(request):
-    context = {
-        "constant_ut_student": UserType.STUDENT,
-        "constant_ut_adminStaff": UserType.ADMIN_STAFF,
-    }
-    return render(request, "dashboard/admissionstaff.html", context)
+    return render(request, "dashboard/index.html", context)

@@ -23,17 +23,42 @@
     </ul>
  
  	<a class="nav-link" href ='#'>profile</a>  
- 	<a class="nav-link" href ='#'>logout</a>
+ 	<a class="nav-link" href ="{% url 'landingpage:index' %}">logout</a>
 
   </div>
  </nav>
 
   <div class="nav-scroller py-1 mb-2">
+  	{% if user_type == constant_ut_student %}
     <nav class="nav d-flex justify-content-between">
+      <a class="p-2 text-muted active" href="#selected_schools" data-toggle="tab">Selected Schools</a>
+      <a class="p-2 text-muted" href="#all_schools" data-toggle="tab">All schools</a>
+      <a class="p-2 text-muted" href="#application_forms" data-toggle="tab">Application forms</a>
+      <a class="p-2 text-muted" href="#teacher_recommendations" data-toggle="tab">Teacher Recommendations</a>
+    </nav>
+    {% elif user_type == constant_ut_adminStaff %}
+    <nav class="nav d-flex">
       <a class="p-2 text-muted active" href="#student_applications" data-toggle="tab">Student Applications</a>
       <a class="p-2 text-muted" href="#school_informations" data-toggle="tab">School Informations</a>
-    </nav>
+    </nav>  
+    {% endif %}  
   </div>
+ {% if user_type == constant_ut_student %}
+ <div id="myTabContent" class="tab-content">
+    <div class = "active tab-pane" id="selected_schools">
+ 	    <h1>Hello, this is selected schools page</h1>
+    </div>
+    <div class = "tab-pane" id="all_schools">
+        <h1>Hello, this is all shcools page</h1>
+    </div>
+    <div class = "tab-pane", id="application_forms">
+ 	    <h1>Hello, this is application forms page</h1>
+    </div>
+    <div class= "tab-pane" id="teacher_recommendations">
+        <h1>Hello, this is teacher recommendations page</h1>
+    </div>
+</div>
+{% elif user_type == constant_ut_adminStaff %}
  <div id="myTabContent" class="tab-content">
     <div class = "active tab-pane" id="student_applications">
  	    <h1>Hello, this is student applications page</h1>
@@ -42,6 +67,7 @@
         <h1>Hello, this is school informations page</h1>
     </div>
 </div>
+{% endif %}
 <footer class="blog-footer">
   <p>
     <a href="#">Back to top</a>

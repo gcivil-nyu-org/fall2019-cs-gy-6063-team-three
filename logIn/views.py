@@ -2,13 +2,10 @@ from django.shortcuts import render
 from .forms import LoginForm
 from register.models import Student, Admin_Staff
 from OneApply.constants import UserType
+from django.shortcuts import redirect
 
 
 def login_user(request, user_type):
-    context = {
-        "constant_ut_student": UserType.STUDENT,
-        "constant_ut_adminStaff": UserType.ADMIN_STAFF,
-    }
     login_error = False
     if request.method == "POST":
         form = LoginForm(request.POST)
@@ -18,13 +15,13 @@ def login_user(request, user_type):
             if user_type == UserType.STUDENT:
                 user = Student.objects.filter(username=username, password=password)
                 if user:
-                    return render(request, "dashboard/student.html", context)
+                    return redirect("dashboard:dashboard", UserType.STUDENT)
                 else:
                     login_error = True
             elif user_type == UserType.ADMIN_STAFF:
                 user = Admin_Staff.objects.filter(username=username, password=password)
                 if user:
-                    return render(request, "dashboard/admissionstaff.html", context)
+                    return redirect("dashboard:dashboard", UserType.ADMIN_STAFF)
                 else:
                     login_error = True
     else:
