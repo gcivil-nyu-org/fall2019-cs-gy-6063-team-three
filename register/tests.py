@@ -262,7 +262,23 @@ class StudentViewActivateTest(TestCase):
     def test_activation_student(self):
         uid64 = urlsafe_base64_encode(force_bytes(self.student.pk))
         token = account_activation_token.make_token(self.student)
-        url = reverse("activate_user_account", args=[uid64, token])
+        url = reverse("activate_student_account", args=[uid64, token])
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_invalid_id_activation_student(self):
+        uid64 = urlsafe_base64_encode(force_bytes(10000000))
+        token = account_activation_token.make_token(self.student)
+        url = reverse("activate_student_account", args=[uid64, token])
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_invalid_token_activation_student(self):
+        uid64 = urlsafe_base64_encode(force_bytes(self.student.pk))
+        token = account_activation_token.make_token(self.student)
+        token = token[:-3]
+        token += "xyz"
+        url = reverse("activate_student_account", args=[uid64, token])
         response = self.client.post(url)
         self.assertEqual(response.status_code, 200)
 

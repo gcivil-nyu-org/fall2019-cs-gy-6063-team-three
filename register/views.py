@@ -24,7 +24,7 @@ def register_user(request, user_type):
                 current_site = get_current_site(request)
                 mail_subject = "Activate your account."
                 message = render_to_string(
-                    "register/activate_email.html",
+                    "register/activate_student_email.html",
                     {
                         "user": f,
                         "domain": current_site.domain,
@@ -60,14 +60,16 @@ def register_user(request, user_type):
     return render(request, "register/index.html", context)
 
 
-def activate_user_account(request, uidb64, token):
+def activate_student_account(request, uidb64, token):
+    user = Student
     try:
         uid = force_text(urlsafe_base64_decode(uidb64))
         user = Student.objects.get(id=uid)
     except (TypeError, ValueError, OverflowError, user.DoesNotExist):
-        user = None
-        return HttpResponse("invalid token")
+        return HttpResponse("User Does Not Exist")
     if account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
         return HttpResponse("Thank you for confirming your email. You can now login.")
+    else:
+        return HttpResponse("Wrong Token")

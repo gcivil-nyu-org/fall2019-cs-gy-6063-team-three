@@ -1,7 +1,7 @@
 {% autoescape off %}
 Hi {{ user.username }},
 Please click on the link to confirm your registration,
-http://{{ domain }}{% url 'activate_user_account' uidb64=uid token=token %}
+http://{{ domain }}{% url 'activate_student_account' uidb64=uid token=token %}
 
 Thank you,
 One Apply Registration Team
