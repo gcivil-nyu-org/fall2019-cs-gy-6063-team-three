@@ -3,7 +3,7 @@ from django.urls import reverse
 
 from .forms import LoginForm
 from OneApply.constants import UserType
-from register.models import Student
+from register.models import Student, Admin_Staff
 
 
 class LoginFormTest(TestCase):
@@ -18,7 +18,7 @@ class LoginFormTest(TestCase):
         self.assertFalse(form.is_valid())
 
 
-class LoginViewTest(TestCase):
+class LoginStudentViewTest(TestCase):
     def create_student(self):
         return Student.objects.create(
             first_name="Hritik",
@@ -29,6 +29,7 @@ class LoginViewTest(TestCase):
             password="hritikRoshan@10",
             current_school="NYU",
             borough="MN",
+            is_active=True,
         )
 
     def setUp(self):
@@ -50,3 +51,36 @@ class LoginViewTest(TestCase):
 
     def tearDown(self):
         self.student.delete()
+
+
+class LoginAdminStaffViewTest(TestCase):
+    def create_admin_staff(self):
+        return Admin_Staff.objects.create(
+            first_name="Hritik",
+            last_name="Roshan",
+            email_address="hrx@gmail.com",
+            username="hritik",
+            password="hritikRoshan@10",
+            school="NYU",
+            supervisor_email="hrx@gmail.com",
+        )
+
+    def setUp(self):
+        self.admin_staff = self.create_admin_staff()
+
+    def test_valid_login_admin_staff(self):
+        data = {"username": "hritick", "password": "hritikRoshan@10"}
+        url = reverse("logIn:login_user", args=[UserType.ADMIN_STAFF])
+        response = self.client.post(url, data=data)
+        self.assertEqual(response.status_code, 200)
+        self.assertIsNotNone(Admin_Staff.objects.get(username="hritik"))
+
+    def test_invalid_login_admin_staff(self):
+        data = {"username": "hritick", "password": "hritikRoshan@12"}
+        url = reverse("logIn:login_user", args=[UserType.ADMIN_STAFF])
+        response = self.client.post(url, data=data)
+        self.assertEqual(response.status_code, 200)
+        self.assertIsNotNone(Admin_Staff.objects.get(username="hritik"))
+
+    def tearDown(self):
+        self.admin_staff.delete()
