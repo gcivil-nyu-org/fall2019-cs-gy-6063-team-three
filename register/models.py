@@ -29,6 +29,7 @@ class User(models.Model):
     )
     username = models.CharField(max_length=20, null=True, blank=False)
     password = models.CharField(max_length=256)
+    is_active = models.BooleanField(default=False)
 
     class Meta:
         abstract = True
