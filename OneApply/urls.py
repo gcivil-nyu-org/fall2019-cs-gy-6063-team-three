@@ -5,7 +5,7 @@ from register import views
 
 
 urlpatterns = [
-    path("", include("landingpage.urls", namespace="ladndingpage")),
+    path("", include("landingpage.urls", namespace="landingpage")),
     path("login/", include("logIn.urls")),
     path("register/", include("register.urls")),
     path("dashboard/", include("dashboard.urls")),
