@@ -1,6 +1,6 @@
 {% extends 'high_school/index.html' %}
 
-{% block content %}
+{% block save_highschool %}
     <form action="{% url 'high_school:save' %}" method="POST">
         {% csrf_token %}
         {{ form }}

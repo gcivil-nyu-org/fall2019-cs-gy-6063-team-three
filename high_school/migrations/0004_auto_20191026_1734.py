@@ -5,19 +5,17 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('high_school', '0003_auto_20191026_1733'),
-    ]
+    dependencies = [("high_school", "0003_auto_20191026_1733")]
 
     operations = [
         migrations.AlterField(
-            model_name='highschool',
-            name='end_time',
+            model_name="highschool",
+            name="end_time",
             field=models.CharField(max_length=6),
         ),
         migrations.AlterField(
-            model_name='highschool',
-            name='start_time',
+            model_name="highschool",
+            name="start_time",
             field=models.CharField(max_length=6),
         ),
     ]

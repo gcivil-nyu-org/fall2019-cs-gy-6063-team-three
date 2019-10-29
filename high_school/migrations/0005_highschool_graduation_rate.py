@@ -5,15 +5,13 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('high_school', '0004_auto_20191026_1734'),
-    ]
+    dependencies = [("high_school", "0004_auto_20191026_1734")]
 
     operations = [
         migrations.AddField(
-            model_name='highschool',
-            name='graduation_rate',
+            model_name="highschool",
+            name="graduation_rate",
             field=models.FloatField(default=0.0, max_length=5),
             preserve_default=False,
-        ),
+        )
     ]

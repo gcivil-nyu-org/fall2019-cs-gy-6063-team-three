@@ -23,9 +23,9 @@ class User(models.Model):
     email_address = models.EmailField(
         max_length=200, null=True, blank=False, validators=[validators.validate_email]
     )
-    # phoneNumber = models.CharField(
-    #     max_length=15, validators=[RegexValidator(PHONE_REGEX)]
-    # )
+    phoneNumber = models.CharField(
+        max_length=15, validators=[RegexValidator(PHONE_REGEX)]
+    )
     username = models.CharField(max_length=20, null=True, blank=False)
     password = models.CharField(max_length=256)
 

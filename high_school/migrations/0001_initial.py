@@ -7,26 +7,33 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='HighSchools',
+            name="HighSchools",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('dbn', models.CharField(max_length=10)),
-                ('school_name', models.CharField(max_length=200)),
-                ('boro', models.CharField(max_length=1)),
-                ('overview_paragraph', models.CharField(max_length=1000)),
-                ('neighborhood', models.CharField(max_length=100)),
-                ('location', models.CharField(max_length=50)),
-                ('phone_number', models.CharField(max_length=10)),
-                ('school_email', models.EmailField(max_length=254)),
-                ('website', models.CharField(max_length=50)),
-                ('total_students', models.IntegerField()),
-                ('start_time', models.TimeField()),
-                ('end_time', models.TimeField()),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("dbn", models.CharField(max_length=10)),
+                ("school_name", models.CharField(max_length=200)),
+                ("boro", models.CharField(max_length=1)),
+                ("overview_paragraph", models.CharField(max_length=1000)),
+                ("neighborhood", models.CharField(max_length=100)),
+                ("location", models.CharField(max_length=50)),
+                ("phone_number", models.CharField(max_length=10)),
+                ("school_email", models.EmailField(max_length=254)),
+                ("website", models.CharField(max_length=50)),
+                ("total_students", models.IntegerField()),
+                ("start_time", models.TimeField()),
+                ("end_time", models.TimeField()),
             ],
-        ),
+        )
     ]

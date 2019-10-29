@@ -5,4 +5,4 @@ from .models import HighSchool
 class HighSchoolSerializer(serializers.ModelSerializer):
     class Meta:
         model = HighSchool
-        fields = '__all__'
+        fields = "__all__"

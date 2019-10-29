@@ -12,20 +12,28 @@
 <div class="all-school-root">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-6 left-pane">
-                {% block school_list %}
-                    {% include 'high_school/school_list.html' %}
+            {% if high_schools %}
+                <div class="col-md-6 left-pane">
+                    {% block school_list %}
+                        {% include 'high_school/school_list.html' %}
+                    {% endblock %}
+                </div>
+                <div class="col-md-6 right-pane">
+                    {% block school_overview %}
+                        {% include 'high_school/school_overview.html' %}
+                    {% endblock %}
+                </div>
+            {% else %}
+                {% block broken %}
+                    {% include 'high_school/broken.html' %}
                 {% endblock %}
-            </div>
-            <div class="col-md-6 right-pane">
-                {% block school_overview %}
-                    {% include 'high_school/school_overview.html' %}
-                {% endblock %}
+            {% endif %}
+            <div>
+            {% block save_highschool %}
+            {% endblock %}
             </div>
         </div>
     </div>
 </div>
-{% block content %}
-{% endblock %}
 </body>
 </html>
