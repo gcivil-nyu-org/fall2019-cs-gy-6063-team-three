@@ -5,6 +5,7 @@ from django.utils.translation import gettext_lazy as _
 import re
 from .models import Student, Admin_Staff
 
+
 BOROUGH_CHOICES = [
     ("", "Borough"),
     ("MN", "Manhattan"),
