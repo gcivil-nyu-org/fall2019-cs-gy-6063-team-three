@@ -14,7 +14,9 @@ BOROUGH_CHOICES = [
     ("SI", "Staten Island"),
 ]
 
-REG_EX = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&_-]{8,20}$"  # noqa: W605, E501
+REG_EX = (
+    "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&_-]{8,20}$"
+)  # noqa: W605, E501
 
 
 class StudentRegisterForm(ModelForm):
