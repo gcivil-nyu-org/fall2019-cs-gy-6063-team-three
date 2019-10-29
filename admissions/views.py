@@ -11,7 +11,7 @@ def index(request, user_id):
 def detail(request, application_id):
     try:
         application = HighSchoolApplication.objects.get(id=application_id)
-    except:
+    except HighSchoolApplication.DoesNotExist:
         application = None
     context = {"application": application}
 
@@ -21,7 +21,7 @@ def detail(request, application_id):
 def get_applications(user_id):
     try:
         admin_staff = Admin_Staff.objects.get(id=user_id)
-    except:
+    except Admin_Staff.DoesNotExist:
         return []
     school_id = admin_staff.school_id
     return HighSchoolApplication.objects.filter(school_id=school_id)

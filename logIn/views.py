@@ -31,8 +31,9 @@ def login_user(request, user_type):
             elif user_type == UserType.ADMIN_STAFF:
                 user = Admin_Staff.objects.filter(username=username, password=password)
                 if user:
-                    return HttpResponseRedirect(reverse("admissions:index"),
-                                                args=(user.id,))
+                    return HttpResponseRedirect(
+                        reverse("admissions:index"), args=(user.id,)
+                    )
                 else:
                     login_error = True
     else:

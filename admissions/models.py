@@ -30,7 +30,7 @@ class HighSchoolApplication(models.Model):
         max_length=50, validators=[validators.validate_email]
     )
     phoneNumber = models.CharField(
-        max_length=15, validators=[RegexValidator(PHONE_REGEX)],
+        max_length=15, validators=[RegexValidator(PHONE_REGEX)]
     )
     address = models.CharField(max_length=100)
     gender = models.CharField(max_length=15)
@@ -38,7 +38,7 @@ class HighSchoolApplication(models.Model):
     gpa = models.DecimalField(max_digits=3, decimal_places=2)
     parent_name = models.CharField(max_length=100)
     parent_phoneNumber = models.CharField(
-        max_length=15, validators=[RegexValidator(PHONE_REGEX)],
+        max_length=15, validators=[RegexValidator(PHONE_REGEX)]
     )
     school = models.ForeignKey(HighSchool, on_delete=models.CASCADE)
     program = models.CharField(max_length=100)

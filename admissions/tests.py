@@ -49,7 +49,7 @@ def create_school():
         total_students=1000,
         start_time=123,
         end_time=124,
-        graduation_rate=80
+        graduation_rate=80,
     )
 
 
@@ -70,7 +70,7 @@ def create_application(student, school):
         parent_phoneNumber="9135670125",
         school=school,
         program="Science",
-        submitted_date=datetime.now()
+        submitted_date=datetime.now(),
     )
 
 
@@ -82,7 +82,6 @@ def common_setup():
 
 
 class AdmissionsIndexViewTest(TestCase):
-
     def setUp(self):
         common_setup()
 
@@ -109,8 +108,9 @@ class AdmissionsDetailViewTest(TestCase):
         # Test without creating admin user
         url = reverse("admissions:detail", args=[11])
         response = self.client.post(url)
-        self.assertContains(response,
-                            "The application you are looking for doesn't exist.")
+        self.assertContains(
+            response, "The application you are looking for doesn't exist."
+        )
 
     def test_valid_admin(self):
         # Check for admin staff who doesnt exist
