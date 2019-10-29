@@ -4,7 +4,6 @@ from django.db import models
 from django.core import validators
 from django.core.validators import RegexValidator
 
-
 PHONE_REGEX = "r'^([0-9]{3}) [0-9]{3}-[0-9]{4}$'"
 
 
@@ -43,5 +42,6 @@ class Student(User):
 
 @auto_str
 class Admin_Staff(User):
+    school_id = models.CharField(max_length=100)
     school = models.CharField(max_length=100, null=True, blank=True)
     supervisor_email = models.EmailField(max_length=100, null=True, blank=True)
