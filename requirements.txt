@@ -6,7 +6,7 @@ sqlparse==0.3.0
 gunicorn
 django-heroku
 flake8
-black=
+black==19.3b0
 coverage
 coveralls
 PyYAML
