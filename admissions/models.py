@@ -2,6 +2,8 @@ from django.db import models
 from django.core import validators
 from django.core.validators import RegexValidator
 from datetime import datetime
+
+from high_school.models import HighSchool
 from register.models import Student
 
 PHONE_REGEX = "r'^([1-9]{1}\\d{2}) \\d{3} -\\d{4}'"
@@ -21,7 +23,7 @@ def auto_str(cls):
 @auto_str
 class HighSchoolApplication(models.Model):
     application_number = models.IntegerField()
-    user_id = models.ForeignKey(Student, on_delete=models.CASCADE)
+    user = models.ForeignKey(Student, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     email_address = models.EmailField(
@@ -38,6 +40,6 @@ class HighSchoolApplication(models.Model):
     parent_phoneNumber = models.CharField(
         max_length=15, validators=[RegexValidator(PHONE_REGEX)],
     )
-    school_id = models.CharField(max_length=100)
+    school = models.ForeignKey(HighSchool, on_delete=models.CASCADE)
     program = models.CharField(max_length=100)
     submitted_date = models.DateTimeField(default=datetime.now)

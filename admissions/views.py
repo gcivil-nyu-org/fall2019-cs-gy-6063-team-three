@@ -9,13 +9,19 @@ def index(request, user_id):
 
 
 def detail(request, application_id):
-    application = HighSchoolApplication.objects.get(id=application_id)
+    try:
+        application = HighSchoolApplication.objects.get(id=application_id)
+    except:
+        application = None
     context = {"application": application}
+
     return render(request, "admissions/detail.html", context)
 
 
 def get_applications(user_id):
-    admin_staff = Admin_Staff.objects.get(id=user_id)
+    try:
+        admin_staff = Admin_Staff.objects.get(id=user_id)
+    except:
+        return []
     school_id = admin_staff.school_id
     return HighSchoolApplication.objects.filter(school_id=school_id)
-

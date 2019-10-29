@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     "logIn.apps.LogInConfig",
     "admissions.apps.AdmissionsConfig",
     "register.apps.RegisterConfig",
+    "high_school.apps.HighSchoolConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
