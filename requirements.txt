@@ -10,5 +10,7 @@ black==19.3b0
 coverage
 coveralls
 PyYAML
+sodapy
+djangorestframework
 django-phonenumber-field
 phonenumbers

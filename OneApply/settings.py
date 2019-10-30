@@ -35,15 +35,18 @@ INSTALLED_APPS = [
     "landingpage",
     "dashboard",
     "logIn.apps.LogInConfig",
+    "admissions.apps.AdmissionsConfig",
     "register.apps.RegisterConfig",
     "application.apps.ApplicationConfig",
     "phonenumber_field",
+    "high_school.apps.HighSchoolConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "rest_framework",
 ]
 
 
