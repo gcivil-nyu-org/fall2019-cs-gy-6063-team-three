@@ -1,0 +1,10 @@
+{% autoescape off %}
+Hi {{ user.username }},
+
+Your supervisor has verified your employment at {{user.school}}.
+Please click on the link to confirm your registration,
+http://{{ domain }}{% url 'activate_admission_account' uidb64=uid token=token %}
+
+Thank you,
+One Apply Registration Team
+{% endautoescape %}

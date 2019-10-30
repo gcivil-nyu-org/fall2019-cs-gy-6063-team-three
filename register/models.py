@@ -1,9 +1,8 @@
-# Create your models here.
-
 from django.db import models
 from django.core import validators
 from django.core.validators import RegexValidator
 
+from high_school.models import HighSchool
 
 PHONE_REGEX = "r'^([0-9]{3}) [0-9]{3}-[0-9]{4}$'"
 
@@ -44,5 +43,6 @@ class Student(User):
 
 @auto_str
 class Admin_Staff(User):
-    school = models.CharField(max_length=100, null=True, blank=True)
+    school = models.ForeignKey(HighSchool, on_delete=models.CASCADE)
+    is_verified_employee = models.BooleanField(default=False)
     supervisor_email = models.EmailField(max_length=100, null=True, blank=True)
