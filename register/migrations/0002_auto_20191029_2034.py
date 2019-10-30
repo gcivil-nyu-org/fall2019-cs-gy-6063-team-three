@@ -6,14 +6,17 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('register', '0001_initial'),
-    ]
+    dependencies = [("register", "0001_initial")]
 
     operations = [
         migrations.AlterField(
-            model_name='admin_staff',
-            name='school',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='high_school.HighSchool'),
-        ),
+            model_name="admin_staff",
+            name="school",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="high_school.HighSchool",
+            ),
+        )
     ]
