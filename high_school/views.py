@@ -60,7 +60,9 @@ class HighSchoolListView(ListView):
         if self.dbn:
             context["selected_school"] = get_object_or_404(HighSchool, dbn=self.dbn)
         if self.query:
-            context["high_schools"] = HighSchool.objects.filter(school_name__icontains=self.query).order_by(
+            context["high_schools"] = HighSchool.objects.filter(
+                school_name__icontains=self.query
+            ).order_by(
                 "school_name"
             )  # noqa: E501
         return context
