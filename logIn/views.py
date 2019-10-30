@@ -1,9 +1,10 @@
-from django.shortcuts import render
 from django.core.exceptions import ObjectDoesNotExist
-from .forms import LoginForm
-from register.models import Student, Admin_Staff
-from OneApply.constants import UserType
 from django.shortcuts import redirect
+from django.shortcuts import render
+
+from OneApply.constants import UserType
+from register.models import Student, Admin_Staff
+from .forms import LoginForm
 
 
 def login_user(request, user_type):

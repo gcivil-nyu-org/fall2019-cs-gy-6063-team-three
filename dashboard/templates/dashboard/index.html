@@ -56,7 +56,7 @@
                 </nav>
             {% elif user_type == constant_ut_adminStaff %}
                 <nav class="nav d-flex">
-                    <a class="p-2 text-muted active" href="#student_applications" data-toggle="tab">Student
+                    <a class="p-2 text-muted active" href="{% url 'dashboard:admissions:index'%}" data-toggle="tab">Student
                         Applications</a>
                     <a class="p-2 text-muted" href="#school_informations" data-toggle="tab">School
                         Informations</a>
@@ -81,14 +81,8 @@
             </div>
         </div>
     {% elif user_type == constant_ut_adminStaff %}
-        <div id="myTabContent" class="tab-content">
-            <div class="active tab-pane" id="student_applications">
-                <h1>Hello, this is student applications page</h1>
-            </div>
-            <div class="tab-pane" id="school_informations">
-                <h1>Hello, this is school informations page</h1>
-            </div>
-        </div>
+        {% block content %}
+        {% endblock %}
     {% endif %}
     <footer class="blog-footer">
         <p>
