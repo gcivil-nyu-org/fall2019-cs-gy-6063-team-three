@@ -2,3 +2,4 @@
 [![Coverage Status](https://coveralls.io/repos/github/gcivil-nyu-org/fall2019-cs-gy-6063-team-three/badge.svg?branch=master)](https://coveralls.io/github/gcivil-nyu-org/fall2019-cs-gy-6063-team-three?branch=master)
 
 # OneApply
+
