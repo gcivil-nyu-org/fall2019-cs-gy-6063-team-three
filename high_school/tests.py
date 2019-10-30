@@ -81,20 +81,20 @@ class HighSchoolViewTests(TestCase):
 
     def test_one_entry(self):
         self.create_highschool()
-        response = self.client.get("/high_school/")
+        response = self.client.get("/dashboard/ut_student/all_schools/")
         self.assertContains(response, "06A231")
         self.assertContains(response, "912-121-0911")
 
     def test_two_entries(self):
         self.create_highschool()
         self.create_highschool("05A221", "311-911-2100")
-        response = self.client.get("/high_school/")
+        response = self.client.get("/dashboard/ut_student/all_schools/")
         self.assertContains(response, "06A231")
         self.assertContains(response, "05A221")
         self.assertContains(response, "311-911-2100")
 
     def test_no_entries(self):
-        response = self.client.get("/high_school/")
+        response = self.client.get("/dashboard/ut_student/all_schools/")
         self.assertContains(
             response, "Oops! Something seems broken. Please check again later."
         )
