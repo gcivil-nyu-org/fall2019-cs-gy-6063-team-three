@@ -43,9 +43,7 @@ def login_user(request, user_type):
                     elif user.password != password:
                         login_error = True
                     else:
-                        return HttpResponseRedirect(
-                            reverse("admissions:index", args=(user.id,))
-                        )
+                        return redirect("dashboard:dashboard", UserType.ADMIN_STAFF)
     else:
         form = LoginForm()
     context = {

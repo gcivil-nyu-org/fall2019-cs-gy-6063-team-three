@@ -1,10 +1,21 @@
 from django.shortcuts import render
+
+from OneApply.constants import UserType
 from admissions.models import HighSchoolApplication
 from register.models import Admin_Staff
 
 
-def index(request, user_id):
-    context = {"applications": get_applications(user_id)}
+def index(request):
+    # This user ID is hard coded to 1, needs to be changed after sessions are
+    # implemented
+    user_id = 1
+    applications = get_applications(user_id)
+    context = {
+        "user_type": UserType.ADMIN_STAFF,
+        "constant_ut_student": UserType.STUDENT,
+        "constant_ut_adminStaff": UserType.ADMIN_STAFF,
+        "applications": applications,
+    }
     return render(request, "admissions/index.html", context)
 
 
@@ -13,8 +24,12 @@ def detail(request, application_id):
         application = HighSchoolApplication.objects.get(id=application_id)
     except HighSchoolApplication.DoesNotExist:
         application = None
-    context = {"application": application}
-
+    context = {
+        "user_type": UserType.ADMIN_STAFF,
+        "constant_ut_student": UserType.STUDENT,
+        "constant_ut_adminStaff": UserType.ADMIN_STAFF,
+        "application": application,
+    }
     return render(request, "admissions/detail.html", context)
 
 
