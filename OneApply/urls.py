@@ -10,6 +10,7 @@ urlpatterns = [
     path("register/", include("register.urls")),
     path("admissions/", include("admissions.urls")),
     path("dashboard/", include("dashboard.urls")),
+    path("high_school/", include("high_school.urls")),
     path("admin/", admin.site.urls),
     url(
         r"^activate_student_account/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$",  # noqa: E501
