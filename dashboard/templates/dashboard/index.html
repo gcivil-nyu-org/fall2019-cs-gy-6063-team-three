@@ -9,9 +9,11 @@
     <link href="{% static 'dashboard/blog.css' %}" rel="stylesheet">
 
     <!--script-->
-{#        <script src="//cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>#}
-{##}
-{#        <script src="//cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>#}
+    {#  commented scripts below because all_schools functionality fails with jquery  #}
+    {#  TODO: check this in a later sprint  #}
+    {#        <script src="//cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>#}
+    {##}
+    {#        <script src="//cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>#}
 
     <title>OneApply</title>
 </head>
@@ -42,6 +44,8 @@
                 <nav class="nav d-flex justify-content-between">
                     <a class="p-2 text-muted" href="#selected_schools" data-toggle="tab">Selected
                         Schools</a>
+                    {# TODO: update this    #}
+                    {# this has to be a user object and not a user_type string  #}
                     <a class="p-2 text-muted active"
                        href="{% url 'dashboard:high_school:index' 'ut_student' %}"
                        data-toggle="tab">All Schools</a>
@@ -60,39 +64,32 @@
             {% endif %}
         </div>
     </div>
-{##}
-{#    <div class="container-fluid">#}
-{##}
-{#        <div class="row">#}
-            {% if user_type == constant_ut_student %}
-                <div id="myTabContent" class="tab-content">
-                    <div class="tab-pane" id="selected_schools">
-                        <h1>Hello, this is selected schools page</h1>
-                    </div>
-                    <div class="tab-pane active" id="all_schools">
-                        {% block all_high_schools %}
-                        {% endblock %}
-                    </div>
-                    <div class="tab-pane" id="application_forms">
-                        <h1>Hello, this is application forms page</h1>
-                    </div>
-                    <div class="tab-pane" id="teacher_recommendations">
-                        <h1>Hello, this is teacher recommendations page</h1>
-                    </div>
-                </div>
-            {% elif user_type == constant_ut_adminStaff %}
-                <div id="myTabContent" class="tab-content">
-                    <div class="active tab-pane" id="student_applications">
-                        <h1>Hello, this is student applications page</h1>
-                    </div>
-                    <div class="tab-pane" id="school_informations">
-                        <h1>Hello, this is school informations page</h1>
-                    </div>
-                </div>
-            {% endif %}
-{##}
-{#        </div>#}
-{#    </div>#}
+    {% if user_type == constant_ut_student %}
+        <div id="myTabContent" class="tab-content">
+            <div class="tab-pane" id="selected_schools">
+                <h1>Hello, this is selected schools page</h1>
+            </div>
+            <div class="tab-pane active" id="all_schools">
+                {% block all_high_schools %}
+                {% endblock %}
+            </div>
+            <div class="tab-pane" id="application_forms">
+                <h1>Hello, this is application forms page</h1>
+            </div>
+            <div class="tab-pane" id="teacher_recommendations">
+                <h1>Hello, this is teacher recommendations page</h1>
+            </div>
+        </div>
+    {% elif user_type == constant_ut_adminStaff %}
+        <div id="myTabContent" class="tab-content">
+            <div class="active tab-pane" id="student_applications">
+                <h1>Hello, this is student applications page</h1>
+            </div>
+            <div class="tab-pane" id="school_informations">
+                <h1>Hello, this is school informations page</h1>
+            </div>
+        </div>
+    {% endif %}
     <footer class="blog-footer">
         <p>
             <a href="#">Back to top</a>
