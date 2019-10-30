@@ -14,6 +14,7 @@
 
 <script src="//cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
+
 <title>OneApply</title>
 </head>
 <body>
@@ -38,7 +39,7 @@
     <nav class="nav d-flex justify-content-between">
       <a class="p-2 text-muted active" href="#selected_schools" data-toggle="tab">Selected Schools</a>
       <a class="p-2 text-muted" href="#all_schools" data-toggle="tab">All Schools</a>
-      <a class="p-2 text-muted" href="#application_forms" data-toggle="tab">Application Forms</a>
+      <a class="p-2 text-muted" href="{% url 'application:index' user_id %}" data-toggle="tab">Application Forms</a>
       <a class="p-2 text-muted" href="#teacher_recommendations" data-toggle="tab">Teacher Recommendations</a>
     </nav>
     {% elif user_type == constant_ut_adminStaff %}
@@ -57,7 +58,9 @@
         <h1>Hello, this is all shcools page</h1>
     </div>
     <div class = "tab-pane", id="application_forms">
- 	    <h1>Hello, this is application forms page</h1>
+ 	    {% block app_list %}
+          {% include 'application/index.html' %}
+      {% endblock %}
     </div>
     <div class= "tab-pane" id="teacher_recommendations">
         <h1>Hello, this is teacher recommendations page</h1>

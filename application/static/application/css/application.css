@@ -1,0 +1,96 @@
+html, body {
+    height: 100%;
+}
+
+body {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+    align-items: center;
+    padding-top: 40px;
+    padding-bottom: 40px;
+    background-color: #f5f5f5;
+}
+
+.all-app-root {
+    width: 100%;
+}
+
+.left-pane {
+    height: 100vh !important;
+    /*background-color: #95a5a6;*/
+    background-color: whitesmoke;
+    /*overflow-y: scroll;*/
+    /*overflow-x: hidden;*/
+}
+
+.pagination-div{
+    margin: 0% 7.5%;
+}
+
+.right-pane {
+    background-color: whitesmoke;
+    height: 100vh;
+}
+
+.blur-bg {
+    height: 100%;
+    background-color: black;
+    opacity: 0.38;
+    filter: blur(2px);
+    margin-left: -15px;
+    margin-right: -15px;
+}
+
+.right-pane-container {
+    position: absolute;
+    top: 7.5%;
+    margin: 5% 7.5%;
+    width: 80%;
+}
+
+.right-pane .top-header {
+    height: 40%;
+    max-height: 45%;
+    /*background: url("../../logIn/images/bg_1.jpg");*/
+    /*background-size: cover;*/
+}
+
+.no-app-placeholder {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+/*overriding bootstrap*/
+.list-group-item {
+    width: 85% !important;
+    margin: 5% 7.5% 0% 7.5% !important;
+    border-radius: 10px;
+}
+
+.list-group-item:last-child {
+    margin-bottom: 5% !important;
+}
+/* Scrollbar - CSS*/
+/* Width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #F39C12;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #d4860b;
+}

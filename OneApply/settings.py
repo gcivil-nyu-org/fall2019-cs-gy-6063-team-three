@@ -36,6 +36,8 @@ INSTALLED_APPS = [
     "dashboard",
     "logIn.apps.LogInConfig",
     "register.apps.RegisterConfig",
+    "application.apps.ApplicationConfig",
+    "phonenumber_field",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -133,5 +135,8 @@ EMAIL_HOST = "smtp.gmail.com"
 EMAIL_HOST_USER = "UserVerifOneApply@gmail.com"
 EMAIL_HOST_PASSWORD = "pwd@TeamThree"
 EMAIL_PORT = 587
+
+# configure phone number field
+PHONENUMBER_DB_FORMAT = "E164"
 
 django_heroku.settings(locals(), test_runner=False)

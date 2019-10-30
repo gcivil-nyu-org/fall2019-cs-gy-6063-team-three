@@ -10,3 +10,5 @@ black==19.3b0
 coverage
 coveralls
 PyYAML
+django-phone-field-1.8.0
+phonenumbers
