@@ -3,7 +3,7 @@ from django.views.generic import ListView
 from sodapy import Socrata
 
 from OneApply.constants import ApiInfo
-from .forms import SaveHighSchools
+from .forms import SaveHighSchoolsForm
 from .serializer import HighSchoolSerializer
 from .models import HighSchool
 
@@ -12,7 +12,7 @@ client = Socrata(ApiInfo.API_DOMAIN, ApiInfo.APP_TOKEN)
 
 def save_highschool_data(request):
     if request.method == "POST":
-        form = SaveHighSchools(request.POST)
+        form = SaveHighSchoolsForm(request.POST)
         if form.is_valid():
             limit = form.cleaned_data["limit"]
             results = client.get(
@@ -25,7 +25,7 @@ def save_highschool_data(request):
             else:
                 print(serializer.errors)
     else:
-        form = SaveHighSchools()
+        form = SaveHighSchoolsForm()
     return render(request, "high_school/save_high_schools.html", {"form": form})
 
 

@@ -1,6 +1,7 @@
 from django.db import models
 
 
+# TODO: add Program model
 class HighSchool(models.Model):
     dbn = models.CharField(max_length=10, blank=False, null=False)
     school_name = models.CharField(max_length=200, blank=False, null=False)

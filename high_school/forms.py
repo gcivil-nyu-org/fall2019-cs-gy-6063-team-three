@@ -1,5 +1,5 @@
 from django import forms
 
 
-class SaveHighSchools(forms.Form):
+class SaveHighSchoolsForm(forms.Form):
     limit = forms.IntegerField()
