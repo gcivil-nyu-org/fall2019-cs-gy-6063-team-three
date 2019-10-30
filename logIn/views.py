@@ -1,9 +1,9 @@
 from django.shortcuts import render
-from django.http import HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
 from .forms import LoginForm
 from register.models import Student, Admin_Staff
 from OneApply.constants import UserType
+from django.shortcuts import redirect
 
 
 def login_user(request, user_type):
@@ -26,7 +26,7 @@ def login_user(request, user_type):
                     elif user.password != password:
                         login_error = True
                     else:
-                        return HttpResponse("Yay! We do remember you... (Student)")
+                        return redirect("dashboard:dashboard", UserType.STUDENT)
             elif user_type == UserType.ADMIN_STAFF:
                 try:
                     user = Admin_Staff.objects.get(username=username)
@@ -40,7 +40,7 @@ def login_user(request, user_type):
                     elif user.password != password:
                         login_error = True
                     else:
-                        return HttpResponse("Yay! We do remember you... (Admin Staff)")
+                        return redirect("dashboard:dashboard", UserType.ADMIN_STAFF)
     else:
         form = LoginForm()
     context = {

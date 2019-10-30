@@ -1,6 +1,5 @@
 from django.test import TestCase
 from django.urls import reverse
-
 from .forms import LoginForm
 from OneApply.constants import UserType
 from register.models import Student, Admin_Staff
@@ -39,7 +38,7 @@ class LoginStudentViewTest(TestCase):
         data = {"username": "hritik", "password": "hritikRoshan@10"}
         url = reverse("logIn:login_user", args=[UserType.STUDENT])
         response = self.client.post(url, data=data)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
         self.assertIsNotNone(Student.objects.get(username="hritik"))
 
     def test_invalid_login_student(self):
@@ -81,7 +80,7 @@ class LoginAdminStaffViewTest(TestCase):
         data = {"username": "hritik", "password": "hritikRoshan@10"}
         url = reverse("logIn:login_user", args=[UserType.ADMIN_STAFF])
         response = self.client.post(url, data=data)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
         self.assertIsNotNone(Admin_Staff.objects.get(username="hritik"))
 
     def test_invalid_login_admin_staff(self):

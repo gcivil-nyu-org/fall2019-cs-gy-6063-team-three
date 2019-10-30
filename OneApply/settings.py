@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     "landingpage",
+    "dashboard",
     "logIn.apps.LogInConfig",
     "register.apps.RegisterConfig",
     "django.contrib.admin",
