@@ -5,9 +5,10 @@ from admissions.models import HighSchoolApplication
 from register.models import Admin_Staff
 
 
+# TODO: Change this to list view
 def index(request):
-    # This user ID is hard coded to 1, needs to be changed after sessions are
-    # implemented
+    # TODO: This user ID is hard coded to 1, needs to be changed after sessions are
+    #  implemented
     user_id = 1
     applications = get_applications(user_id)
     context = {

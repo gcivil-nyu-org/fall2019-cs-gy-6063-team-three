@@ -45,6 +45,7 @@ def register_user(request, user_type):
             if form is not None and form.is_valid():
                 password = form.cleaned_data["input_password"]
                 f = form.save(commit=False)
+                # TODO: Get the ID from sessions, here it is hardcoded to 1
                 f.school = HighSchool.objects.get(id=1)
                 f.password = password
                 f.save()
