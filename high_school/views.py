@@ -10,7 +10,7 @@ from .models import HighSchool
 client = Socrata(ApiInfo.API_DOMAIN, ApiInfo.APP_TOKEN)
 
 
-def save_highschool_data(request):
+def save_highschool_data(request, user_type):
     if request.method == "POST":
         form = SaveHighSchoolsForm(request.POST)
         if form.is_valid():

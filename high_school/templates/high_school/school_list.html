@@ -3,10 +3,10 @@
         <div class="list-group">
             {% for school in high_schools %}
                 {% if selected_school and selected_school.dbn == school.dbn %}
-                    <a href="{% url 'high_school:overview' school.dbn %}"
+                    <a href="{% url 'dashboard:high_school:overview' 'ut_student' school.dbn %}"
                        class="list-group-item list-group-item-action active">
                 {% else %}
-                    <a href="{% url 'high_school:overview' school.dbn %}"
+                    <a href="{% url 'dashboard:high_school:overview' 'ut_student' school.dbn %}"
                        class="list-group-item list-group-item-action">
                 {% endif %}
             <div class="d-flex w-100 justify-content-between mb-2">
