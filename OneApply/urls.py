@@ -8,6 +8,7 @@ urlpatterns = [
     path("", include("landingpage.urls", namespace="landingpage")),
     path("login/", include("logIn.urls")),
     path("register/", include("register.urls")),
+    path("admissions/", include("admissions.urls")),
     path("dashboard/", include("dashboard.urls")),
     path("high_school/", include("high_school.urls")),
     path("admin/", admin.site.urls),

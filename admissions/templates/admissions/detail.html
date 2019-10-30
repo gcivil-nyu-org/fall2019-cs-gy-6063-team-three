@@ -1,0 +1,65 @@
+{% extends "dashboard/index.html" %}
+{% block content %}
+    <h5 style="margin: 1em; text-align: center;"><b>Application Form</b></h5>
+    <table class="table table-striped" style="border: 1px solid black; border-collapse:
+inherit; width: 75%; margin: 0 auto 2em;">
+        <tbody>
+        {% if application %}
+            <tr>
+                <th scope="row">Application Number</th>
+                <td>{{ application.application_number }}</td>
+            </tr>
+            <tr>
+                <th scope="row">First Name</th>
+                <td>{{ application.first_name }}</td>
+            </tr>
+            <tr>
+                <th scope="row">Last Name</th>
+                <td colspan="2">{{ application.last_name }}</td>
+            </tr>
+            <tr>
+                <th scope="row">Email Address</th>
+                <td>{{ application.email_address }}</td>
+            </tr>
+            <tr>
+                <th scope="row">Phone Number</th>
+                <td>{{ application.phoneNumber }}</td>
+            </tr>
+            <tr>
+                <th scope="row">Address</th>
+                <td>{{ application.address }}</td>
+            </tr>
+            <tr>
+                <th scope="row">Gender</th>
+                <td>{{ application.gender }}</td>
+            </tr>
+            <tr>
+                <th scope="row">Date of Birth</th>
+                <td>{{ application.date_of_birth }}</td>
+            </tr>
+            <tr>
+                <th scope="row">GPA</th>
+                <td>{{ application.gpa }}</td>
+            </tr>
+            <tr>
+                <th scope="row">Parent/Guardian Name</th>
+                <td>{{ application.parent_name }}</td>
+            </tr>
+            <tr>
+                <th scope="row">Parent/Guardian Phone Number</th>
+                <td>{{ application.parent_phoneNumber }}</td>
+            </tr>
+            <tr>
+                <th scope="row">Program Name</th>
+                <td colspan="2">{{ application.program }}</td>
+            </tr>
+            <tr>
+                <th scope="row">Date of Submission</th>
+                <td colspan="2">{{ application.submitted_date }}</td>
+            </tr>
+        {% else %}
+            <p>The application you are looking for doesn't exist.</p>
+        {% endif %}
+        </tbody>
+    </table>
+{% endblock %}
