@@ -42,5 +42,6 @@ class Student(User):
 
 @auto_str
 class Admin_Staff(User):
+    is_verified_employee = models.BooleanField(default=False)
     school = models.CharField(max_length=100, null=True, blank=True)
     supervisor_email = models.EmailField(max_length=100, null=True, blank=True)

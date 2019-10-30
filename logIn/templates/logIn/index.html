@@ -23,6 +23,9 @@
                         <label for={{ field.id_for_label }}>{{ field.label }}</label>
                     </div>
                 {% endfor %}
+                {% if verif_error %}
+                    <p class="errorlist" style="color: red">Supervisor verification is required</p>
+                {% endif %}
                 {% if valid_error %}
                     <p class="errorlist" style="color: red">Account has not been verified</p>
                 {% endif %}
