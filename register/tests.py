@@ -4,19 +4,38 @@ from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 
 from OneApply.constants import UserType
+from high_school.models import HighSchool
 from .forms import StudentRegisterForm, AdminStaffRegisterForm
 from .models import Student, Admin_Staff
 from .tokens import account_activation_token
 
 
 class AdmissionStaffViewTest(TestCase):
+    def create_school(self):
+        return HighSchool.objects.create(
+            id=1,
+            dbn="DBN1",
+            school_name="GMU",
+            boro="B",
+            overview_paragraph="Overview1",
+            neighborhood="Neighborhood1",
+            location="1, ABCD Street",
+            phone_number=9173924885,
+            school_email="school@gmu.com",
+            website="www.gmu.com",
+            total_students=1000,
+            start_time=123,
+            end_time=124,
+            graduation_rate=80,
+        )
+
     def setUp(self):
+        self.create_school()
         self.adminStaff = {
             "username": "jwang",
             "first_name": "Jenny",
             "last_name": "Wang",
             "email_address": "jenny.wang@gmail.com",
-            "school": "NYU",
             "supervisor_email": "jack.w@nyu.edu",
             "input_password": "Jenny@1234",
             "confirm_password": "Jenny@1234",
@@ -34,7 +53,6 @@ class AdmissionStaffViewTest(TestCase):
             "first_name": "Jenny",
             "last_name": "Wang",
             "email_address": "jenny.wang@gmail.com",
-            "school": "NYU",
             "supervisor_email": "jack.w@nyu.edu",
             "input_password": "Jenny@1234",
             "confirm_password": "Jenny@1234",
@@ -50,12 +68,28 @@ class AdmissionStaffViewTest(TestCase):
 
 class AdmissionStaffModelTest(TestCase):
     def create_admission_staff(self):
+        hs = HighSchool.objects.create(
+            id=1,
+            dbn="DBN1",
+            school_name="GMU",
+            boro="B",
+            overview_paragraph="Overview1",
+            neighborhood="Neighborhood1",
+            location="1, ABCD Street",
+            phone_number=9173924885,
+            school_email="school@gmu.com",
+            website="www.gmu.com",
+            total_students=1000,
+            start_time=123,
+            end_time=124,
+            graduation_rate=80,
+        )
         return Admin_Staff.objects.create(
             username="jwang",
             first_name="Jenny",
             last_name="Wang",
             email_address="jenny.wang@gmail.com",
-            school="NYU",
+            school=hs,
             supervisor_email="jack.w@nyu.edu",
             password="Jenny@1234",
         )
@@ -67,7 +101,6 @@ class AdmissionStaffModelTest(TestCase):
         self.assertEqual(admissions_staff.first_name, "Jenny")
         self.assertEqual(admissions_staff.last_name, "Wang")
         self.assertEqual(admissions_staff.email_address, "jenny.wang@gmail.com")
-        self.assertEqual(admissions_staff.school, "NYU")
         self.assertEqual(admissions_staff.supervisor_email, "jack.w@nyu.edu")
 
     def test_get_admission(self):
@@ -88,7 +121,6 @@ class AdmissionsFormTest(TestCase):
             "first_name": "Jenny",
             "last_name": "Wang",
             "email_address": "jenny.wang@gmail.com",
-            "school": "NYU",
             "supervisor_email": "jack.w@nyu.edu",
             "input_password": "Jenny@1234",
             "confirm_password": "Jenny@1234",
@@ -102,7 +134,6 @@ class AdmissionsFormTest(TestCase):
             "first_name": "Jenny",
             "last_name": "Wang",
             "email_address": "jenny.wang@gmail.com",
-            "school": "NYU",
             "supervisor_email": "jack.w@nyu.edu",
             "input_password": "Jenny1234",
             "confirm_password": "Jenny1234",
@@ -117,7 +148,6 @@ class AdmissionsFormTest(TestCase):
             "first_name": "Jenny",
             "last_name": "Wang",
             "email_address": "jenny.wang@gmail.com",
-            "school": "NYU",
             "supervisor_email": "jack.w@nyu.edu",
             "input_password": "Jenny@1234",
             "confirm_password": "Jenny@1234567",

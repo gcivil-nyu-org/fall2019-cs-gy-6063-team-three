@@ -5,6 +5,8 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
+
+from high_school.models import HighSchool
 from register.models import Student
 from .forms import StudentRegisterForm, AdminStaffRegisterForm
 from .tokens import account_activation_token
@@ -43,6 +45,7 @@ def register_user(request, user_type):
             if form is not None and form.is_valid():
                 password = form.cleaned_data["input_password"]
                 f = form.save(commit=False)
+                f.school = HighSchool.objects.get(id=1)
                 f.password = password
                 f.save()
                 return HttpResponse("Registered Successfully!")

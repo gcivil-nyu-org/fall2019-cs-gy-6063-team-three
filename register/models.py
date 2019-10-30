@@ -45,5 +45,6 @@ class Student(User):
 
 @auto_str
 class Admin_Staff(User):
-    school = models.ForeignKey(HighSchool, on_delete=models.CASCADE)
+    school = models.ForeignKey(HighSchool, on_delete=models.CASCADE, null=True,
+                               blank=True)
     supervisor_email = models.EmailField(max_length=100, null=True, blank=True)

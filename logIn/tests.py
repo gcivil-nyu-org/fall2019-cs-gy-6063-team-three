@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
 
+from high_school.models import HighSchool
 from .forms import LoginForm
 from OneApply.constants import UserType
 from register.models import Student, Admin_Staff
@@ -54,14 +55,33 @@ class LoginStudentViewTest(TestCase):
 
 
 class LoginAdminStaffViewTest(TestCase):
+    def create_school(self):
+        return HighSchool.objects.create(
+            id=1,
+            dbn="DBN1",
+            school_name="GMU",
+            boro="B",
+            overview_paragraph="Overview1",
+            neighborhood="Neighborhood1",
+            location="1, ABCD Street",
+            phone_number=9173924885,
+            school_email="school@gmu.com",
+            website="www.gmu.com",
+            total_students=1000,
+            start_time=123,
+            end_time=124,
+            graduation_rate=80,
+        )
+
     def create_admin_staff(self):
+        hs = self.create_school()
         return Admin_Staff.objects.create(
             first_name="Hritik",
             last_name="Roshan",
             email_address="hrx@gmail.com",
             username="hritik",
             password="hritikRoshan@10",
-            school="NYU",
+            school=hs,
             supervisor_email="hrx@gmail.com",
         )
 
