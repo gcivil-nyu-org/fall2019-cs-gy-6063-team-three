@@ -38,10 +38,17 @@ class HighSchoolListView(ListView):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.dbn = None
+        self.query = None
 
     def get_queryset(self):
         if "dbn" in self.kwargs:
             self.dbn = self.kwargs["dbn"]
+        self.query = self.request.GET.get("q")
+        """if query:
+            return HighSchool.objects.filter(school_name__icontains=query).order_by(
+                "school_name"
+            )  # noqa: E501
+        else:"""
         return HighSchool.objects.order_by("school_name")
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -52,4 +59,10 @@ class HighSchoolListView(ListView):
         # context['unauthorized'] = True
         if self.dbn:
             context["selected_school"] = get_object_or_404(HighSchool, dbn=self.dbn)
+        if self.query:
+            context["high_schools"] = HighSchool.objects.filter(
+                school_name__icontains=self.query
+            ).order_by(
+                "school_name"
+            )  # noqa: E501
         return context

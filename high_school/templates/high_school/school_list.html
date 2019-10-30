@@ -1,6 +1,10 @@
 {% block school_list %}
     <div style="height: 90%; overflow-y: scroll; margin-bottom: 5%;">
         <div class="list-group">
+                <form method='GET'>
+                    <input type='text' name='q' value='{{ request.GET.q }}'>
+                    <input class="button" type='submit' value="Search Schools">
+                </form>
             {% for school in high_schools %}
                 {% if selected_school and selected_school.dbn == school.dbn %}
                     <a href="{% url 'dashboard:high_school:overview' 'ut_student' school.dbn %}"
