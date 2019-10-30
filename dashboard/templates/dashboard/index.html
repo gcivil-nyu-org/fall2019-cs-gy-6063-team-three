@@ -1,82 +1,100 @@
-
 {% load staticfiles %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- Bootstrap core CSS -->
-<link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
 
-<!-- Custom styles for this template -->
-<link href="{% static 'dashboard/blog.css' %}" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="{% static 'dashboard/blog.css' %}" rel="stylesheet">
 
-<!--script-->
-<script src="//cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+    <!--script-->
+    {#  commented scripts below because all_schools functionality fails with jquery  #}
+    {#  TODO: check this in a later sprint  #}
+    {#        <script src="//cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>#}
+    {##}
+    {#        <script src="//cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>#}
 
-<script src="//cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-
-<title>OneApply</title>
+    <title>OneApply</title>
 </head>
 <body>
-  <nav class="navbar navbar-expand-md navbar-dark bg-primary mb-4">
-  	<a class="navbar-brand" href="#">OneApply</a>
-  		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-    		<span class="navbar-toggler-icon"></span>
-  		</button>
-  	<div class="collapse navbar-collapse" id="navbarCollapse">
-    <ul class="navbar-nav mr-auto">
+<div style="display: flex; flex-direction: column; width: 100%; height: 100%;">
+    <div class="nav-container">
+        <nav class="navbar navbar-expand-md navbar-dark bg-primary mb-4">
+            <a class="navbar-brand" href="#">OneApply</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse"
+                    data-target="#navbarCollapse" aria-controls="navbarCollapse"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="navbar-nav mr-auto">
 
-    </ul>
- 
- 	<a class="nav-link" href ='#'>Profile</a>  
- 	<a class="nav-link" href ="{% url 'landingpage:index' %}">Logout</a>
+                </ul>
 
-  </div>
- </nav>
+                <a class="nav-link" href='#'>Profile</a>
+                <a class="nav-link" href="{% url 'landingpage:index' %}">Logout</a>
 
-  <div class="nav-scroller py-1 mb-2">
-  	{% if user_type == constant_ut_student %}
-    <nav class="nav d-flex justify-content-between">
-      <a class="p-2 text-muted active" href="#selected_schools" data-toggle="tab">Selected Schools</a>
-      <a class="p-2 text-muted" href="#all_schools" data-toggle="tab">All Schools</a>
-      <a class="p-2 text-muted" href="#application_forms" data-toggle="tab">Application Forms</a>
-      <a class="p-2 text-muted" href="#teacher_recommendations" data-toggle="tab">Teacher Recommendations</a>
-    </nav>
+            </div>
+        </nav>
+
+        <div class="nav-scroller py-1 mb-2">
+            {% if user_type == constant_ut_student %}
+                <nav class="nav d-flex justify-content-between">
+                    <a class="p-2 text-muted" href="#selected_schools" data-toggle="tab">Selected
+                        Schools</a>
+                    {# TODO: update this    #}
+                    {# this has to be a user object and not a user_type string  #}
+                    <a class="p-2 text-muted active"
+                       href="{% url 'dashboard:high_school:index' 'ut_student' %}"
+                       data-toggle="tab">All Schools</a>
+                    <a class="p-2 text-muted" href="#application_forms" data-toggle="tab">Application
+                        Forms</a>
+                    <a class="p-2 text-muted" href="#teacher_recommendations" data-toggle="tab">Teacher
+                        Recommendations</a>
+                </nav>
+            {% elif user_type == constant_ut_adminStaff %}
+                <nav class="nav d-flex">
+                    <a class="p-2 text-muted active" href="#student_applications" data-toggle="tab">Student
+                        Applications</a>
+                    <a class="p-2 text-muted" href="#school_informations" data-toggle="tab">School
+                        Informations</a>
+                </nav>
+            {% endif %}
+        </div>
+    </div>
+    {% if user_type == constant_ut_student %}
+        <div id="myTabContent" class="tab-content">
+            <div class="tab-pane" id="selected_schools">
+                <h1>Hello, this is selected schools page</h1>
+            </div>
+            <div class="tab-pane active" id="all_schools">
+                {% block all_high_schools %}
+                {% endblock %}
+            </div>
+            <div class="tab-pane" id="application_forms">
+                <h1>Hello, this is application forms page</h1>
+            </div>
+            <div class="tab-pane" id="teacher_recommendations">
+                <h1>Hello, this is teacher recommendations page</h1>
+            </div>
+        </div>
     {% elif user_type == constant_ut_adminStaff %}
-    <nav class="nav d-flex">
-      <a class="p-2 text-muted active" href="#student_applications" data-toggle="tab">Student Applications</a>
-      <a class="p-2 text-muted" href="#school_informations" data-toggle="tab">School Informations</a>
-    </nav>  
-    {% endif %}  
-  </div>
- {% if user_type == constant_ut_student %}
- <div id="myTabContent" class="tab-content">
-    <div class = "active tab-pane" id="selected_schools">
- 	    <h1>Hello, this is selected schools page</h1>
-    </div>
-    <div class = "tab-pane" id="all_schools">
-        <h1>Hello, this is all shcools page</h1>
-    </div>
-    <div class = "tab-pane", id="application_forms">
- 	    <h1>Hello, this is application forms page</h1>
-    </div>
-    <div class= "tab-pane" id="teacher_recommendations">
-        <h1>Hello, this is teacher recommendations page</h1>
-    </div>
+        <div id="myTabContent" class="tab-content">
+            <div class="active tab-pane" id="student_applications">
+                <h1>Hello, this is student applications page</h1>
+            </div>
+            <div class="tab-pane" id="school_informations">
+                <h1>Hello, this is school informations page</h1>
+            </div>
+        </div>
+    {% endif %}
+    <footer class="blog-footer">
+        <p>
+            <a href="#">Back to top</a>
+        </p>
+    </footer>
 </div>
-{% elif user_type == constant_ut_adminStaff %}
- <div id="myTabContent" class="tab-content">
-    <div class = "active tab-pane" id="student_applications">
- 	    <h1>Hello, this is student applications page</h1>
-    </div>
-    <div class = "tab-pane" id="school_informations">
-        <h1>Hello, this is school informations page</h1>
-    </div>
-</div>
-{% endif %}
-<footer class="blog-footer">
-  <p>
-    <a href="#">Back to top</a>
-  </p>
-</footer>
 </body>
 </html>
