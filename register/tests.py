@@ -92,6 +92,7 @@ class AdmissionStaffModelTest(TestCase):
             school=hs,
             supervisor_email="jack.w@nyu.edu",
             password="Jenny@1234",
+            is_active=True,
         )
 
     def test_create_admission(self):
@@ -155,6 +156,71 @@ class AdmissionsFormTest(TestCase):
         form = AdminStaffRegisterForm(data=data)
         self.assertFalse(form.is_valid())
         self.assertFalse("confirm_password" in form.cleaned_data)
+
+
+class AdmissionsViewActivateTest(TestCase):
+    def create_admission_staff(self):
+        return Admin_Staff.objects.create(
+            username="jwang",
+            first_name="Jenny",
+            last_name="Wang",
+            email_address="jenny.wang@gmail.com",
+            school="NYU",
+            supervisor_email="jack.w@nyu.edu",
+            password="Jenny@1234",
+        )
+
+    def setUp(self):
+        self.admission_staff = self.create_admission_staff()
+
+    def test_verification_admission_staff(self):
+        uid64 = urlsafe_base64_encode(force_bytes(self.admission_staff.pk))
+        token = account_activation_token.make_token(self.admission_staff)
+        url = reverse("verify_employee_status", args=[uid64, token])
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_invalid_id_verification_admission_staff(self):
+        uid64 = urlsafe_base64_encode(force_bytes(1000000))
+        token = account_activation_token.make_token(self.admission_staff)
+        url = reverse("verify_employee_status", args=[uid64, token])
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_invalid_token_verification_admission_staff(self):
+        uid64 = urlsafe_base64_encode(force_bytes(self.admission_staff.pk))
+        token = account_activation_token.make_token(self.admission_staff)
+        token = token[:-3]
+        token += "xyz"
+        url = reverse("verify_employee_status", args=[uid64, token])
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_activation_admission_staff(self):
+        uid64 = urlsafe_base64_encode(force_bytes(self.admission_staff.pk))
+        token = account_activation_token.make_token(self.admission_staff)
+        url = reverse("activate_admission_account", args=[uid64, token])
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_invalid_id_activation_admission_staff(self):
+        uid64 = urlsafe_base64_encode(force_bytes(10000000))
+        token = account_activation_token.make_token(self.admission_staff)
+        url = reverse("activate_admission_account", args=[uid64, token])
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_invalid_token_activation_student(self):
+        uid64 = urlsafe_base64_encode(force_bytes(self.admission_staff.pk))
+        token = account_activation_token.make_token(self.admission_staff)
+        token = token[:-3]
+        token += "xyz"
+        url = reverse("activate_admission_account", args=[uid64, token])
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, 200)
+
+    def tearDown(self):
+        self.admission_staff.delete()
 
 
 class StudentModelTest(TestCase):

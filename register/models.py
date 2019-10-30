@@ -48,4 +48,5 @@ class Admin_Staff(User):
     school = models.ForeignKey(
         HighSchool, on_delete=models.CASCADE, null=True, blank=True
     )
+    is_verified_employee = models.BooleanField(default=False)
     supervisor_email = models.EmailField(max_length=100, null=True, blank=True)
