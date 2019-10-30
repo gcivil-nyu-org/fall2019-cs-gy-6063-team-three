@@ -10,31 +10,74 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-        ('high_school', '0001_initial'),
-        ('register', '0001_initial'),
-    ]
+    dependencies = [("high_school", "0001_initial"), ("register", "0001_initial")]
 
     operations = [
         migrations.CreateModel(
-            name='HighSchoolApplication',
+            name="HighSchoolApplication",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('application_number', models.IntegerField()),
-                ('first_name', models.CharField(max_length=50)),
-                ('last_name', models.CharField(max_length=50)),
-                ('email_address', models.EmailField(max_length=50, validators=[django.core.validators.EmailValidator()])),
-                ('phoneNumber', models.CharField(max_length=15, validators=[django.core.validators.RegexValidator("r'^([1-9]{1}\\d{2}) \\d{3} -\\d{4}'")])),
-                ('address', models.CharField(max_length=100)),
-                ('gender', models.CharField(max_length=15)),
-                ('date_of_birth', models.DateField()),
-                ('gpa', models.DecimalField(decimal_places=2, max_digits=3)),
-                ('parent_name', models.CharField(max_length=100)),
-                ('parent_phoneNumber', models.CharField(max_length=15, validators=[django.core.validators.RegexValidator("r'^([1-9]{1}\\d{2}) \\d{3} -\\d{4}'")])),
-                ('program', models.CharField(max_length=100)),
-                ('submitted_date', models.DateTimeField(default=datetime.datetime.now)),
-                ('school', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='high_school.HighSchool')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='register.Student')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("application_number", models.IntegerField()),
+                ("first_name", models.CharField(max_length=50)),
+                ("last_name", models.CharField(max_length=50)),
+                (
+                    "email_address",
+                    models.EmailField(
+                        max_length=50,
+                        validators=[django.core.validators.EmailValidator()],
+                    ),
+                ),
+                (
+                    "phoneNumber",
+                    models.CharField(
+                        max_length=15,
+                        validators=[
+                            django.core.validators.RegexValidator(
+                                "r'^([1-9]{1}\\d{2}) \\d{3} -\\d{4}'"
+                            )
+                        ],
+                    ),
+                ),
+                ("address", models.CharField(max_length=100)),
+                ("gender", models.CharField(max_length=15)),
+                ("date_of_birth", models.DateField()),
+                ("gpa", models.DecimalField(decimal_places=2, max_digits=3)),
+                ("parent_name", models.CharField(max_length=100)),
+                (
+                    "parent_phoneNumber",
+                    models.CharField(
+                        max_length=15,
+                        validators=[
+                            django.core.validators.RegexValidator(
+                                "r'^([1-9]{1}\\d{2}) \\d{3} -\\d{4}'"
+                            )
+                        ],
+                    ),
+                ),
+                ("program", models.CharField(max_length=100)),
+                ("submitted_date", models.DateTimeField(default=datetime.datetime.now)),
+                (
+                    "school",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="high_school.HighSchool",
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="register.Student",
+                    ),
+                ),
             ],
-        ),
+        )
     ]
