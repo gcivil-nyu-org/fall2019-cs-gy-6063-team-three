@@ -1,6 +1,5 @@
 from django.db import models
 from django.core import validators
-from django.core.validators import RegexValidator
 from datetime import datetime
 
 from high_school.models import HighSchool
@@ -29,17 +28,13 @@ class HighSchoolApplication(models.Model):
     email_address = models.EmailField(
         max_length=50, validators=[validators.validate_email]
     )
-    phoneNumber = models.CharField(
-        max_length=15, validators=[RegexValidator(PHONE_REGEX)]
-    )
+    phoneNumber = models.CharField(max_length=15)
     address = models.CharField(max_length=100)
     gender = models.CharField(max_length=15)
     date_of_birth = models.DateField()
     gpa = models.DecimalField(max_digits=3, decimal_places=2)
     parent_name = models.CharField(max_length=100)
-    parent_phoneNumber = models.CharField(
-        max_length=15, validators=[RegexValidator(PHONE_REGEX)]
-    )
+    parent_phoneNumber = models.CharField(max_length=15)
     school = models.ForeignKey(HighSchool, on_delete=models.CASCADE)
     program = models.CharField(max_length=100)
     submitted_date = models.DateTimeField(default=datetime.now)
