@@ -44,7 +44,7 @@ def login_user(request, user_type):
                         login_error = True
                     else:
                         return HttpResponseRedirect(
-                            reverse("admissions:index"), args=(user.id,)
+                            reverse("admissions:index", args=(user.id,))
                         )
     else:
         form = LoginForm()

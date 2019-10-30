@@ -160,12 +160,28 @@ class AdmissionsFormTest(TestCase):
 
 class AdmissionsViewActivateTest(TestCase):
     def create_admission_staff(self):
+        hs = HighSchool.objects.create(
+            id=1,
+            dbn="DBN1",
+            school_name="GMU",
+            boro="B",
+            overview_paragraph="Overview1",
+            neighborhood="Neighborhood1",
+            location="1, ABCD Street",
+            phone_number=9173924885,
+            school_email="school@gmu.com",
+            website="www.gmu.com",
+            total_students=1000,
+            start_time=123,
+            end_time=124,
+            graduation_rate=80,
+        )
         return Admin_Staff.objects.create(
             username="jwang",
             first_name="Jenny",
             last_name="Wang",
             email_address="jenny.wang@gmail.com",
-            school="NYU",
+            school=hs,
             supervisor_email="jack.w@nyu.edu",
             password="Jenny@1234",
         )
