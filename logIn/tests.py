@@ -48,6 +48,13 @@ class LoginStudentViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIsNotNone(Student.objects.get(username="hritik"))
 
+    def test_invalid_username_login_student(self):
+        data = {"username": "hritick", "password": "hritikRoshan@10"}
+        url = reverse("logIn:login_user", args=[UserType.STUDENT])
+        response = self.client.post(url, data=data)
+        self.assertEqual(response.status_code, 200)
+        self.assertIsNotNone(Student.objects.get(username="hritik"))
+
     def tearDown(self):
         self.student.delete()
 
@@ -62,19 +69,28 @@ class LoginAdminStaffViewTest(TestCase):
             password="hritikRoshan@10",
             school="NYU",
             supervisor_email="hrx@gmail.com",
+            is_verified_employee=True,
+            is_active=True,
         )
 
     def setUp(self):
         self.admin_staff = self.create_admin_staff()
 
     def test_valid_login_admin_staff(self):
-        data = {"username": "hritick", "password": "hritikRoshan@10"}
+        data = {"username": "hritik", "password": "hritikRoshan@10"}
         url = reverse("logIn:login_user", args=[UserType.ADMIN_STAFF])
         response = self.client.post(url, data=data)
         self.assertEqual(response.status_code, 200)
         self.assertIsNotNone(Admin_Staff.objects.get(username="hritik"))
 
     def test_invalid_login_admin_staff(self):
+        data = {"username": "hritik", "password": "hritikRoshan@12"}
+        url = reverse("logIn:login_user", args=[UserType.ADMIN_STAFF])
+        response = self.client.post(url, data=data)
+        self.assertEqual(response.status_code, 200)
+        self.assertIsNotNone(Admin_Staff.objects.get(username="hritik"))
+
+    def test_invalid_username_admin_staff(self):
         data = {"username": "hritick", "password": "hritikRoshan@12"}
         url = reverse("logIn:login_user", args=[UserType.ADMIN_STAFF])
         response = self.client.post(url, data=data)

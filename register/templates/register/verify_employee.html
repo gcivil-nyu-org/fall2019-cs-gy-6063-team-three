@@ -1,0 +1,11 @@
+{% autoescape off %}
+Hi,
+
+{{user.first_name}} {{user.last_name}} has signed up as an admissions staff user from {{ user.school }} for our website.
+As their supervisor, you must verify their employment before they can use the site.
+Please click on the link to confirm their employment and allow them to verify their account,
+http://{{ domain }}{% url 'verify_employee_status' uidb64=uid token=token %}
+
+Thank you,
+One Apply Registration Team
+{% endautoescape %}
