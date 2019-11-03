@@ -21,7 +21,7 @@ def save_highschool_data(request, user_type):
             serializer = HighSchoolSerializer(data=results, many=True)
             for x in range(limit):
                 # for testing purposes, we should not be using actual high school emails
-                # all school emails are replaced with Patryk's email for future implementation of
+                # all school emails are replaced with Patryk's email for future implementation of # noqa : E501
                 # supervisor email being taken directly from the school.
                 serializer.initial_data[x]["school_email"] = "pp2224@nyu.edu"
                 try:
@@ -30,7 +30,9 @@ def save_highschool_data(request, user_type):
                     # some fields have text after the time that is not necessary
                     if serializer.initial_data[x]["start_time"]:
                         am_loc = serializer.initial_data[x]["start_time"].find("am")
-                        serializer.initial_data[x]["start_time"] = serializer.initial_data[x]["start_time"][:am_loc+2]
+                        serializer.initial_data[x][
+                            "start_time"
+                        ] = serializer.initial_data[x]["start_time"][: am_loc + 2]
                 except KeyError:
                     # if there is no start time provided in the info set it to N/A
                     serializer.initial_data[x]["start_time"] = "N/A"
@@ -40,7 +42,9 @@ def save_highschool_data(request, user_type):
                     # some fields have text after the time that is not necessary
                     if serializer.initial_data[x]["end_time"]:
                         pm_loc = serializer.initial_data[x]["end_time"].find("pm")
-                        serializer.initial_data[x]["end_time"] = serializer.initial_data[x]["end_time"][:pm_loc+2]
+                        serializer.initial_data[x][
+                            "end_time"
+                        ] = serializer.initial_data[x]["end_time"][: pm_loc + 2]
                 except KeyError:
                     # if there is no end time provided in the info set it to N/A
                     serializer.initial_data[x]["end_time"] = "N/A"
