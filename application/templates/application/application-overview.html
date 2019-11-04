@@ -2,17 +2,16 @@
     {% if selected_app %}
         <div class="top-header">
             <div class="right-pane-container">
-                {% if not selected_ap.is_draft %}
-                    {% for name, value in selected_ap.get_fields %}
-                <h5 class="mb-3">{{name}} -> {{ value }}</h5>
-                {% endfor %}
-
-        </div>
-        <div style="margin: 7.5%" class="justify-content-between">
-            {{ selected_ap.overview_paragraph }}
-        </div>
+                {% if not selected_app.is_draft %}
+                    {% for name, value in selected_app.get_fields %}
+                        <h5 class="mb-3">{{name}} -> {{ value }}</h5>
+                    {% endfor %}
+            </div>
+            <div style="margin: 7.5%" class="justify-content-between">
+                {{ selected_app.overview_paragraph }}
+            </div>
             {% else %}
-            <form action="{% url 'application:draftExistingApplication' user_id selected_ap.pk %}" method="post" class="form-signup" style="padding-top: 100px;">
+            <form action="{% url 'dashboard:application:draftExistingApplication' user_type user_id selected_app.pk %}" method="post" class="form-signup" style="padding-top: 100px;">
                 {% csrf_token %}
                 <div class="form-row">
                     <div class="form-label-group col-md-6">

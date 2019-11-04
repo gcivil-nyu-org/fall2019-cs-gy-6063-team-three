@@ -1,14 +1,14 @@
 {% block app_list %}
     <div style="height: 90%; overflow-y: scroll; margin-bottom: 5%;">
-        <a href="{% url 'application:draftApplication' user_id %}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Apply to high school</a>
+        <a href="{% url 'dashboard:application:draftApplication' user_type user_id %}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Apply to high school</a>
         <div class="list-group">
             {% if applications %}
             {% for app in applications %}
                 {% if selected_app and selected_app.pk == app.pk %}
-                    <a href="{% url 'application:overview' user_id app.pk %}"
+                    <a href="{% url 'dashboard:application:overview' user_type user_id app.pk %}"
                        class="list-group-item list-group-item-action active">
                 {% else %}
-                    <a href="{% url 'application:overview' user_id app.pk %}"
+                    <a href="{% url 'dashboard:application:overview' user_type user_id app.pk %}"
                        class="list-group-item list-group-item-action">
                 {% endif %}
             <div class="d-flex w-100 justify-content-between mb-2">

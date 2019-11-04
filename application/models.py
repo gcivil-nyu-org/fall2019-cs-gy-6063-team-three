@@ -10,7 +10,9 @@ from register.models import Student
 
 class HighSchoolApplication(models.Model):
     application_number = models.CharField(max_length=10)
-    user = models.ForeignKey(Student, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        Student, on_delete=models.CASCADE, related_name="high_school_app_user"
+    )
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     email_address = models.EmailField(

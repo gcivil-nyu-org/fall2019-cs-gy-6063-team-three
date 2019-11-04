@@ -8,6 +8,10 @@ urlpatterns = [
     # TODO: Change this to path, and don't use rul
     url("ut_admin_staff/", include("admissions.urls")),
     path("", include("high_school.urls"), name="all_schools"),
-    path("<str:user_type>/", views.dashboard, name="dashboard"),
-    path("application/", include("application.urls"), name="application"),
+    path("<str:user_type>/<int:user_id>/", views.dashboard, name="dashboard"),
+    path(
+        "<str:user_type>/<int:user_id>/applications/",
+        include("application.urls"),
+        name="application",
+    ),
 ]

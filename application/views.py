@@ -6,7 +6,7 @@ from django.utils import timezone
 from django.urls import reverse
 
 
-def draft_application(request, user_id):
+def new_application(request, user_type, user_id):
     if request.method == "POST":
         form = HighSchoolApplicationForm(request.POST)
         if form.is_valid():
@@ -22,14 +22,16 @@ def draft_application(request, user_id):
             except:  # noqa: E722
                 pass
             f.save()
-            return HttpResponseRedirect(reverse("application:index", args=(user_id,)))
+            return HttpResponseRedirect(
+                reverse("dashboard:application:index", args=(user_type, user_id))
+            )
     else:
         form = HighSchoolApplicationForm()
-    context = {"form": form, "user_id": user_id}
+    context = {"form": form, "user_type": user_type, "user_id": user_id}
     return render(request, "application/application-form.html", context)
 
 
-def draft_existing_application(request, user_id, application_id):
+def save_existing_application(request, user_type, user_id, application_id):
     if request.method == "POST":
         form = HighSchoolApplicationForm(request.POST)
         if form.is_valid():
@@ -52,29 +54,35 @@ def draft_existing_application(request, user_id, application_id):
             try:
                 if "Submit" in request.POST.get("submit"):
                     f.is_draft = False
-                    print("iiffff")
                 else:
                     f.is_draft = True
-                    print("elseeeee")
             except:  # noqa: E722
                 f.is_draft = True
             f.save()
-            return HttpResponseRedirect(reverse("application:index", args=(user_id,)))
+            return HttpResponseRedirect(
+                reverse("dashboard:application:index", args=(user_type, user_id))
+            )
     else:
         form = HighSchoolApplicationForm()
-    context = {"form": form, "application_id": application_id, "user_id": user_id}
-    return render(request, "application/index.html", context)
-
-
-def index(request, user_id):
     context = {
-        "applications": HighSchoolApplication.objects.filter(user_id=user_id),
+        "form": form,
+        "application_id": application_id,
+        "user_type": user_type,
         "user_id": user_id,
     }
     return render(request, "application/index.html", context)
 
 
-def detail(request, user_id, application_id):
+def index(request, user_type, user_id):
+    context = {
+        "applications": HighSchoolApplication.objects.filter(user_id=user_id),
+        "user_id": user_id,
+        "user_type": user_type,
+    }
+    return render(request, "application/index.html", context)
+
+
+def detail(request, user_type, user_id, application_id):
     application = HighSchoolApplication.objects.get(pk=application_id)
     data = {
         "pk": application.pk,
@@ -98,5 +106,6 @@ def detail(request, user_id, application_id):
         "selected_school": application,
         "form": form,
         "user_id": user_id,
+        "user_type": user_type,
     }
     return render(request, "application/index.html", context)
