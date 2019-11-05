@@ -6,7 +6,7 @@ app_name = "application"
 urlpatterns = [
     path("", views.index, name="index"),
     path("detail/<int:application_id>/", views.detail, name="overview"),
-    path("apply/", views.new_application, name="draftApplication"),
+    path("apply/", views.new_application, name="new_application"),
     path(
         "detail/<int:application_id>/apply/",
         views.save_existing_application,

@@ -10,9 +10,10 @@ GENDER = [("", "Gender"), ("Male", "Male"), ("Female", "Female")]
 class HighSchoolApplicationForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields["gender"].label = "Gender"
 
         for field in self.fields.values():
-            field.widget.attrs.update({"class": "form-control", "placeholder": field})
+            field.widget.attrs.update({"class": "form-control"})
 
     class Meta:
         model = HighSchoolApplication

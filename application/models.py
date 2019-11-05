@@ -6,6 +6,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 
 from register.models import Student
+from high_school.models import HighSchool
 
 
 class HighSchoolApplication(models.Model):
@@ -27,7 +28,9 @@ class HighSchoolApplication(models.Model):
     )
     parent_name = models.CharField(max_length=100)
     parent_phoneNumber = PhoneNumberField()
-    school = models.CharField(max_length=100)
+    school = models.ForeignKey(
+        HighSchool, on_delete=models.CASCADE, related_name="high_school_app_school"
+    )
     program = models.CharField(max_length=100)
     is_draft = models.BooleanField(default=True)
     submitted_date = models.DateTimeField()

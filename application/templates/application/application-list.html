@@ -1,38 +1,36 @@
 {% block app_list %}
-    <div style="height: 90%; overflow-y: scroll; margin-bottom: 5%;">
-        <a href="{% url 'dashboard:application:draftApplication' user_type user_id %}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Apply to high school</a>
-        <div class="list-group">
-            {% if applications %}
-            {% for app in applications %}
-                {% if selected_app and selected_app.pk == app.pk %}
-                    <a href="{% url 'dashboard:application:overview' user_type user_id app.pk %}"
-                       class="list-group-item list-group-item-action active">
-                {% else %}
-                    <a href="{% url 'dashboard:application:overview' user_type user_id app.pk %}"
-                       class="list-group-item list-group-item-action">
-                {% endif %}
+<div style="height: 90%; overflow-y: scroll; margin-bottom: 5%; ">
+    <div class="list-group" style="margin-top:10px;">
+        {% if applications %}
+        {% for app in applications %}
+        {% if selected_app and selected_app.pk == app.pk %}
+        <a href="{% url 'dashboard:application:overview' app.pk %}"
+            class="list-group-item list-group-item-action active" style="margin-top:5px;">
+        {% else %}
+        <a href="{% url 'dashboard:application:overview' app.pk %}"
+            class="list-group-item list-group-item-action" style="margin-top:5px;">
+            {% endif %}
             <div class="d-flex w-100 justify-content-between mb-2">
-                <h4 class="mb-1" style="width: 75%">{{ app.school }} -<br/> {{ app.program }}</h4>
-
+                <h4 class="mb-1" style="width: 75%">{{ app.school.school_name }} -<br/> {{ app.program }}</h4>
                 <small class="pt-1"
-                       style="width: 25%; text-align: right; vertical-align: middle;">
-                                    <span style="font-size: 14px; padding: 4px;"><i
-                                            class="fas fa-bookmark  "></i></span>
-                    {{ app.application_number }} <br/>
-                    {% if app.is_draft %}
-                        Draft
-                        {% else %}
-                        Submitted
-                        {% endif %}
+                    style="width: 25%; text-align: right; vertical-align: middle;">
+                <span style="font-size: 14px; padding: 4px;"><i
+                    class="fas fa-bookmark  "></i></span>
+                {{ app.application_number }} <br/>
+                {% if app.is_draft %}
+                Draft
+                {% else %}
+                Submitted
+                {% endif %}
                 </small>
             </div>
-            </a>
-            {% endfor %}
-            {% else %} 
-            <div class="d-flex w-100 justify-content-between mb-2">
+        </a>
+        {% endfor %}
+        {% else %}
+        <div class="d-flex w-100 justify-content-between mb-2">
             <h4 class="mb-1" style="width: 75%">No applications submitted.</h4>
-            </div>
-            {% endif %}
         </div>
+        {% endif %}
     </div>
+</div>
 {% endblock %}

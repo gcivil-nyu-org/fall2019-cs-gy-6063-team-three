@@ -6,13 +6,17 @@ from django.utils import timezone
 from django.urls import reverse
 
 
-def new_application(request, user_type, user_id):
+def new_application(request):
     if request.method == "POST":
+        # user_id will be replaced by sessions
+        user_id = 1
         form = HighSchoolApplicationForm(request.POST)
         if form.is_valid():
             f = form.save(commit=False)
             f.user_id = user_id
-            f.application_number = str(user_id) + str(f.school) + str(f.program)
+            f.application_number = (
+                str(user_id) + str(f.school.school_name) + str(f.program)
+            )
             f.submitted_date = timezone.now()
             try:
                 if "Submit" in request.POST.get("submit"):
@@ -22,26 +26,27 @@ def new_application(request, user_type, user_id):
             except:  # noqa: E722
                 pass
             f.save()
-            return HttpResponseRedirect(
-                reverse("dashboard:application:index", args=(user_type, user_id))
-            )
+            return HttpResponseRedirect(reverse("application:index"))
     else:
         form = HighSchoolApplicationForm()
-    context = {"form": form, "user_type": user_type, "user_id": user_id}
+    context = {"form": form}
     return render(request, "application/application-form.html", context)
 
 
-def save_existing_application(request, user_type, user_id, application_id):
+def save_existing_application(request, application_id):
     if request.method == "POST":
         form = HighSchoolApplicationForm(request.POST)
         if form.is_valid():
+            user_id = 1
             f = HighSchoolApplication.objects.get(pk=application_id)
             form = form.save(commit=False)
             f.first_name = form.first_name
             f.last_name = form.last_name
             f.school = form.school
             f.program = form.program
-            f.application_number = str(user_id) + str(f.school) + str(f.program)
+            f.application_number = (
+                str(user_id) + str(f.school.school_name) + str(f.program)
+            )
             f.email_address = form.email_address
             f.phoneNumber = form.phoneNumber
             f.address = form.address
@@ -59,31 +64,22 @@ def save_existing_application(request, user_type, user_id, application_id):
             except:  # noqa: E722
                 f.is_draft = True
             f.save()
-            return HttpResponseRedirect(
-                reverse("dashboard:application:index", args=(user_type, user_id))
-            )
+            return HttpResponseRedirect(reverse("dashboard:application:index"))
     else:
         form = HighSchoolApplicationForm()
-    context = {
-        "form": form,
-        "application_id": application_id,
-        "user_type": user_type,
-        "user_id": user_id,
-    }
+    context = {"form": form, "application_id": application_id}
     return render(request, "application/index.html", context)
 
 
-def index(request, user_type, user_id):
-    context = {
-        "applications": HighSchoolApplication.objects.filter(user_id=user_id),
-        "user_id": user_id,
-        "user_type": user_type,
-    }
+def index(request):
+    user_id = 1
+    context = {"applications": HighSchoolApplication.objects.filter(user_id=user_id)}
     return render(request, "application/index.html", context)
 
 
-def detail(request, user_type, user_id, application_id):
+def detail(request, application_id):
     application = HighSchoolApplication.objects.get(pk=application_id)
+    user_id = 1
     data = {
         "pk": application.pk,
         "application_number": application.application_number,
@@ -103,9 +99,7 @@ def detail(request, user_type, user_id, application_id):
     form = HighSchoolApplicationForm(data)
     context = {
         "applications": HighSchoolApplication.objects.filter(user_id=user_id),
-        "selected_school": application,
+        "selected_app": application,
         "form": form,
-        "user_id": user_id,
-        "user_type": user_type,
     }
     return render(request, "application/index.html", context)

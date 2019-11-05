@@ -27,9 +27,7 @@ def login_user(request, user_type):
                     elif user.password != password:
                         login_error = True
                     else:
-                        return redirect(
-                            "dashboard:dashboard", UserType.STUDENT, user.id
-                        )
+                        return redirect("dashboard:dashboard", UserType.STUDENT)
             elif user_type == UserType.ADMIN_STAFF:
                 try:
                     user = Admin_Staff.objects.get(username=username)
@@ -43,9 +41,7 @@ def login_user(request, user_type):
                     elif user.password != password:
                         login_error = True
                     else:
-                        return redirect(
-                            "dashboard:dashboard", UserType.ADMIN_STAFF, user.id
-                        )
+                        return redirect("dashboard:dashboard", UserType.ADMIN_STAFF)
     else:
         form = LoginForm()
     context = {
