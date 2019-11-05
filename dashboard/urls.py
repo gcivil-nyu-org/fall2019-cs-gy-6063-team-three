@@ -13,4 +13,5 @@ urlpatterns = [
     # leave the initial path empty (""), check login.urls for more
     # path("", include("logIn.urls"), name="testing"),
     path("<str:user_type>/", views.dashboard, name="dashboard"),
+    path("", include("application.urls"), name="application"),
 ]
