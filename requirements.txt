@@ -12,3 +12,5 @@ coveralls
 PyYAML
 sodapy
 djangorestframework
+django-phonenumber-field
+phonenumbers
