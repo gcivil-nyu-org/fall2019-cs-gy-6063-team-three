@@ -24,10 +24,6 @@ body {
     /*overflow-x: hidden;*/
 }
 
-.pagination-div{
-    margin: 0% 7.5%;
-}
-
 .right-pane {
     background-color: whitesmoke;
     height: 100vh;
@@ -74,23 +70,4 @@ body {
 
 .list-group-item:last-child {
     margin-bottom: 5% !important;
-}
-/* Scrollbar - CSS*/
-/* Width */
-::-webkit-scrollbar {
-  width: 10px;
-}
-/* Track */
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #F39C12;
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #d4860b;
 }

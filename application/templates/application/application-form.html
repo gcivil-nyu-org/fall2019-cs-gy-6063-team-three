@@ -10,101 +10,111 @@
     <form action="{% url 'dashboard:application:new_application' %}" method="post" class="form-signup" style="padding-top: 10px;">
         {% csrf_token %}
         <div class="form-row">
-            <div class="form-label-group col-md-6"><label for={{ form.first_name.id_for_label }}>{{ form.first_name.label }}</label>
+            <div class="form-label-group col-md-6">
                 {{ form.first_name }}
+                <label for={{ form.first_name.id_for_label }}>{{ form.first_name.label }}</label>
                 {% if form.first_name.help_text %}
-                <p class="help">{{ form.first_name.help_text|safe }}</p>
+                    <p class="help">{{ form.first_name.help_text|safe }}</p>
                 {% endif %}
             </div>
             <div class="form-label-group col-md-6">
-                <label for={{ form.last_name.id_for_label }}>{{ form.last_name.label }}</label>
                 {{ form.last_name }}
+                <label for={{ form.last_name.id_for_label }}>{{ form.last_name.label }}</label>
                 {% if form.last_name.help_text %}
-                <p class="help">{{ form.last_name.help_text|safe }}</p>
+                    <p class="help">{{ form.last_name.help_text|safe }}</p>
                 {% endif %}
             </div>
         </div>
         <div class="form-row">
             <div class="form-label-group col-md-6">
-                {{ form.email_address.errors }}
-                <label for={{ form.email_address.id_for_label }}>{{ form.email_address.label }}</label>
                 {{ form.email_address }}
+                <label for={{ form.email_address.id_for_label }}>{{ form.email_address.label }}</label>
                 {% if form.email_address.errors %}
-                {{ form.email_address.errors }}
+                    {{ form.email_address.errors }}
                 {% endif %}
             </div>
             <div class="form-label-group col-md-6">
-                <label for={{ form.phoneNumber.id_for_label }}>{{ form.phoneNumber.label }}</label>
                 {{ form.phoneNumber }}
+                <label for={{ form.phoneNumber.id_for_label }}>{{ form.phoneNumber.label }}</label>
                 {% if form.phoneNumber.help_text %}
-                <p class="help">{{ form.phoneNumber.help_text|safe }}</p>
+                    <p class="help">{{ form.phoneNumber.help_text|safe }}</p>
+                {% endif %}
+                {% if form.phoneNumber.errors %}
+                    {{ form.phoneNumber.errors }}
                 {% endif %}
             </div>
         </div>
         <div class="form-row">
             <div class="form-label-group col-md-6">
-                <label for={{ form.date_of_birth.id_for_label }}>{{ form.date_of_birth.label }}</label>
                 {{ form.date_of_birth }}
+                <label for={{ form.date_of_birth.id_for_label }}>{{ form.date_of_birth.label }}</label>
                 {% if form.date_of_birth.help_text %}
-                <p class="help">{{ form.date_of_birth.help_text|safe }}</p>
+                    <p class="help">{{ form.date_of_birth.help_text|safe }}</p>
                 {% endif %}
             </div>
-            <div class="col-auto my-1 col-md-6">
-<!--                TODO : label does not get displayed-->
-                <label class="mr-sm-2 sr-only" for={{ form.gender.id_for_label }}>{{ form.gender.label }}</label>
+            <div class="form-label-group col-md-6">
                 {{ form.gender }}
+<!--                TODO : label does not get displayed-->
+                <label for={{ form.gender.id_for_label }}>{{ form.gender.label }}</label>
                 {% if form.gender.help_text %}
-                <p class="help">{{ form.gender.help_text|safe }}</p>
+                    <p class="help">{{ form.gender.help_text|safe }}</p>
                 {% endif %}
             </div>
         </div>
         <div class="form-row">
             <div class="form-label-group col-md-6">
-                <label for={{ form.address.id_for_label }}>{{ form.address.label }}</label>
                 {{ form.address }}
+                <label for={{ form.address.id_for_label }}>{{ form.address.label }}</label>
                 {% if form.address.help_text %}
-                <p class="help">{{ form.address.help_text|safe }}</p>
+                    <p class="help">{{ form.address.help_text|safe }}</p>
                 {% endif %}
             </div>
             <div class="form-label-group col-md-6">
-                <label for={{ form.gpa.id_for_label }}>{{ form.gpa.label }}</label>
                 {{ form.gpa }}
+                <label for={{ form.gpa.id_for_label }}>{{ form.gpa.label }}</label>
                 {% if form.gpa.errors %}
-                {{ form.gpa.errors }}
+                    {{ form.gpa.errors }}
                 {% endif %}
             </div>
         </div>
         <div class="form-row">
             <div class="form-label-group col-md-6">
-                <label for={{ form.parent_name.id_for_label }}>{{ form.parent_name.label }}</label>
                 {{ form.parent_name }}
+                <label for={{ form.parent_name.id_for_label }}>{{ form.parent_name.label }}</label>
                 {% if form.parent_name.errors %}
-                {{ form.parent_name.errors }}
+                    {{ form.parent_name.errors }}
                 {% endif %}
             </div>
             <div class="form-label-group col-md-6">
-                <label for={{ form.parent_phoneNumber.id_for_label }}>{{ form.parent_phoneNumber.label }}</label>
                 {{ form.parent_phoneNumber }}
+                <label for={{ form.parent_phoneNumber.id_for_label }}>{{ form.parent_phoneNumber.label }}</label>
                 {% if form.parent_phoneNumber.errors %}
-                {{ form.parent_phoneNumber.errors }}
+                    {{ form.parent_phoneNumber.errors }}
                 {% endif %}
             </div>
         </div>
         <div class="form-row">
             <div class="form-label-group col-md-6">
-                <label for={{ form.school.id_for_label }}>{{ form.school.label }}</label>
                 {{ form.school }}
+                <label for={{ form.school.id_for_label }}>{{ form.school.label }}</label>
             </div>
             <div class="form-label-group col-md-6">
-                <label for={{ form.username.id_for_label }}>{{ form.program.label }}</label>
                 {{ form.program }}
+                <label for={{ form.program.id_for_label }}>{{ form.program.label }}</label>
                 {% if form.program.help_text %}
-                <p class="help">{{ form.program.help_text|safe }}</p>
+                    <p class="help">{{ form.program.help_text|safe }}</p>
                 {% endif %}
             </div>
         </div>
-        <input class="btn btn-lg btn-primary btn-block" type="submit" value="Save as Draft" name="draft" style="margin-top:10px;"/>
-        <input class="btn btn-lg btn-primary btn-block" type="submit" value="Submit" name="submit"/>
+        <div class="form-row">
+            <div class="form-label-group col-md-6">
+                <input class="btn btn-lg btn-primary btn-block" type="submit" value="Save as Draft"
+                       name="draft" style="margin-top:10px;"/>
+            </div>
+            <div class="form-label-group col-md-6">
+                <input class="btn btn-lg btn-primary btn-block" type="submit" value="Submit" name="submit"/>
+            </div>
+        </div>
     </form>
 </div>
 {% endblock %}

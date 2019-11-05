@@ -8,7 +8,7 @@ from django.urls import reverse
 
 def new_application(request):
     if request.method == "POST":
-        # user_id will be replaced by sessions
+        # TODO user_id will be replaced by sessions
         user_id = 1
         form = HighSchoolApplicationForm(request.POST)
         if form.is_valid():
@@ -37,6 +37,7 @@ def save_existing_application(request, application_id):
     if request.method == "POST":
         form = HighSchoolApplicationForm(request.POST)
         if form.is_valid():
+            # TODO user_id will be replaced by sessions
             user_id = 1
             f = HighSchoolApplication.objects.get(pk=application_id)
             form = form.save(commit=False)
@@ -56,12 +57,9 @@ def save_existing_application(request, application_id):
             f.parent_name = form.parent_name
             f.parent_phoneNumber = form.parent_phoneNumber
             f.submitted_date = timezone.now()
-            try:
-                if "Submit" in request.POST.get("submit"):
-                    f.is_draft = False
-                else:
-                    f.is_draft = True
-            except:  # noqa: E722
+            if request.POST.get("submit") is not None:
+                f.is_draft = False
+            else:
                 f.is_draft = True
             f.save()
             return HttpResponseRedirect(reverse("dashboard:application:index"))
@@ -72,6 +70,7 @@ def save_existing_application(request, application_id):
 
 
 def index(request):
+    # TODO user_id will be replaced by sessions
     user_id = 1
     context = {"applications": HighSchoolApplication.objects.filter(user_id=user_id)}
     return render(request, "application/index.html", context)
@@ -79,6 +78,7 @@ def index(request):
 
 def detail(request, application_id):
     application = HighSchoolApplication.objects.get(pk=application_id)
+    # TODO user_id will be replaced by sessions
     user_id = 1
     data = {
         "pk": application.pk,

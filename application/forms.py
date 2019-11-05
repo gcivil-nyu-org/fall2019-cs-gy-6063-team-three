@@ -4,7 +4,7 @@ from django import forms
 from .models import HighSchoolApplication
 
 
-GENDER = [("", "Gender"), ("Male", "Male"), ("Female", "Female")]
+GENDER = [("", "Gender"), ("M", "Male"), ("F", "Female")]
 
 
 class HighSchoolApplicationForm(ModelForm):

@@ -7,7 +7,6 @@ from register import views
 urlpatterns = [
     path("", include("landingpage.urls", namespace="landingpage")),
     path("login/", include("logIn.urls")),
-    path("application/", include("application.urls")),
     path("register/", include("register.urls")),
     path("admissions/", include("admissions.urls")),
     path("dashboard/", include("dashboard.urls")),
