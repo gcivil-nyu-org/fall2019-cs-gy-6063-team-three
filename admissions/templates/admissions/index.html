@@ -1,34 +1,62 @@
 {% extends "dashboard/index.html" %}
+{% load static %}
 {% block content %}
-    {% load static %}
-    {% if applications %}
-        {% for app in applications %}
-            <div class="card" style="margin: 3em 17em;">
-                <div class="card-header"><b>
-                    {{ app.first_name }} {{ app.last_name }}
-                    <span style="float: right">{{ app.application_number }}
+    {#    <script href="{% static 'admissions/bootstrap.min.js' %}" rel="stylesheet">#}
+    {#    <link href="{% static 'admissions/jquery-3.2.1.slim.min.js' %}" rel="stylesheet">#}
+    {#    <link href="{% static 'admissions/popper.js' %}" rel="stylesheet">#}
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+
+
+    {% if exception %}
+        <p>{{ exception }}</p>
+    {% else %}
+        {% if applications %}
+            <div class="dropdown">
+                <a class="btn btn-secondary dropdown-toggle" href="#" role="button"
+                   id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
+                   aria-expanded="false" style="float: right; margin-right: 2em">
+                    Programs
+                </a>
+
+                {% if programs %}
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        {% for program in programs %}
+                            <a class="dropdown-item"
+                               href="{% url "dashboard:admissions:index" %}?p={{ program }}">{{ program }}</a>
+                            </div>
+                        {% endfor %}
+                {% endif %}
+            </div>
+            {% for app in applications %}
+                <div class="card" style="margin: 3em 17em;">
+                    <div class="card-header"><b>
+                        {{ app.first_name }} {{ app.last_name }}
+                        <span style="float: right">{{ app.application_number }}
                     </span>
-                </b>
-                </div>
-                <div class="card-body">
-                    <div class="card-text" style="align-items: center;">
-                        <p>
-                            Program: {{ app.program }}
-                            <span style="float: right">
+                    </b>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-text" style="align-items: center;">
+                            <p>
+                                Program: {{ app.program }}
+                                <span style="float: right">
                             <a href="{% url 'dashboard:admissions:detail' app.id %}"
                                class="btn btn-primary"
                             >View Application</a>
                         </span>
-                        </p>
-                        <footer class="blockquote-footer"
-                                style="margin-top:1em;">Date of Submission:
-                            {{ app.submitted_date }}
-                        </footer>
+                            </p>
+                            <footer class="blockquote-footer"
+                                    style="margin-top:1em;">Date of Submission:
+                                {{ app.submitted_date }}
+                            </footer>
+                        </div>
                     </div>
                 </div>
-            </div>
-        {% endfor %}
-    {% else %}
-        <p>No applications are available.</p>
+            {% endfor %}
+        {% else %}
+            <p>No applications are available.</p>
+        {% endif %}
     {% endif %}
 {% endblock %}
