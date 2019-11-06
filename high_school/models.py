@@ -16,3 +16,6 @@ class HighSchool(models.Model):
     start_time = models.CharField(max_length=6)
     end_time = models.CharField(max_length=6)
     graduation_rate = models.CharField(max_length=5)
+
+    def __str__(self):
+        return self.school_name
