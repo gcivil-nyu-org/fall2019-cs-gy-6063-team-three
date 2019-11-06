@@ -60,25 +60,44 @@ class HighSchoolListView(ListView):
         # redirection happens by setting "unauthorized" to True
         # context['unauthorized'] = True
 
-        # what does all do? how is it diff from no all?
-        # page issues with query and filter
-        # show no listing instead of broken
+        if self.dbn:
+            context["selected_school"] = get_object_or_404(HighSchool, dbn=self.dbn)
+        else:
+            context["selected_school"] = None
+
+        high_schools = self.getHighSchools()
+        print("high_schools", high_schools)
+        if high_schools:
+            context['high_schools'] = high_schools
+            context['empty_list'] = False
+        else:
+            context['high_schools'] = None
+            context['empty_list'] = True
+
+        return context
+
+    def getHighSchools(self):
+        print("qu")
+        high_schools = None
         borough_filter = ""
         for boro in self.loc_filter:
             if self.loc_filter[boro]:
                 borough_filter += boro + " , "
         borough_filter = borough_filter[:-3]
-        if self.dbn:
-            context["selected_school"] = get_object_or_404(HighSchool, dbn=self.dbn)
+
         if self.query:
             if borough_filter:
-                context["high_schools"] = HighSchool.objects.filter(
+                high_schools = HighSchool.objects.filter(
                     school_name__icontains=self.query, boro__in=borough_filter
                 ).order_by(
                     "school_name"
                 )  # noqa: E501
             else:
-                context["high_schools"] = HighSchool.objects.filter(school_name__icontains=self.query).order_by("school_name")
+                high_schools = HighSchool.objects.filter(
+                    school_name__icontains=self.query).order_by("school_name")
         elif borough_filter:
-            context['high_schools'] = HighSchool.objects.filter(boro__in=borough_filter).order_by("school_name")
-        return context
+            high_schools = HighSchool.objects.filter(boro__in=borough_filter).order_by(
+                "school_name")
+        else:
+            high_schools = HighSchool.objects.order_by("school_name")
+        return high_schools
