@@ -12,6 +12,7 @@ urlpatterns = [
     # include <application_app_name>.urls, name="application"
     # leave the initial path empty (""), check login.urls for more
     # path("", include("logIn.urls"), name="testing"),
-    path("<str:user_type>/", views.dashboard, name="dashboard"),
+    path("", views.dashboard, name="dashboard"),
+    path("logout", views.logout, name="logout"),
     path("", include("application.urls"), name="application"),
 ]
