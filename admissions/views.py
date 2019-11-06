@@ -1,31 +1,11 @@
-from django.core.exceptions import PermissionDenied
-from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import render, redirect
 from django.views.generic import ListView
 
 from OneApply.constants import UserType
 from application.models import HighSchoolApplication
 from register.models import Admin_Staff
-
-
-# TODO: Change this to list view
-def index(request):
-    # TODO: This user ID is hard coded to 1, needs to be changed after sessions are
-    #  implemented
-
-    if request.session["user_type"] != UserType.ADMIN_STAFF:
-        raise PermissionDenied("You are not authorised to view this page")
-    user_id = 1
-    applications = get_applications(user_id)
-    program_list = get_programs(applications)
-
-    context = {
-        "user_type": UserType.ADMIN_STAFF,
-        "constant_ut_student": UserType.STUDENT,
-        "constant_ut_adminStaff": UserType.ADMIN_STAFF,
-        "applications": applications,
-        "programs": program_list,
-    }
-    return render(request, "admissions/index.html", context)
 
 
 class IndexView(ListView):
@@ -34,22 +14,38 @@ class IndexView(ListView):
     context_object_name = "applications"
     template_name = "admissions/index.html"
 
+    def get(self, *args, **kwargs):
+        if not self.request.session.get("is_login", None):
+            return redirect("landingpage:index")
+        return super(IndexView, self).get(*args, **kwargs)
+
     def get_context_data(self, **kwargs):
-        user_id = 1
         context = super().get_context_data(**kwargs)
         context["user_type"] = UserType.ADMIN_STAFF
         context["constant_ut_student"] = UserType.STUDENT
         context["constant_ut_adminStaff"] = UserType.ADMIN_STAFF
-        all_applications = get_applications(user_id=user_id)
+        all_applications = get_applications(self.user)
         context["programs"] = get_programs(all_applications)
         context["current_program"] = self.program if self.program else "All"
         return context
 
     def get_queryset(self):
-        # if self.request.session["user_type"] != UserType.ADMIN_STAFF:
-        #     raise PermissionDenied("You are not authorised to view this page")
-        user_id = 1
-        applications = get_applications(user_id=user_id).order_by("-submitted_date")
+        user_type = self.request.session.get("user_type", None)
+        if user_type != UserType.ADMIN_STAFF:
+            self.program = None
+            self.user_id = None
+            return []
+        username = self.request.session.get("username", None)
+        if not username:
+            self.program = None
+            self.user_id = None
+            return []
+        self.user = None
+        try:
+            self.user = Admin_Staff.objects.get(username=username)
+        except Admin_Staff.DoesNotExist:
+            return []
+        applications = get_applications(admin_staff=self.user).order_by("-submitted_date")
         try:
             self.program = self.request.GET.get("p")
         except KeyError:
@@ -65,6 +61,8 @@ class IndexView(ListView):
 
 
 def detail(request, application_id):
+    if not request.session.get("is_login", None):
+        return redirect("landingpage:index")
     try:
         application = HighSchoolApplication.objects.get(id=application_id)
     except HighSchoolApplication.DoesNotExist:
@@ -78,10 +76,9 @@ def detail(request, application_id):
     return render(request, "admissions/detail.html", context)
 
 
-def get_applications(user_id):
-    try:
-        admin_staff = Admin_Staff.objects.get(id=user_id)
-    except Admin_Staff.DoesNotExist:
+def get_applications(admin_staff):
+    print(admin_staff)
+    if not admin_staff:
         return []
     school_id = admin_staff.school_id
     return HighSchoolApplication.objects.filter(school_id=school_id, is_draft=False)
