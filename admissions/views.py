@@ -5,6 +5,8 @@ from OneApply.constants import UserType
 from application.models import HighSchoolApplication
 from register.models import Admin_Staff
 
+ALL = "All"
+
 
 class IndexView(ListView):
     model = HighSchoolApplication
@@ -24,17 +26,13 @@ class IndexView(ListView):
         context["constant_ut_adminStaff"] = UserType.ADMIN_STAFF
         all_applications = get_applications(self.user)
         context["programs"] = get_programs(all_applications)
-        context["current_program"] = self.program if self.program else "All"
+        context["current_program"] = self.program if self.program else ALL
         return context
 
     def get_queryset(self):
         user_type = self.request.session.get("user_type", None)
-        if user_type != UserType.ADMIN_STAFF:
-            self.program = None
-            self.user = None
-            return []
         username = self.request.session.get("username", None)
-        if not username:
+        if not username or user_type != UserType.ADMIN_STAFF:
             self.program = None
             self.user = None
             return []
@@ -51,7 +49,7 @@ class IndexView(ListView):
         except KeyError:
             self.program = None
         if self.program:
-            if self.program == "All":
+            if self.program == ALL:
                 return applications
             applications = applications.filter(program=self.program).order_by(
                 "-submitted_date"
@@ -63,24 +61,20 @@ def detail(request, application_id):
     if not request.session.get("is_login", None):
         return redirect("landingpage:index")
     user_type = request.session.get("user_type", None)
+    context = {
+        "user_type": UserType.ADMIN_STAFF,
+        "constant_ut_student": UserType.STUDENT,
+        "constant_ut_adminStaff": UserType.ADMIN_STAFF,
+        "application": None,
+    }
     if user_type != UserType.ADMIN_STAFF:
-        context = {
-            "user_type": UserType.STUDENT,
-            "constant_ut_student": UserType.STUDENT,
-            "constant_ut_adminStaff": UserType.ADMIN_STAFF,
-            "application": None,
-        }
+        context["user_type"] = UserType.STUDENT
         return render(request, "admissions/detail.html", context)
     try:
         application = HighSchoolApplication.objects.get(id=application_id)
     except HighSchoolApplication.DoesNotExist:
         application = None
-    context = {
-        "user_type": UserType.ADMIN_STAFF,
-        "constant_ut_student": UserType.STUDENT,
-        "constant_ut_adminStaff": UserType.ADMIN_STAFF,
-        "application": application,
-    }
+    context["application"] = application
     return render(request, "admissions/detail.html", context)
 
 
@@ -95,5 +89,5 @@ def get_programs(applications):
     program_set = set()
     for application in applications:
         program_set.add(application.program)
-    program_set.add("All")
+    program_set.add(ALL)
     return list(sorted(program_set))
