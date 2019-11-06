@@ -1,9 +1,11 @@
 from django.urls import path
+
+from admissions.views import IndexView
 from . import views
 
 app_name = "admissions"
 
 urlpatterns = [
-    path("", views.index, name="index"),
+    path("", IndexView.as_view(), name="index"),
     path("detail/<int:application_id>", views.detail, name="detail"),
 ]

@@ -11,7 +11,13 @@ def dashboard(request):
     }
     if not request.session.get("is_login", None):
         return redirect("landingpage:index")
-    return render(request, "dashboard/index.html", context)
+
+    user_type = request.session.get("user_type", None)
+    if user_type == UserType.ADMIN_STAFF:
+        return redirect("dashboard:admissions:index")
+    else:
+        # TODO: Redirect to the student dashboard
+        return render(request, "dashboard/index.html", context)
 
 
 def logout(request):
