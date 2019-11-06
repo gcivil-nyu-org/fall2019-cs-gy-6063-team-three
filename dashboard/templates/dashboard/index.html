@@ -47,7 +47,7 @@
                           data-url="{% url 'dashboard:high_school:index' 'ut_student' %}"
                           role="tab" aria-controls="nav-allSchools">All Schools</span>
                     <span class="nav-item nav-link p-2" id="nav-applications-tab"
-                          data-toggle="tab" data-url="{% url 'dashboard:application:index' %}"
+                          data-toggle="tab" data-url="{% url 'dashboard:application:all_applications' 'ut_student' %}"
                           role="tab" aria-controls="nav-applications">Application Forms</span>
 {#                    Todo; use this as reference for applications integration#}
 {#                    data-url -> 'dashboard:<applications_app_name>:<index_view>' 'ut_student'#}
