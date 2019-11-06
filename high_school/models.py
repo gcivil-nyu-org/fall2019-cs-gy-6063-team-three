@@ -11,8 +11,11 @@ class HighSchool(models.Model):
     location = models.CharField(max_length=100)
     phone_number = models.CharField(max_length=15, blank=False, null=False)
     school_email = models.EmailField(blank=False, null=False)
-    website = models.CharField(max_length=50)
+    website = models.CharField(max_length=70)
     total_students = models.IntegerField()
     start_time = models.CharField(max_length=6)
     end_time = models.CharField(max_length=6)
     graduation_rate = models.CharField(max_length=5)
+
+    def __str__(self):
+        return self.school_name

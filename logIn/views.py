@@ -11,6 +11,8 @@ def login_user(request, user_type):
     verif_error = False
     valid_error = False
     login_error = False
+    if request.session.get("is_login", None):
+        return redirect("dashboard:dashboard")
     if request.method == "POST":
         form = LoginForm(request.POST)
         if form.is_valid():
@@ -27,7 +29,10 @@ def login_user(request, user_type):
                     elif user.password != password:
                         login_error = True
                     else:
-                        return redirect("dashboard:dashboard", UserType.STUDENT)
+                        request.session["username"] = username
+                        request.session["is_login"] = True
+                        request.session["user_type"] = UserType.STUDENT
+                        return redirect("dashboard:dashboard")
             elif user_type == UserType.ADMIN_STAFF:
                 try:
                     user = Admin_Staff.objects.get(username=username)
@@ -41,7 +46,10 @@ def login_user(request, user_type):
                     elif user.password != password:
                         login_error = True
                     else:
-                        return redirect("dashboard:dashboard", UserType.ADMIN_STAFF)
+                        request.session["username"] = username
+                        request.session["is_login"] = True
+                        request.session["user_type"] = UserType.ADMIN_STAFF
+                        return redirect("dashboard:dashboard")
     else:
         form = LoginForm()
     context = {
