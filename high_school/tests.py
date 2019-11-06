@@ -1,6 +1,28 @@
 from django.test import TestCase
+from django.urls import reverse
 
+from OneApply.constants import UserType
+from register.models import Student
 from .models import HighSchool
+
+
+def create_student():
+    return Student.objects.create(
+        id=1,
+        username="studentone",
+        first_name="John",
+        last_name="Doe",
+        email_address="john.doe@gmail.com",
+        current_school="NYU",
+        borough="B",
+        password="Something@123",
+    )
+
+
+def update_session(client, username, user_type=UserType.STUDENT):
+    s = client.session
+    s.update({"username": username, "is_login": True, "user_type": user_type})
+    s.save()
 
 
 class HighSchoolModelTest(TestCase):
@@ -79,27 +101,54 @@ class HighSchoolViewTests(TestCase):
             graduation_rate=".99",
         )
 
+    def test_no_student_login(self):
+        url = reverse("dashboard:high_school:index", args=[UserType.STUDENT])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 302)
+
+    def test_valid_student_login(self):
+        self.create_highschool()
+        update_session(self.client, "studentone")
+        url = reverse("dashboard:high_school:index", args=[UserType.STUDENT])
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
+        self.assertContains(response, "Testing High School for Bugs!")
+
+    def test_invalid_student_login(self):
+        update_session(self.client, "studentone", user_type=UserType.ADMIN_STAFF)
+        url = reverse("dashboard:high_school:index", args=[UserType.STUDENT])
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
+        self.assertContains(response, "without proper credentials")
+
     def test_one_entry(self):
         self.create_highschool()
-        response = self.client.get("/dashboard/ut_student/all_schools/")
+        update_session(self.client, "studentone")
+        url = reverse("dashboard:high_school:index", args=[UserType.STUDENT])
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
         self.assertContains(response, "06A231")
         self.assertContains(response, "912-121-0911")
 
     def test_two_entries(self):
         self.create_highschool()
         self.create_highschool("05A221", "311-911-2100")
-        response = self.client.get("/dashboard/ut_student/all_schools/")
+        update_session(self.client, "studentone")
+        url = reverse("dashboard:high_school:index", args=[UserType.STUDENT])
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
         self.assertContains(response, "06A231")
         self.assertContains(response, "05A221")
         self.assertContains(response, "311-911-2100")
 
     def test_no_entries(self):
-        response = self.client.get("/dashboard/ut_student/all_schools/")
+        update_session(self.client, "studentone")
+        url = reverse("dashboard:high_school:index", args=[UserType.STUDENT])
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
+        self.assertContains(response, "Oops! We couldn't find your high school")
         self.assertContains(
-            response, "Oops! Something seems broken. Please check again later."
-        )
-        self.assertContains(
-            response, "Contact oneapply_teamthree@gmail.com if the problem " "persists."
+            response, "Contact oneapply_teamthree@gmail.com if the problem persists."
         )
 
     def test_unauthorized(self):

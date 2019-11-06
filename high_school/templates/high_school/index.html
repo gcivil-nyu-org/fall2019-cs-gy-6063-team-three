@@ -32,7 +32,7 @@
                     {% block empty_list %}
                         {% include 'high_school/broken.html' %}
                     {% endblock %}
-                {% else %}
+                {% elif unauth%}
                     {% block unauth %}
                         {% include 'high_school/broken.html' %}
                     {% endblock %}

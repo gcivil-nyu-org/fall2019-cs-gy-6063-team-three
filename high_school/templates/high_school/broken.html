@@ -1,5 +1,5 @@
 {% block broken %}
-    {% if unauthorized %}
+    {% if unauth %}
         <div class="no-school-placeholder">
             <div style="font-size: 18px;">
                     <span class="mb-3" style="font-size: 64px">
@@ -22,7 +22,7 @@
                     </span>
         </div>
         <p class="mt-5" style="font-size: 18px;">
-            Oops! We couldn't find what you're looking for...
+            Oops! We couldn't find your high school
         </p>
         <small class="pt-1">Contact oneapply_teamthree@gmail.com if the problem persists.</small>
         <a href="{% url 'dashboard:high_school:index' 'ut_student' %}">

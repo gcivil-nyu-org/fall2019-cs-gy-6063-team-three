@@ -12,7 +12,7 @@
 <body>
 <div style="display: flex; flex-direction: column; width: 100%; height: 100%;">
     <div class="nav-container">
-        <nav class="navbar navbar-expand-md navbar-dark bg-primary mb-4">
+        <nav class="navbar navbar-expand-md navbar-dark bg-primary">
             <a class="navbar-brand" href="{% url 'dashboard:dashboard' %}">OneApply</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse"
                     data-target="#navbarCollapse" aria-controls="navbarCollapse"
@@ -46,6 +46,9 @@
                           data-toggle="tab"
                           data-url="#nav-selectedSchools" role="tab"
                           aria-controls="nav-selectedSchools">Selected Schools</span>
+                    <span class="nav-item nav-link p-2" id="nav-applications-tab"
+                          data-toggle="tab" data-url="{% url 'dashboard:application:all_applications' 'ut_student' %}"
+                          role="tab" aria-controls="nav-applications">Application Forms</span>
                     <span class="nav-item nav-link p-2" id="nav-apply-tab"
                           data-toggle="tab" data-url="{% url 'dashboard:application:new_application' 'ut_student' %}"
                           role="tab" aria-controls="nav-apply">Apply</span>
