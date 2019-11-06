@@ -10,7 +10,7 @@ from high_school.models import HighSchool
 
 
 class HighSchoolApplication(models.Model):
-    application_number = models.CharField(max_length=10)
+    application_number = models.CharField(max_length=150)
     user = models.ForeignKey(
         Student, on_delete=models.CASCADE, related_name="high_school_app_user"
     )
