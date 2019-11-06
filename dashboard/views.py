@@ -16,6 +16,7 @@ def dashboard(request):
     if user_type == UserType.ADMIN_STAFF:
         return redirect("dashboard:admissions:index")
     else:
+        # TODO: Redirect to the student dashboard
         return render(request, "dashboard/index.html", context)
 
 
