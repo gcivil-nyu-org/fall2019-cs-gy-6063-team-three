@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
 from OneApply.constants import UserType
-from admissions.models import HighSchoolApplication
+from application.models import HighSchoolApplication
 from register.models import Admin_Staff
 
 
@@ -40,4 +40,4 @@ def get_applications(user_id):
     except Admin_Staff.DoesNotExist:
         return []
     school_id = admin_staff.school_id
-    return HighSchoolApplication.objects.filter(school_id=school_id)
+    return HighSchoolApplication.objects.filter(school=school_id, is_draft=False)

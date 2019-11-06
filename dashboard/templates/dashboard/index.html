@@ -12,8 +12,8 @@
 <body>
 <div style="display: flex; flex-direction: column; width: 100%; height: 100%;">
     <div class="nav-container">
-        <nav class="navbar navbar-expand-md navbar-dark bg-primary">
-            <a class="navbar-brand" href="#">OneApply</a>
+        <nav class="navbar navbar-expand-md navbar-dark bg-primary mb-4">
+            <a class="navbar-brand" href="{% url 'dashboard:dashboard' %}">OneApply</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse"
                     data-target="#navbarCollapse" aria-controls="navbarCollapse"
                     aria-expanded="false"
@@ -26,7 +26,7 @@
                 </ul>
 
                 <a class="nav-link" href='#'>Profile</a>
-                <a class="nav-link" href="{% url 'landingpage:index' %}">Logout</a>
+                <a class="nav-link" href="{% url 'dashboard:logout' %}">Logout</a>
 
             </div>
         </nav>
@@ -46,14 +46,13 @@
                           data-toggle="tab"
                           data-url="#nav-selectedSchools" role="tab"
                           aria-controls="nav-selectedSchools">Selected Schools</span>
-                    <span class="nav-item nav-link p-2" id="nav-applications-tab"
-                          data-toggle="tab" data-url="#nav-applications"
-                          role="tab" aria-controls="nav-applications">Application Forms</span>
+                    <span class="nav-item nav-link p-2" id="nav-apply-tab"
+                          data-toggle="tab" data-url="{% url 'dashboard:application:new_application' 'ut_student' %}"
+                          role="tab" aria-controls="nav-apply">Apply</span>
                     <span class="nav-item nav-link p-2" id="nav-recommendations-tab"
                           data-toggle="tab"
                           data-url="#nav-recommendations" role="tab"
                           aria-controls="nav-recommendations">Teacher Recommendations</span>
-                    <span></span>
                 </div>
             </nav>
         {% elif user_type == constant_ut_adminStaff %}
@@ -71,7 +70,6 @@
             <div class="tab-pane fade active" id="nav-allSchools" role="tabpanel"
                  aria-labelledby="nav-allSchools-tab">
                 {% block all_high_schools %}
-                    All schools
                 {% endblock %}
             </div>
             <div class="tab-pane fade" id="nav-selectedSchools" role="tabpanel"
@@ -80,17 +78,19 @@
             </div>
             <div class="tab-pane fade" id="nav-applications" role="tabpanel"
                  aria-labelledby="nav-applications-tab">
-                <h1>Hello, this is application forms page</h1>
+                {% block all_applications %}
+                {% endblock %}
+            </div>
+            <div class="tab-pane fade" id="nav-apply" role="tabpanel"
+                 aria-labelledby="nav-apply-tab">
+                {% block app_apply %}
+                {% endblock %}
             </div>
             <div class="tab-pane fade" id="nav-recommendations" role="tabpanel"
                  aria-labelledby="nav-recommendations-tab">
-{#                Todo: remove this post successful integration of application app#}
-{#                declare your block name here#}
-{#                extend dashboard/index.html in your app/template/app/<main>.html#}
-{#                also enclose all of your content in a block with the same name as provided here#}
-{#                {% block testing %}#}
-{#                    Testing#}
-{#                {% endblock %}#}
+                {% block recommendations %}
+                    Teacher recommendations tab
+                {% endblock %}
             </div>
         </div>
     {% elif user_type == constant_ut_adminStaff %}
@@ -135,4 +135,5 @@
         window.location.href = selected_tab.attr("data-url")
     })
 </script>
+
 </html>
