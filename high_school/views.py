@@ -89,10 +89,6 @@ class HighSchoolListView(ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(HighSchoolListView, self).get_context_data(**kwargs)
-        # TODO: add check for aunthorized access
-        # check for both -> user not None and user instance of Student
-        # redirection happens by setting "unauthorized" to True
-        # context['unauthorized'] = True
         user_type = self.request.session.get("user_type", None)
         if not user_type:
             return redirect("landingpage:index")

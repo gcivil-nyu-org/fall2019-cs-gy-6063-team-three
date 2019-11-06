@@ -102,21 +102,21 @@ class HighSchoolViewTests(TestCase):
         )
 
     def test_no_student_login(self):
-        url = reverse("dashboard:high_school:index", args=[UserType.STUDENT])
+        url = reverse("dashboard:high_school:index")
         response = self.client.get(url)
         self.assertEqual(response.status_code, 302)
 
     def test_valid_student_login(self):
         self.create_highschool()
         update_session(self.client, "studentone")
-        url = reverse("dashboard:high_school:index", args=[UserType.STUDENT])
+        url = reverse("dashboard:high_school:index")
         response = self.client.get(url)
         self.assertEquals(response.status_code, 200)
         self.assertContains(response, "Testing High School for Bugs!")
 
     def test_invalid_student_login(self):
         update_session(self.client, "studentone", user_type=UserType.ADMIN_STAFF)
-        url = reverse("dashboard:high_school:index", args=[UserType.STUDENT])
+        url = reverse("dashboard:high_school:index")
         response = self.client.get(url)
         self.assertEquals(response.status_code, 200)
         self.assertContains(response, "without proper credentials")
@@ -124,7 +124,7 @@ class HighSchoolViewTests(TestCase):
     def test_one_entry(self):
         self.create_highschool()
         update_session(self.client, "studentone")
-        url = reverse("dashboard:high_school:index", args=[UserType.STUDENT])
+        url = reverse("dashboard:high_school:index")
         response = self.client.get(url)
         self.assertEquals(response.status_code, 200)
         self.assertContains(response, "06A231")
@@ -134,7 +134,7 @@ class HighSchoolViewTests(TestCase):
         self.create_highschool()
         self.create_highschool("05A221", "311-911-2100")
         update_session(self.client, "studentone")
-        url = reverse("dashboard:high_school:index", args=[UserType.STUDENT])
+        url = reverse("dashboard:high_school:index")
         response = self.client.get(url)
         self.assertEquals(response.status_code, 200)
         self.assertContains(response, "06A231")
@@ -143,7 +143,7 @@ class HighSchoolViewTests(TestCase):
 
     def test_no_entries(self):
         update_session(self.client, "studentone")
-        url = reverse("dashboard:high_school:index", args=[UserType.STUDENT])
+        url = reverse("dashboard:high_school:index")
         response = self.client.get(url)
         self.assertEquals(response.status_code, 200)
         self.assertContains(response, "Oops! We couldn't find your high school")
