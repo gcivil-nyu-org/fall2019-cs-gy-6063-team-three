@@ -42,6 +42,7 @@ class IndexView(ListView):
         context["constant_ut_adminStaff"] = UserType.ADMIN_STAFF
         all_applications = get_applications(user_id=user_id)
         context["programs"] = get_programs(all_applications)
+        context["current_program"] = self.program if self.program else "All"
         return context
 
     def get_queryset(self):
@@ -50,14 +51,16 @@ class IndexView(ListView):
         user_id = 1
         applications = get_applications(user_id=user_id).order_by("-submitted_date")
         try:
-            program = self.request.GET.get("p")
+            self.program = self.request.GET.get("p")
         except KeyError:
-            program = None
-        if program:
-            applications = applications.filter(program=program).order_by(
+            self.program = None
+        if self.program:
+            if self.program == "All":
+                return applications
+            applications = applications.filter(program=self.program).order_by(
                 "-submitted_date"
             )
-        print(applications)
+
         return applications
 
 
@@ -88,4 +91,5 @@ def get_programs(applications):
     program_set = set()
     for application in applications:
         program_set.add(application.program)
-    return list(program_set)
+    program_set.add("All")
+    return list(sorted(program_set))
