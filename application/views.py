@@ -15,7 +15,7 @@ def new_application(request):
             f = form.save(commit=False)
             f.user_id = user_id
             f.application_number = (
-                str(user_id) + str(f.school.school_name) + str(f.program)
+                    str(user_id) + str(f.school.school_name) + str(f.program)
             )
             f.submitted_date = timezone.now()
             try:
@@ -33,7 +33,7 @@ def new_application(request):
     return render(request, "application/application-form.html", context)
 
 
-def save_existing_application(request, application_id):
+def save_existing_application(request, user_type, application_id):
     if request.method == "POST":
         form = HighSchoolApplicationForm(request.POST)
         if form.is_valid():
@@ -46,7 +46,7 @@ def save_existing_application(request, application_id):
             f.school = form.school
             f.program = form.program
             f.application_number = (
-                str(user_id) + str(f.school.school_name) + str(f.program)
+                    str(user_id) + str(f.school.school_name) + str(f.program)
             )
             f.email_address = form.email_address
             f.phoneNumber = form.phoneNumber
@@ -69,14 +69,14 @@ def save_existing_application(request, application_id):
     return render(request, "application/index.html", context)
 
 
-def index(request):
+def all_applications(request, user_type):
     # TODO user_id will be replaced by sessions
     user_id = 1
     context = {"applications": HighSchoolApplication.objects.filter(user_id=user_id)}
     return render(request, "application/index.html", context)
 
 
-def detail(request, application_id):
+def detail(request, user_type, application_id):
     application = HighSchoolApplication.objects.get(pk=application_id)
     # TODO user_id will be replaced by sessions
     user_id = 1
