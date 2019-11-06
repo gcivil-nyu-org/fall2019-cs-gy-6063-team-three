@@ -6,7 +6,7 @@ from django.utils import timezone
 from django.urls import reverse
 
 
-def new_application(request):
+def new_application(request, user_type):
     if request.method == "POST":
         # TODO user_id will be replaced by sessions
         user_id = 1
@@ -26,14 +26,16 @@ def new_application(request):
             except:  # noqa: E722
                 pass
             f.save()
-            return HttpResponseRedirect(reverse("application:index"))
+            return HttpResponseRedirect(
+                reverse("dashboard:application:all_applications", args=[user_type])
+            )
     else:
         form = HighSchoolApplicationForm()
     context = {"form": form}
     return render(request, "application/application-form.html", context)
 
 
-def save_existing_application(request, application_id):
+def save_existing_application(request, user_type, application_id):
     if request.method == "POST":
         form = HighSchoolApplicationForm(request.POST)
         if form.is_valid():
@@ -62,21 +64,23 @@ def save_existing_application(request, application_id):
             else:
                 f.is_draft = True
             f.save()
-            return HttpResponseRedirect(reverse("dashboard:application:index"))
+            return HttpResponseRedirect(
+                reverse("dashboard:application:all_applications", args=[user_type])
+            )
     else:
         form = HighSchoolApplicationForm()
     context = {"form": form, "application_id": application_id}
     return render(request, "application/index.html", context)
 
 
-def index(request):
+def all_applications(request, user_type):
     # TODO user_id will be replaced by sessions
     user_id = 1
     context = {"applications": HighSchoolApplication.objects.filter(user_id=user_id)}
     return render(request, "application/index.html", context)
 
 
-def detail(request, application_id):
+def detail(request, user_type, application_id):
     application = HighSchoolApplication.objects.get(pk=application_id)
     # TODO user_id will be replaced by sessions
     user_id = 1
@@ -102,4 +106,5 @@ def detail(request, application_id):
         "selected_app": application,
         "form": form,
     }
-    return render(request, "application/index.html", context)
+    # TODO redirect to index
+    return render(request, "application/application-overview.html", context)
