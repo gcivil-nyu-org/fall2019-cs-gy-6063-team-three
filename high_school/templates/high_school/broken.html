@@ -1,5 +1,5 @@
 {% block broken %}
-    {% if unauthorized %}
+    {% if unauth %}
         <div class="no-school-placeholder">
             <div style="font-size: 18px;">
                     <span class="mb-3" style="font-size: 64px">
@@ -12,17 +12,22 @@
             </p>
             <small>Contact oneapply_teamthree@gmail.com if you think this is an error.</small>
         </div>
-    {% else %}
-        <div class="no-school-placeholder">
-            <div style="font-size: 18px;">
-                    <span class="mb-3" style="font-size: 64px">
+    {% endif %}
+{% endblock %}
+{% block empty_list %}
+    <div class="no-school-placeholder">
+        <div style="font-size: 18px;">
+                    <span class="mb-3" style="font-size: 48px">
                         <i class="fa fa-unlink fa-5x"></i>
                     </span>
-            </div>
-            <p class="mt-5" style="font-size: 18px;">
-                Oops! Something seems broken. Please check again later.
-            </p>
-            <small>Contact oneapply_teamthree@gmail.com if the problem persists.</small>
         </div>
-    {% endif %}
+        <p class="mt-5" style="font-size: 18px;">
+            Oops! We couldn't find your high school
+        </p>
+        <small class="pt-1">Contact oneapply_teamthree@gmail.com if the problem persists.</small>
+        <a href="{% url 'dashboard:high_school:index'  %}">
+            <button class="btn btn-lg btn-primary mt-4 mb-4">Home
+            </button>
+        </a>
+    </div>
 {% endblock %}

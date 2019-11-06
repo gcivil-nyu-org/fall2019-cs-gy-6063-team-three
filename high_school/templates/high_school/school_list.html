@@ -1,16 +1,75 @@
 {% block school_list %}
     <div style="height: 90%; overflow-y: scroll; margin-bottom: 5%;">
         <div class="list-group">
-                <form method='GET'>
-                    <input type='text' name='q' value='{{ request.GET.q }}'>
-                    <input class="button" type='submit' value="Search Schools">
-                </form>
+            <div style="display: flex; flex-direction: row; width: 100%;">
+                <div class="high-school-search">
+                    <form name="search_filter_form" method='GET'>
+                        <div class="search-div">
+                        <span>
+                            <input class="search-input" type='text' name='q'
+                                   value='{{ request.GET.q }}' placeholder="Search for your school">
+                            <span onclick="search_filter_form.submit();" class="search-btn">
+                                <i class="fa fa-search mr-2"></i>
+                            </span>
+                        </span>
+                        </div>
+                        <div class="high-school-filter-div">
+                            <p class="mb-1">Filter using boroughs</p>
+                            <div class="form-group">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input"
+                                           id="loc_bx" name="loc_bx"
+                                           {% if request.GET.loc_bx %}checked=""{% endif %}
+                                           onchange="search_filter_form.submit();">
+                                    <label class="custom-control-label"
+                                           for="loc_bx">Bronx</label>
+                                </div>
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input"
+                                           id="loc_bk" name="loc_bk"
+                                           {% if request.GET.loc_bk %}checked=""{% endif %}
+                                           onchange="search_filter_form.submit();">
+                                    <label class="custom-control-label"
+                                           for="loc_bk">Brooklyn</label>
+                                </div>
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input"
+                                           id="loc_mn" name="loc_mn"
+                                           {% if request.GET.loc_mn %}checked=""{% endif %}
+                                           onchange="search_filter_form.submit();">
+                                    <label class="custom-control-label"
+                                           for="loc_mn">Manhattan</label>
+                                </div>
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input"
+                                           id="loc_qn" name="loc_qn"
+                                           {% if request.GET.loc_qn %}checked=""{% endif %}
+                                           onchange="search_filter_form.submit();">
+                                    <label class="custom-control-label"
+                                           for="loc_qn">Queens</label>
+                                </div>
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input"
+                                           id="loc_si" name="loc_si"
+                                           {% if request.GET.loc_si %}checked=""{% endif %}
+                                           onchange="search_filter_form.submit();">
+                                    <label class="custom-control-label"
+                                           for="loc_si">Staten Island</label>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="high-school-filters">
+                    <span class="filter-btn"><i class="fa fa-filter"></i></span>
+                </div>
+            </div>
             {% for school in high_schools %}
                 {% if selected_school and selected_school.dbn == school.dbn %}
-                    <a href="{% url 'dashboard:high_school:overview' 'ut_student' school.dbn %}"
+                    <a href="{% url 'dashboard:high_school:overview'  school.dbn %}"
                        class="list-group-item list-group-item-action active">
                 {% else %}
-                    <a href="{% url 'dashboard:high_school:overview' 'ut_student' school.dbn %}"
+                    <a href="{% url 'dashboard:high_school:overview'  school.dbn %}"
                        class="list-group-item list-group-item-action">
                 {% endif %}
             <div class="d-flex w-100 justify-content-between mb-2">

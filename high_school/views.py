@@ -1,8 +1,8 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView
 from sodapy import Socrata
 
-from OneApply.constants import ApiInfo
+from OneApply.constants import ApiInfo, UserType
 from .forms import SaveHighSchoolsForm
 from .serializer import HighSchoolSerializer
 from .models import HighSchool
@@ -66,32 +66,77 @@ class HighSchoolListView(ListView):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.user_type = None
         self.dbn = None
         self.query = None
+        self.loc_filter = {}
+
+    def get(self, *args, **kwargs):
+        if not self.request.session.get("is_login", None):
+            return redirect("landingpage:index")
+        return super(HighSchoolListView, self).get(*args, **kwargs)
 
     def get_queryset(self):
         if "dbn" in self.kwargs:
             self.dbn = self.kwargs["dbn"]
         self.query = self.request.GET.get("q")
-        """if query:
-            return HighSchool.objects.filter(school_name__icontains=query).order_by(
-                "school_name"
-            )  # noqa: E501
-        else:"""
+        self.loc_filter["X"] = self.request.GET.get("loc_bx")
+        self.loc_filter["K"] = self.request.GET.get("loc_bk")
+        self.loc_filter["M"] = self.request.GET.get("loc_mn")
+        self.loc_filter["Q"] = self.request.GET.get("loc_qn")
+        self.loc_filter["R"] = self.request.GET.get("loc_si")
         return HighSchool.objects.order_by("school_name")
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(HighSchoolListView, self).get_context_data(**kwargs)
-        # TODO: add check for aunthorized access
-        # check for both -> user not None and user instance of Student
-        # redirection happens by setting "unauthorized" to True
-        # context['unauthorized'] = True
-        if self.dbn:
-            context["selected_school"] = get_object_or_404(HighSchool, dbn=self.dbn)
-        if self.query:
-            context["high_schools"] = HighSchool.objects.filter(
-                school_name__icontains=self.query
-            ).order_by(
-                "school_name"
-            )  # noqa: E501
+        user_type = self.request.session.get("user_type", None)
+        if not user_type:
+            return redirect("landingpage:index")
+        if user_type != UserType.STUDENT:
+            context["unauth"] = True
+            context["high_schools"] = None
+            context["selected_school"] = None
+            context["empty_list"] = False
+        else:
+            context["unauth"] = False
+            if self.dbn:
+                context["selected_school"] = get_object_or_404(HighSchool, dbn=self.dbn)
+            else:
+                context["selected_school"] = None
+
+            high_schools = self.getHighSchools()
+            if high_schools:
+                context["high_schools"] = high_schools
+                context["empty_list"] = False
+            else:
+                context["high_schools"] = None
+                context["empty_list"] = True
+
         return context
+
+    def getHighSchools(self):
+        high_schools = None
+        borough_filter = ""
+        for boro in self.loc_filter:
+            if self.loc_filter[boro]:
+                borough_filter += boro + " , "
+        borough_filter = borough_filter[:-3]
+
+        if self.query:
+            if borough_filter:
+                high_schools = HighSchool.objects.filter(
+                    school_name__icontains=self.query, boro__in=borough_filter
+                ).order_by(
+                    "school_name"
+                )  # noqa: E501
+            else:
+                high_schools = HighSchool.objects.filter(
+                    school_name__icontains=self.query
+                ).order_by("school_name")
+        elif borough_filter:
+            high_schools = HighSchool.objects.filter(boro__in=borough_filter).order_by(
+                "school_name"
+            )
+        else:
+            high_schools = HighSchool.objects.order_by("school_name")
+        return high_schools

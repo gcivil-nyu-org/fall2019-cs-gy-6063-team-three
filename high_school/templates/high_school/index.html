@@ -11,6 +11,7 @@
         <link rel="stylesheet" type="text/css"
               href="{% static 'high_schools/css/high_school.css' %}">
         <script src="https://kit.fontawesome.com/fc24e2383c.js" crossorigin="anonymous"></script>
+
     </head>
     <body>
     <div class="all-school-root">
@@ -27,8 +28,12 @@
                             {% include 'high_school/school_overview.html' %}
                         {% endblock %}
                     </div>
-                {% else %}
-                    {% block broken %}
+                {% elif empty_list %}
+                    {% block empty_list %}
+                        {% include 'high_school/broken.html' %}
+                    {% endblock %}
+                {% elif unauth%}
+                    {% block unauth %}
                         {% include 'high_school/broken.html' %}
                     {% endblock %}
                 {% endif %}
@@ -40,6 +45,24 @@
         </div>
     </div>
     </body>
+    <!--bootstrap jquery and js-->
+    <script src="//cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+    <script src="//cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+    <script>
+        {#         for school list filter#}
+        $(".filter-btn").click(function (e) {
+            let high_school_div = $(".high-school-filter-div");
+            let is_div_visible = high_school_div.hasClass("active");
+            if (!is_div_visible) {
+                high_school_div.addClass("active");
+                high_school_div.show()
+            } else {
+                high_school_div.removeClass("active");
+                high_school_div.hide()
+            }
+        })
+    </script>
     </html>
 
 {% endblock %}
