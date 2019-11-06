@@ -6,19 +6,31 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('register', '0002_auto_20191104_1620'),
-    ]
+    dependencies = [("register", "0002_auto_20191104_1620")]
 
     operations = [
         migrations.AlterField(
-            model_name='admin_staff',
-            name='phoneNumber',
-            field=models.CharField(max_length=15, validators=[django.core.validators.RegexValidator("r'^([0-9]{3}) [0-9]{3}-[0-9]{4}$'")]),
+            model_name="admin_staff",
+            name="phoneNumber",
+            field=models.CharField(
+                max_length=15,
+                validators=[
+                    django.core.validators.RegexValidator(
+                        "r'^([0-9]{3}) [0-9]{3}-[0-9]{4}$'"
+                    )
+                ],
+            ),
         ),
         migrations.AlterField(
-            model_name='student',
-            name='phoneNumber',
-            field=models.CharField(max_length=15, validators=[django.core.validators.RegexValidator("r'^([0-9]{3}) [0-9]{3}-[0-9]{4}$'")]),
+            model_name="student",
+            name="phoneNumber",
+            field=models.CharField(
+                max_length=15,
+                validators=[
+                    django.core.validators.RegexValidator(
+                        "r'^([0-9]{3}) [0-9]{3}-[0-9]{4}$'"
+                    )
+                ],
+            ),
         ),
     ]

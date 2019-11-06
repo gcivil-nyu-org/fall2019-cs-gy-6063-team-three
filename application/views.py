@@ -6,7 +6,7 @@ from django.utils import timezone
 from django.urls import reverse
 
 
-def new_application(request):
+def new_application(request, user_type):
     if request.method == "POST":
         # TODO user_id will be replaced by sessions
         user_id = 1
@@ -15,7 +15,7 @@ def new_application(request):
             f = form.save(commit=False)
             f.user_id = user_id
             f.application_number = (
-                    str(user_id) + str(f.school.school_name) + str(f.program)
+                str(user_id) + str(f.school.school_name) + str(f.program)
             )
             f.submitted_date = timezone.now()
             try:
@@ -26,7 +26,9 @@ def new_application(request):
             except:  # noqa: E722
                 pass
             f.save()
-            return HttpResponseRedirect(reverse("application:index"))
+            return HttpResponseRedirect(
+                reverse("dashboard:application:all_applications", args=[user_type])
+            )
     else:
         form = HighSchoolApplicationForm()
     context = {"form": form}
@@ -46,7 +48,7 @@ def save_existing_application(request, user_type, application_id):
             f.school = form.school
             f.program = form.program
             f.application_number = (
-                    str(user_id) + str(f.school.school_name) + str(f.program)
+                str(user_id) + str(f.school.school_name) + str(f.program)
             )
             f.email_address = form.email_address
             f.phoneNumber = form.phoneNumber
@@ -62,7 +64,9 @@ def save_existing_application(request, user_type, application_id):
             else:
                 f.is_draft = True
             f.save()
-            return HttpResponseRedirect(reverse("dashboard:application:index"))
+            return HttpResponseRedirect(
+                reverse("dashboard:application:all_applications", args=[user_type])
+            )
     else:
         form = HighSchoolApplicationForm()
     context = {"form": form, "application_id": application_id}
@@ -102,4 +106,5 @@ def detail(request, user_type, application_id):
         "selected_app": application,
         "form": form,
     }
-    return render(request, "application/index.html", context)
+    # TODO redirect to index
+    return render(request, "application/application-overview.html", context)

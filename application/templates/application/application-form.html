@@ -7,7 +7,7 @@
 
 <div style="margin-left:20%;height: 90%; margin-bottom: 5%; width:50%;">
     <h2>High School Application Form</h2>
-    <form action="{% url 'dashboard:application:new_application' %}" method="post" class="form-signup" style="padding-top: 10px;">
+    <form action="{% url 'dashboard:application:new_application' 'ut_student' %}" method="post" class="form-signup" style="padding-top: 10px;">
         {% csrf_token %}
         <div class="form-row">
             <div class="form-label-group col-md-6">
@@ -109,7 +109,7 @@
         <div class="form-row">
             <div class="form-label-group col-md-6">
                 <input class="btn btn-lg btn-primary btn-block" type="submit" value="Save as Draft"
-                       name="draft" style="margin-top:10px;"/>
+                       name="draft"/>
             </div>
             <div class="form-label-group col-md-6">
                 <input class="btn btn-lg btn-primary btn-block" type="submit" value="Submit" name="submit"/>
