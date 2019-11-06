@@ -39,16 +39,19 @@ class HighSchoolListView(ListView):
         super().__init__(**kwargs)
         self.dbn = None
         self.query = None
+        self.loc_filter = {}
 
     def get_queryset(self):
         if "dbn" in self.kwargs:
             self.dbn = self.kwargs["dbn"]
         self.query = self.request.GET.get("q")
-        """if query:
-            return HighSchool.objects.filter(school_name__icontains=query).order_by(
-                "school_name"
-            )  # noqa: E501
-        else:"""
+        self.loc_filter['all'] = self.request.GET.get("loc_all")
+        self.loc_filter['X'] = self.request.GET.get("loc_bx")
+        self.loc_filter['K'] = self.request.GET.get("loc_bk")
+        self.loc_filter['M'] = self.request.GET.get("loc_mn")
+        self.loc_filter['Q'] = self.request.GET.get("loc_qn")
+        self.loc_filter['R'] = self.request.GET.get("loc_si")
+        print(self.loc_filter)
         return HighSchool.objects.order_by("school_name")
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -57,12 +60,25 @@ class HighSchoolListView(ListView):
         # check for both -> user not None and user instance of Student
         # redirection happens by setting "unauthorized" to True
         # context['unauthorized'] = True
+
+        # what does all do? how is it diff from no all?
+        # page issues with query and filter
+        # show no listing instead of broken
+        borough_filter = ""
+        if not self.loc_filter['all']:
+            for boro in self.loc_filter:
+                if self.loc_filter[boro]:
+                    borough_filter += boro + " , "
+            borough_filter = borough_filter[:-3]
         if self.dbn:
             context["selected_school"] = get_object_or_404(HighSchool, dbn=self.dbn)
         if self.query:
-            context["high_schools"] = HighSchool.objects.filter(
-                school_name__icontains=self.query
-            ).order_by(
-                "school_name"
-            )  # noqa: E501
+            if borough_filter:
+                context["high_schools"] = HighSchool.objects.filter(
+                    school_name__icontains=self.query, boro__in=borough_filter
+                ).order_by(
+                    "school_name"
+                )  # noqa: E501
+        elif borough_filter:
+            context['high_schools'] = HighSchool.objects.filter(boro__in=borough_filter).order_by("school_name")
         return context
