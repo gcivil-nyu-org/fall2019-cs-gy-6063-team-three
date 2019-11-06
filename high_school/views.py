@@ -45,7 +45,6 @@ class HighSchoolListView(ListView):
         if "dbn" in self.kwargs:
             self.dbn = self.kwargs["dbn"]
         self.query = self.request.GET.get("q")
-        self.loc_filter['all'] = self.request.GET.get("loc_all")
         self.loc_filter['X'] = self.request.GET.get("loc_bx")
         self.loc_filter['K'] = self.request.GET.get("loc_bk")
         self.loc_filter['M'] = self.request.GET.get("loc_mn")
@@ -65,11 +64,10 @@ class HighSchoolListView(ListView):
         # page issues with query and filter
         # show no listing instead of broken
         borough_filter = ""
-        if not self.loc_filter['all']:
-            for boro in self.loc_filter:
-                if self.loc_filter[boro]:
-                    borough_filter += boro + " , "
-            borough_filter = borough_filter[:-3]
+        for boro in self.loc_filter:
+            if self.loc_filter[boro]:
+                borough_filter += boro + " , "
+        borough_filter = borough_filter[:-3]
         if self.dbn:
             context["selected_school"] = get_object_or_404(HighSchool, dbn=self.dbn)
         if self.query:
@@ -79,6 +77,8 @@ class HighSchoolListView(ListView):
                 ).order_by(
                     "school_name"
                 )  # noqa: E501
+            else:
+                context["high_schools"] = HighSchool.objects.filter(school_name__icontains=self.query).order_by("school_name")
         elif borough_filter:
             context['high_schools'] = HighSchool.objects.filter(boro__in=borough_filter).order_by("school_name")
         return context

@@ -107,7 +107,7 @@ body {
 }
 .high-school-filter-div{
     display: none;
-    margin: 2% 7.5% 0 7.5%;
+    margin: 2% 0 0 0;
 }
 /*overriding bootstrap*/
 .list-group-item {
