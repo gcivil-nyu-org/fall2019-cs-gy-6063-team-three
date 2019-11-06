@@ -1,5 +1,3 @@
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.views.generic import ListView
 
@@ -33,19 +31,21 @@ class IndexView(ListView):
         user_type = self.request.session.get("user_type", None)
         if user_type != UserType.ADMIN_STAFF:
             self.program = None
-            self.user_id = None
+            self.user = None
             return []
         username = self.request.session.get("username", None)
         if not username:
             self.program = None
-            self.user_id = None
+            self.user = None
             return []
         self.user = None
         try:
             self.user = Admin_Staff.objects.get(username=username)
         except Admin_Staff.DoesNotExist:
             return []
-        applications = get_applications(admin_staff=self.user).order_by("-submitted_date")
+        applications = get_applications(admin_staff=self.user).order_by(
+            "-submitted_date"
+        )
         try:
             self.program = self.request.GET.get("p")
         except KeyError:
@@ -56,13 +56,21 @@ class IndexView(ListView):
             applications = applications.filter(program=self.program).order_by(
                 "-submitted_date"
             )
-
         return applications
 
 
 def detail(request, application_id):
     if not request.session.get("is_login", None):
         return redirect("landingpage:index")
+    user_type = request.session.get("user_type", None)
+    if user_type != UserType.ADMIN_STAFF:
+        context = {
+            "user_type": UserType.STUDENT,
+            "constant_ut_student": UserType.STUDENT,
+            "constant_ut_adminStaff": UserType.ADMIN_STAFF,
+            "application": None,
+        }
+        return render(request, "admissions/detail.html", context)
     try:
         application = HighSchoolApplication.objects.get(id=application_id)
     except HighSchoolApplication.DoesNotExist:
@@ -77,7 +85,6 @@ def detail(request, application_id):
 
 
 def get_applications(admin_staff):
-    print(admin_staff)
     if not admin_staff:
         return []
     school_id = admin_staff.school_id

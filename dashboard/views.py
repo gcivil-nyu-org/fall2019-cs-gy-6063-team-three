@@ -19,9 +19,6 @@ def dashboard(request):
         return render(request, "dashboard/index.html", context)
 
 
-
-
-
 def logout(request):
     request.session.flush()
     return redirect("landingpage:index")
