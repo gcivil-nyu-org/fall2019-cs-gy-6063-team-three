@@ -14,4 +14,5 @@ urlpatterns = [
     # path("", include("logIn.urls"), name="testing"),
     path("", views.dashboard, name="dashboard"),
     path("logout", views.logout, name="logout"),
+    path("", include("application.urls"), name="application"),
 ]

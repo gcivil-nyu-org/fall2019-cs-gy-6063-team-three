@@ -47,7 +47,7 @@
                           data-url="{% url 'dashboard:high_school:index' 'ut_student' %}"
                           role="tab" aria-controls="nav-allSchools">All Schools</span>
                     <span class="nav-item nav-link p-2" id="nav-applications-tab"
-                          data-toggle="tab" data-url="#nav-applications"
+                          data-toggle="tab" data-url="{% url 'dashboard:application:index' %}"
                           role="tab" aria-controls="nav-applications">Application Forms</span>
 {#                    Todo; use this as reference for applications integration#}
 {#                    data-url -> 'dashboard:<applications_app_name>:<index_view>' 'ut_student'#}
@@ -82,7 +82,9 @@
             </div>
             <div class="tab-pane fade" id="nav-applications" role="tabpanel"
                  aria-labelledby="nav-applications-tab">
-                <h1>Hello, this is application forms page</h1>
+                {% block all_applications %}
+                    All applications
+                {% endblock %}
             </div>
             <div class="tab-pane fade" id="nav-recommendations" role="tabpanel"
                  aria-labelledby="nav-recommendations-tab">
@@ -137,4 +139,5 @@
         window.location.href = selected_tab.attr("data-url")
     })
 </script>
+
 </html>
