@@ -3,11 +3,12 @@
         <div class="list-group">
             <div style="display: flex; flex-direction: row; width: 100%;">
                 <div class="high-school-search">
-                    <form name="search_filter_form" method='GET'>
+                    <form id="search_filter_form" name="search_filter_form" method='GET'>
                         <div class="search-div">
                         <span>
-                            <input class="search-input" type='text' name='q'
-                                   value='{{ request.GET.q }}' placeholder="Search for your school">
+                            <input class="search-input" type='text' name='query'
+                                   {% if request.GET.query %}value="{{ request.GET.query }}"
+                                   {% endif %}  placeholder="Search for your school">
                             <span onclick="search_filter_form.submit();" class="search-btn">
                                 <i class="fa fa-search mr-2"></i>
                             </span>
@@ -96,40 +97,10 @@
     </div>
     <div class="pagination-div">
         {% if is_paginated %}
-            <ul class="pagination">
-                {% if page_obj.has_previous %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}"
-                           tabindex="-1">Previous</a>
-                    </li>
-                {% else %}
-                    <li class="page-item disabled">
-                        <a class="page-link" href="#" tabindex="-1"
-                           aria-disabled="true">Previous</a>
-                    </li>
-                {% endif %}
-                {% for i in paginator.page_range %}
-                    {% if page_obj.number == i %}
-                        <li class="page-item active" aria-current="page">
-                            <a class="page-link" href="#">{{ i }} <span
-                                    class="sr-only">(current)</span></a>
-                        </li>
-                    {% else %}
-                        <li class="page-item"><a class="page-link"
-                                                 href="?page={{ i }}">{{ i }}</a></li>
-                    {% endif %}
-                {% endfor %}
-                {% if page_obj.has_next %}
-                    <li class="page-item">
-                        <a class="page-link"
-                           href="?page={{ page_obj.next_page_number }}">Next</a>
-                    </li>
-                {% else %}
-                    <li class="page-item disabled">
-                        <a class="page-link" href="#">Next</a>
-                    </li>
-                {% endif %}
-            </ul>
+            {% with request.get_full_path as querystring %}
+                <ul class="pagination">
+                </ul>
+            {% endwith %}
         {% endif %}
     </div>
 {% endblock %}

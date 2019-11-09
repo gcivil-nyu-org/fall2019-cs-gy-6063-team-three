@@ -10,7 +10,7 @@ from .models import HighSchool
 client = Socrata(ApiInfo.API_DOMAIN, ApiInfo.APP_TOKEN)
 
 
-def save_highschool_data(request, user_type):
+def save_highschool_data(request):
     if request.method == "POST":
         form = SaveHighSchoolsForm(request.POST)
         if form.is_valid():
@@ -62,6 +62,7 @@ class HighSchoolListView(ListView):
     template_name = "high_school/index.html"
     model = HighSchool
     context_object_name = "high_schools"
+    # paginator_class = None
     paginate_by = 5
 
     def __init__(self, **kwargs):
@@ -79,13 +80,13 @@ class HighSchoolListView(ListView):
     def get_queryset(self):
         if "dbn" in self.kwargs:
             self.dbn = self.kwargs["dbn"]
-        self.query = self.request.GET.get("q")
+        self.query = self.request.GET.get("query")
         self.loc_filter["X"] = self.request.GET.get("loc_bx")
         self.loc_filter["K"] = self.request.GET.get("loc_bk")
         self.loc_filter["M"] = self.request.GET.get("loc_mn")
         self.loc_filter["Q"] = self.request.GET.get("loc_qn")
         self.loc_filter["R"] = self.request.GET.get("loc_si")
-        return HighSchool.objects.order_by("school_name")
+        return self.getHighSchools()
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(HighSchoolListView, self).get_context_data(**kwargs)
@@ -104,14 +105,10 @@ class HighSchoolListView(ListView):
             else:
                 context["selected_school"] = None
 
-            high_schools = self.getHighSchools()
-            if high_schools:
-                context["high_schools"] = high_schools
-                context["empty_list"] = False
-            else:
-                context["high_schools"] = None
+            if not context["high_schools"]:
                 context["empty_list"] = True
-
+            else:
+                context["empty_list"] = False
         return context
 
     def getHighSchools(self):

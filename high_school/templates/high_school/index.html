@@ -32,7 +32,7 @@
                     {% block empty_list %}
                         {% include 'high_school/broken.html' %}
                     {% endblock %}
-                {% elif unauth%}
+                {% elif unauth %}
                     {% block unauth %}
                         {% include 'high_school/broken.html' %}
                     {% endblock %}
@@ -61,7 +61,134 @@
                 high_school_div.removeClass("active");
                 high_school_div.hide()
             }
-        })
+        });
+        {# for restricting page numbers in pagination #}
+
+        function getPageList(totalPages, page, maxLength) {
+            if (maxLength < 5) throw "maxLength must be at least 5";
+
+            function range(start, end) {
+                return Array.from(Array(end - start + 1), (_, i) => i + start);
+            }
+
+            let sideWidth = maxLength < 9 ? 1 : 2;
+            let leftWidth = (maxLength - sideWidth * 2 - 3) >> 1;
+            let rightWidth = (maxLength - sideWidth * 2 - 2) >> 1;
+            if (totalPages <= maxLength) {
+                // no breaks in list
+                return range(1, totalPages);
+            }
+            if (page <= maxLength - sideWidth - 1 - rightWidth) {
+                // no break on left of page
+                return range(1, maxLength - sideWidth - 1)
+                    .concat([0])
+                    .concat(range(totalPages - sideWidth + 1, totalPages));
+            }
+            if (page >= totalPages - sideWidth - 1 - rightWidth) {
+                // no break on right of page
+                return range(1, sideWidth)
+                    .concat([0])
+                    .concat(range(totalPages - sideWidth - 1 - rightWidth - leftWidth, totalPages));
+            }
+            // Breaks on both sides
+            return range(1, sideWidth)
+                .concat([0])
+                .concat(range(page - leftWidth, page + rightWidth))
+                .concat([0])
+                .concat(range(totalPages - sideWidth + 1, totalPages));
+        }
+
+        $(function () {
+            let totalPages = {{ paginator.num_pages }};
+            let paginationSize = 7;
+            let currentPage;
+
+            function showPage(whichPage) {
+                if (whichPage < 1 || whichPage > totalPages) return false;
+                currentPage = whichPage;
+                $(".pagination li").slice(1, -1).remove();
+                getPageList(totalPages, currentPage, paginationSize).forEach(item => {
+                    $("<li>").addClass("page-item")
+                        .addClass(item ? "" : "disabled")
+                        .toggleClass("active", item === currentPage).append(
+                        $("<a>").addClass("page-link").attr({
+                            {% with request.get_full_path as querystring  %}
+                                {% if 'query' in querystring or 'loc_bx' in querystring or 'loc_bk' in querystring or 'loc_mn' in querystring or 'loc_qn' in querystring or 'loc_si' in querystring %}
+                                    {% if 'page' in querystring %}
+                                        href: item ? "{{ querystring|slice:":-7" }}&page=" + item : "javascript.void(0)"
+                                    {% else %}
+                                        href: item ? "{{ querystring }}&page=" + item : "javascript.void(0)"
+                                    {% endif %}
+                                {% else %}
+                                    href: item ? "?page=" + item : "javascript.void(0)"
+                                {% endif %}
+                            {% endwith %}
+                        }).text(item || "...")
+                    ).insertBefore("#next-page");
+                });
+                // Disable prev/next when at first/last page:
+                $("#previous-page").toggleClass("disabled", currentPage === 1);
+                $("#next-page").toggleClass("disabled", currentPage === totalPages);
+                return true;
+            }
+
+            $(".pagination").append(
+                $("<li>").addClass("page-item").attr({id: "previous-page"}).append(
+                    $("<a>").addClass("page-link").attr({
+                        {% with request.get_full_path as querystring  %}
+                            {% if 'query' in querystring or 'loc_bx' in querystring or 'loc_bk' in querystring or 'loc_mn' in querystring or 'loc_qn' in querystring or 'loc_si' in querystring %}
+                                {% if 'page' in querystring %}
+                                    href: {% if page_obj.has_previous %}
+                                        "{{ querystring|slice:":-7" }}&page={{ page_obj.previous_page_number }}"
+                                    {% else %} "javascript.void(0)" {% endif %}
+                                {% else %}
+                                    href: {% if page_obj.has_previous %}
+                                        "{{ querystring }}&page={{ page_obj.previous_page_number }}"
+                                        {% else %}"javascript.void(0)"{% endif %}
+                                {% endif %}
+                            {% else %}
+                                href: {% if page_obj.has_previous %}
+                                    "?page={{ page_obj.previous_page_number }}"
+                                    {% else %}"javascript.void(0)"{% endif %}
+                            {% endif %}
+                        {% endwith %}
+                    }).text("Prev")
+                ),
+                $("<li>").addClass("page-item").attr({id: "next-page"}).append(
+                    $("<a>").addClass("page-link").attr({
+                        {% with request.get_full_path as querystring  %}
+                            {% if 'query' in querystring or 'loc_bx' in querystring or 'loc_bk' in querystring or 'loc_mn' in querystring or 'loc_qn' in querystring or 'loc_si' in querystring %}
+                                {% if 'page' in querystring %}
+                                    href: {% if page_obj.has_next %}
+                                        "{{ querystring|slice:":-7" }}&page={{ page_obj.next_page_number }}"
+                                        {% else %}"javascript.void(0)"{% endif %}
+                                {% else %}
+                                    href: {% if page_obj.has_next %}
+                                        "{{ querystring }}&page={{ page_obj.next_page_number }}"
+                                        {% else %}"javascript.void(0)"{% endif %}
+                                {% endif %}
+                            {% else %}
+                                href: {% if page_obj.has_next %}
+                                    "?page={{ page_obj.next_page_number }}"
+                                    {% else %}"javascript.void(0)"{% endif %}
+                            {% endif %}
+                        {% endwith %}
+                    }).text("Next")
+                )
+            );
+            showPage({% if request.GET.page %} {{ request.GET.page }} {% else %} 1 {% endif %});
+            // Use event delegation, as these items are recreated later
+            $(document).on("click", ".pagination li.current-page:not(.active)", function () {
+                return showPage(+$(this).text());
+            });
+            $("#next-page").on("click", function () {
+                return showPage(currentPage + 1);
+            });
+
+            $("#previous-page").on("click", function () {
+                return showPage(currentPage - 1);
+            });
+        });
     </script>
     </html>
 
