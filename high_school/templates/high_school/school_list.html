@@ -1,4 +1,5 @@
 {% block school_list %}
+    {% load hs_filters %}
     <div style="height: 90%; overflow-y: scroll; margin-bottom: 5%;">
         <div class="list-group">
             <div style="display: flex; flex-direction: row; width: 100%;">
@@ -8,7 +9,7 @@
                         <span>
                             <input class="search-input" type='text' name='query'
                                    {% if request.GET.query %}value="{{ request.GET.query }}"
-                                   {% endif %}  placeholder="Search for your school">
+                                   {% endif %} placeholder="Search for your school">
                             <span onclick="search_filter_form.submit();" class="search-btn">
                                 <i class="fa fa-search mr-2"></i>
                             </span>
@@ -66,13 +67,15 @@
                 </div>
             </div>
             {% for school in high_schools %}
-                {% if selected_school and selected_school.dbn == school.dbn %}
-                    <a href="{% url 'dashboard:high_school:overview'  school.dbn %}"
-                       class="list-group-item list-group-item-action active">
-                {% else %}
-                    <a href="{% url 'dashboard:high_school:overview'  school.dbn %}"
-                       class="list-group-item list-group-item-action">
-                {% endif %}
+                {% with request.get_full_path as querystring %}
+                    {% if querystring|split_string:"?" %}
+                        <a href="{% url 'dashboard:high_school:overview'  school.dbn %}?{{ querystring|split_string:"?" }}"
+                           class="list-group-item list-group-item-action {% if selected_school and selected_school.dbn == school.dbn %}active{% endif %}">
+                    {% else %}
+                        <a href="{% url 'dashboard:high_school:overview'  school.dbn %}"
+                           class="list-group-item list-group-item-action {% if selected_school and selected_school.dbn == school.dbn %}active{% endif %}">
+                    {% endif %}
+                {% endwith %}
             <div class="d-flex w-100 justify-content-between mb-2">
                 <h4 class="mb-1" style="width: 75%">{{ school.school_name }}</h4>
                 <small class="pt-1"
