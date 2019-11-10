@@ -26,7 +26,8 @@ def create_highschool(dbn="06A231", phone_number="912-121-0911"):
         boro="K",
         overview_paragraph="The mission of Testing High School for Bugs is to "
         "intellectually prepare, morally inspire, and socially "
-        "motivate every bug to become non-existent in this vastly changing project.",
+        "motivate every bug to become non-existent in this vastly "
+        "changing project.",
         # noqa: E501
         neighborhood="Downtown-Brooklyn",
         location="0 MTep Street, Brooklyn NY 00192(01.010101, -02.020202)",
@@ -91,7 +92,8 @@ class HighSchoolViewTests(TestCase):
             boro="K",
             overview_paragraph="The mission of Testing High School for Bugs is to "
             "intellectually prepare, morally inspire, and socially "
-            "motivate every bug to become non-existent in this vastly changing project.",
+            "motivate every bug to become non-existent in this "
+            "vastly changing project.",
             # noqa: E501
             neighborhood="Downtown-Brooklyn",
             location="0 MTep Street, Brooklyn NY 00192(01.010101, -02.020202)",
