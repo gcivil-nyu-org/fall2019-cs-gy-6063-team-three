@@ -97,7 +97,7 @@ class HighSchoolListView(ListView):
             context["unauth"] = True
             context["high_schools"] = None
             context["selected_school"] = None
-            context["empty_list"] = False
+            context["empty_list"] = None
         else:
             context["unauth"] = False
             if not context["high_schools"]:
