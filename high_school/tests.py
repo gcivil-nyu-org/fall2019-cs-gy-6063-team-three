@@ -176,7 +176,7 @@ class HighSchoolViewTests(TestCase):
         response = self.client.get(url)
         self.assertEquals(response.status_code, 200)
         self.assertTrue("empty_list" in response.context)
-        self.assertContains(response, "Oops! We couldn't find your high school")
+        self.assertContains(response, "Oops! We couldn't find what you're looking for")
         self.assertContains(
             response, "Contact oneapply_teamthree@gmail.com if the problem persists."
         )
