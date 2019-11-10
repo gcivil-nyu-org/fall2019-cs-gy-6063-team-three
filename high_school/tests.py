@@ -3,7 +3,7 @@ from django.urls import reverse
 
 from OneApply.constants import UserType
 from register.models import Student
-from .models import HighSchool
+from .models import HighSchool, Program
 
 
 def create_student():
@@ -19,6 +19,27 @@ def create_student():
     )
 
 
+def create_highschool(dbn="06A231", phone_number="912-121-0911"):
+    return HighSchool.objects.create(
+        dbn=dbn,
+        school_name="Testing High School for Bugs!",
+        boro="K",
+        overview_paragraph="The mission of Testing High School for Bugs is to "
+        "intellectually prepare, morally inspire, and socially "
+        "motivate every bug to become non-existent in this vastly changing project.",
+        # noqa: E501
+        neighborhood="Downtown-Brooklyn",
+        location="0 MTep Street, Brooklyn NY 00192(01.010101, -02.020202)",
+        phone_number=phone_number,
+        school_email="temp@schools.cyn.vog",
+        website="testhighschool.com",
+        total_students=5,
+        start_time="9am",
+        end_time="2pm",
+        graduation_rate=".99",
+    )
+
+
 def update_session(client, username, user_type=UserType.STUDENT):
     s = client.session
     s.update({"username": username, "is_login": True, "user_type": user_type})
@@ -26,27 +47,8 @@ def update_session(client, username, user_type=UserType.STUDENT):
 
 
 class HighSchoolModelTest(TestCase):
-    def create_highschool(self, dbn="06A231"):
-        return HighSchool.objects.create(
-            dbn=dbn,
-            school_name="Testing High School for Bugs!",
-            boro="K",
-            overview_paragraph="The mission of Testing High School for Bugs is "
-            "to intellectually prepare, morally inspire, and socially motivate "
-            "every bug to become non-existent in this vastly changing project.",
-            neighborhood="Downtown-Brooklyn",
-            location="0 MTep Street, Brooklyn NY 00192(01.010101, -02.020202)",
-            phone_number="912-121-0911",
-            school_email="temp@schools.cyn.vog",
-            website="testhighschool.com",
-            total_students=5,
-            start_time="9am",
-            end_time="2pm",
-            graduation_rate=".99",
-        )
-
     def test_create_highschool(self):
-        high_school = self.create_highschool()
+        high_school = create_highschool()
         self.assertEqual(isinstance(high_school, HighSchool), True)
         self.assertEqual(high_school.dbn, "06A231")
         self.assertEqual(high_school.school_name, "Testing High School for Bugs!")
@@ -71,12 +73,12 @@ class HighSchoolModelTest(TestCase):
         self.assertEqual(high_school.graduation_rate, ".99")
 
     def test_get_highschool(self):
-        high_school = self.create_highschool()
+        high_school = create_highschool()
         response = HighSchool.objects.get(dbn="06A231")
         self.assertTrue(response.dbn, high_school.dbn)
 
     def test_delete_highschool(self):
-        self.create_highschool()
+        create_highschool()
         response = HighSchool.objects.filter(dbn="06A231").delete()
         self.assertIsNotNone(response)
 
@@ -89,7 +91,8 @@ class HighSchoolViewTests(TestCase):
             boro="K",
             overview_paragraph="The mission of Testing High School for Bugs is to "
             "intellectually prepare, morally inspire, and socially "
-            "motivate every bug to become non-existent in this vastly changing project.",  # noqa: E501
+            "motivate every bug to become non-existent in this vastly changing project.",
+            # noqa: E501
             neighborhood="Downtown-Brooklyn",
             location="0 MTep Street, Brooklyn NY 00192(01.010101, -02.020202)",
             phone_number=phone_number,
@@ -156,3 +159,47 @@ class HighSchoolViewTests(TestCase):
         # for checking unauthorized access to /high_school page
         # and update above test case accordingly to fail if authorized
         pass
+
+
+class ProgramModelTest(TestCase):
+    def create_program(self, code="Q83C"):
+        return Program.objects.create(
+            high_school=create_highschool("06A231", phone_number="912-121-0911"),
+            name="Academy of Engineering",
+            code=code,
+            description="New York State approved CTE Program that leads to national "
+            "certification aligned with industry standards and a "
+            "CTE-endorsed Regents Diploma. Interdisciplinary "
+            "project-based curriculum includes coursework in Introduction "
+            "to Engineering & Design, Digital Electronics, Principles of "
+            "Engineering, and Engineering Design & Development.",
+            number_of_seats=70,
+            offer_rate=0,
+        )
+
+    def test_create_program(self):
+        program = self.create_program()
+        self.assertEqual(isinstance(program, Program), True)
+        self.assertEqual(program.code, "Q83C")
+        self.assertEqual(program.name, "Academy of Engineering")
+        self.assertEqual(program.number_of_seats, 70)
+        self.assertEqual(program.offer_rate, 0)
+        self.assertEqual(
+            program.description,
+            "New York State approved CTE Program that leads to national "
+            "certification aligned with industry standards and a "
+            "CTE-endorsed Regents Diploma. Interdisciplinary "
+            "project-based curriculum includes coursework in Introduction "
+            "to Engineering & Design, Digital Electronics, Principles of "
+            "Engineering, and Engineering Design & Development.",
+        )
+
+    def test_get_program(self):
+        program = self.create_program()
+        response = Program.objects.get(code="Q83C")
+        self.assertTrue(response.code, program.code)
+
+    def test_delete_program(self):
+        self.create_program()
+        response = Program.objects.filter(code="Q83C").delete()
+        self.assertIsNotNone(response)
