@@ -76,7 +76,6 @@ def extract_offer_rate(offer_rate_data):
 
 
 def parse_result(result):
-    print("Program {} is: {}".format(type(result), result))
     for i in range(1, 11):
         code = "code" + str(i)
         seats = "seats9ge" + str(i)
