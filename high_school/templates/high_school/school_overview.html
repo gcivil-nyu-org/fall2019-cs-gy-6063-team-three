@@ -3,16 +3,16 @@
         <div class="top-header">
             <div class="blur-bg"></div>
             <div class="right-pane-container">
-                <h3 class="mb-3">{{ selected_school.school_name }}</h3>
-                <h4 class="mb-2">{{ selected_school.neighborhood }}
-                    ({{ selected_school.boro }})</h4>
-                <h5 class="mb-4">{{ selected_school.location|slice:":-23" }}</h5>
-                <h5 class="mb-2">{{ selected_school.total_students }} students</h5>
-                <h5 class="mb-4">
+                <h4 class="mb-3" style="font-size: 28px;">{{ selected_school.school_name }}</h4>
+                <h5 class="mb-2">{{ selected_school.neighborhood }}
+                    ({{ selected_school.boro }})</h5>
+                <h6 class="mb-4">{{ selected_school.location|slice:":-23" }}</h6>
+                <h6 class="mb-2">{{ selected_school.total_students }} students</h6>
+                <h6 class="mb-4">
                     <span style="font-size: 14px; padding: 4px;">
                         <i class="fa fa-graduation-cap mr-2"></i>
                     </span>
-                    {% widthratio selected_school.graduation_rate 1 100 %} %</h5>
+                    {% widthratio selected_school.graduation_rate 1 100 %} %</h6>
                 <div class="d-flex w-100 justify-content-between" style="font-size: 16px;">
                     <a href="https://www.{{ selected_school.website }}" target="_blank"
                        style="font-size: 16px;">Website</a>

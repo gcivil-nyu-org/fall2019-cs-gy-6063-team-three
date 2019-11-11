@@ -42,8 +42,8 @@ body {
 
 .right-pane-container {
     position: absolute;
-    top: 2.5%;
-    margin: 5% 7.5%;
+    top: 1%;
+    margin: 2.5% 7.5%;
     width: 80%;
 }
 
@@ -97,17 +97,32 @@ body {
 }
 
 .high-school-filters{
-    margin: 2% 5% 0 2.5%;
-    padding: 2px 10px;
+    margin: 2% 5% 0 0;
+    padding: 2px;
+    display: flex;
+    font-size: 20px;
 }
 .high-school-filters .filter-btn{
     color: slategray;
-    font-size: 20px;
     cursor: pointer;
+    padding: 0 10px;
 }
 .high-school-filter-div{
     display: none;
     margin: 2% 0 0 0;
+}
+.high-school-filters .fav-btn{
+    color: slategray;
+    cursor: pointer;
+    padding: 0 10px;
+}
+.hide-fav{
+    display: none;
+}
+.high-school-fav-div{
+    font-size: 18px;
+    color: slategray;
+    margin: 2% 0;
 }
 /*overriding bootstrap*/
 .list-group-item {
