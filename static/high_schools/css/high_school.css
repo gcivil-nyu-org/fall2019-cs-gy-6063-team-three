@@ -43,7 +43,11 @@ body {
 .right-pane-container {
     position: absolute;
     top: 1%;
+<<<<<<< HEAD
     margin: 2.5% 7.5%;
+=======
+    margin: 2% 7.5%;
+>>>>>>> 6a6eaedfb4a396e6ade164a015c64ce2f6a9c7fa
     width: 80%;
 }
 

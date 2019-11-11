@@ -164,6 +164,7 @@ class HighSchoolListView(ListView):
                         context["selected_school"] = selected_school[0]
                     else:
                         context["selected_school"] = None
+                        context["high_schools"] = None
                         context["empty_list"] = True
                 else:
                     context["selected_school"] = None
