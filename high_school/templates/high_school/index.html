@@ -18,7 +18,15 @@
     <div class="all-school-root">
         <div class="container-fluid">
             <div class="row">
-                {% if high_schools %}
+                {% if empty_list %}
+                    {% block empty_list %}
+                        {% include 'high_school/broken.html' %}
+                    {% endblock %}
+                {% elif unauth %}
+                    {% block unauth %}
+                        {% include 'high_school/broken.html' %}
+                    {% endblock %}
+                {% elif high_schools %}
                     <div class="col-md-6 left-pane">
                         {% block school_list %}
                             {% include 'high_school/school_list.html' %}
@@ -29,14 +37,6 @@
                             {% include 'high_school/school_overview.html' %}
                         {% endblock %}
                     </div>
-                {% elif empty_list %}
-                    {% block empty_list %}
-                        {% include 'high_school/broken.html' %}
-                    {% endblock %}
-                {% elif unauth %}
-                    {% block unauth %}
-                        {% include 'high_school/broken.html' %}
-                    {% endblock %}
                 {% endif %}
                 <div>
                     {% block save_highschool %}
