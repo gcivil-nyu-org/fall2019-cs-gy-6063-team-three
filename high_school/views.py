@@ -100,16 +100,19 @@ class HighSchoolListView(ListView):
             context["empty_list"] = None
         else:
             context["unauth"] = False
+            context["empty_list"] = False
             if not context["high_schools"]:
                 context["empty_list"] = True
             else:
                 if self.dbn:
-                    context["selected_school"] = get_object_or_404(
-                        HighSchool, dbn=self.dbn
-                    )
+                    selected_school = HighSchool.objects.filter(dbn=self.dbn)
+                    if selected_school:
+                        context["selected_school"] = selected_school[0]
+                    else:
+                        context["high_schools"] = None
+                        context["empty_list"] = True
                 else:
                     context["selected_school"] = None
-                context["empty_list"] = False
         return context
 
     def getHighSchools(self):
