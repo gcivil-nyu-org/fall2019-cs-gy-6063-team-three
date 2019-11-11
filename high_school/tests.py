@@ -19,8 +19,8 @@ class HighSchoolModelTest(TestCase):
             school_name="Testing High School for Bugs!",
             boro="K",
             overview_paragraph="The mission of Testing High School for Bugs is "
-                               "to intellectually prepare, morally inspire, and socially motivate "
-                               "every bug to become non-existent in this vastly changing project.",
+            "to intellectually prepare, morally inspire, and socially motivate "
+            "every bug to become non-existent in this vastly changing project.",
             neighborhood="Downtown-Brooklyn",
             location="0 MTep Street, Brooklyn NY 00192(01.010101, -02.020202)",
             phone_number="912-121-0911",
@@ -70,20 +70,20 @@ class HighSchoolModelTest(TestCase):
 
 class HighSchoolViewTests(TestCase):
     def create_highschool(
-            self,
-            dbn="06A231",
-            school_name="Testing High School for Bugs!",
-            phone_number="912-121-0911",
-            boro="K",
+        self,
+        dbn="06A231",
+        school_name="Testing High School for Bugs!",
+        phone_number="912-121-0911",
+        boro="K",
     ):
         return HighSchool.objects.create(
             dbn=dbn,
             school_name=school_name,
             boro=boro,
             overview_paragraph="The mission of Testing High School for Bugs is to "
-                               "intellectually prepare, morally inspire, and socially "
-                               "motivate every bug to become non-existent in this vastly "
-                               "changing project.",
+            "intellectually prepare, morally inspire, and socially "
+            "motivate every bug to become non-existent in this vastly "
+            "changing project.",
             neighborhood="Downtown-Brooklyn",
             location="0 MTep Street, Brooklyn NY 00192(01.010101, -02.020202)",
             phone_number=phone_number,
@@ -281,9 +281,11 @@ class SaveHighSchoolTests(TestCase):
         # test blank data
         form = SaveHighSchoolsForm({})
         self.assertFalse(form.is_valid())
-        self.assertEqual(form.errors, {'limit': ['This field is required.']})
+        self.assertEqual(form.errors, {"limit": ["This field is required."]})
 
         # test invalid data
         form = SaveHighSchoolsForm({"limit": -1})
         self.assertFalse(form.is_valid())
-        self.assertTrue(form.errors, {'limit': ['Value must be greater than or equal to 1.']})
+        self.assertTrue(
+            form.errors, {"limit": ["Value must be greater than or equal to 1."]}
+        )
