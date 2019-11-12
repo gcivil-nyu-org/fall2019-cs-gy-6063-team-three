@@ -7,19 +7,22 @@
 
 <div style="margin-left:20%;height: 90%; margin-bottom: 5%; width:50%;">
     <h2>High School Application Form</h2>
-    <form action="{% url 'dashboard:application:new_application' 'ut_student' %}" method="post" class="form-signup" style="padding-top: 10px;">
+    <form action="{% url 'dashboard:application:new_application' 'ut_student' %}" prog-data-url="{% url 'dashboard:application:ajax_load_programs' %}" method="post" class="form-signup" style="padding-top: 10px;">
         {% csrf_token %}
+        <div class="rounded bg-secondary" style="height:35px;margin-bottom:10px;">
+            <h5 class="p-2">PERSONAL</h5>
+        </div>
         <div class="form-row">
             <div class="form-label-group col-md-6">
-                {{ form.first_name }}
                 <label for={{ form.first_name.id_for_label }}>{{ form.first_name.label }}</label>
+                {{ form.first_name }}
                 {% if form.first_name.help_text %}
                     <p class="help">{{ form.first_name.help_text|safe }}</p>
                 {% endif %}
             </div>
             <div class="form-label-group col-md-6">
-                {{ form.last_name }}
                 <label for={{ form.last_name.id_for_label }}>{{ form.last_name.label }}</label>
+                {{ form.last_name }}
                 {% if form.last_name.help_text %}
                     <p class="help">{{ form.last_name.help_text|safe }}</p>
                 {% endif %}
@@ -27,15 +30,15 @@
         </div>
         <div class="form-row">
             <div class="form-label-group col-md-6">
-                {{ form.email_address }}
                 <label for={{ form.email_address.id_for_label }}>{{ form.email_address.label }}</label>
+                {{ form.email_address }}
                 {% if form.email_address.errors %}
                     {{ form.email_address.errors }}
                 {% endif %}
             </div>
             <div class="form-label-group col-md-6">
-                {{ form.phoneNumber }}
                 <label for={{ form.phoneNumber.id_for_label }}>{{ form.phoneNumber.label }}</label>
+                {{ form.phoneNumber }}
                 {% if form.phoneNumber.help_text %}
                     <p class="help">{{ form.phoneNumber.help_text|safe }}</p>
                 {% endif %}
@@ -46,67 +49,75 @@
         </div>
         <div class="form-row">
             <div class="form-label-group col-md-6">
-                {{ form.date_of_birth }}
                 <label for={{ form.date_of_birth.id_for_label }}>{{ form.date_of_birth.label }}</label>
+                {{ form.date_of_birth }}
                 {% if form.date_of_birth.help_text %}
                     <p class="help">{{ form.date_of_birth.help_text|safe }}</p>
                 {% endif %}
             </div>
             <div class="form-label-group col-md-6">
-                {{ form.gender }}
-<!--                TODO : label does not get displayed-->
                 <label for={{ form.gender.id_for_label }}>{{ form.gender.label }}</label>
+                {{ form.gender }}
                 {% if form.gender.help_text %}
                     <p class="help">{{ form.gender.help_text|safe }}</p>
                 {% endif %}
             </div>
         </div>
         <div class="form-row">
-            <div class="form-label-group col-md-6">
-                {{ form.address }}
+            <div class="form-label-group col-md-12">
                 <label for={{ form.address.id_for_label }}>{{ form.address.label }}</label>
+                {{ form.address }}
                 {% if form.address.help_text %}
                     <p class="help">{{ form.address.help_text|safe }}</p>
-                {% endif %}
-            </div>
-            <div class="form-label-group col-md-6">
-                {{ form.gpa }}
-                <label for={{ form.gpa.id_for_label }}>{{ form.gpa.label }}</label>
-                {% if form.gpa.errors %}
-                    {{ form.gpa.errors }}
                 {% endif %}
             </div>
         </div>
         <div class="form-row">
             <div class="form-label-group col-md-6">
-                {{ form.parent_name }}
                 <label for={{ form.parent_name.id_for_label }}>{{ form.parent_name.label }}</label>
+                {{ form.parent_name }}
                 {% if form.parent_name.errors %}
                     {{ form.parent_name.errors }}
                 {% endif %}
             </div>
             <div class="form-label-group col-md-6">
-                {{ form.parent_phoneNumber }}
                 <label for={{ form.parent_phoneNumber.id_for_label }}>{{ form.parent_phoneNumber.label }}</label>
+                {{ form.parent_phoneNumber }}
                 {% if form.parent_phoneNumber.errors %}
                     {{ form.parent_phoneNumber.errors }}
                 {% endif %}
             </div>
         </div>
+        <div class="rounded bg-secondary" style="height:35px;margin-bottom:10px;margin-top:15px;">
+            <h5 class="p-2">EDUCATIONAL</h5>
+        </div>
         <div class="form-row">
             <div class="form-label-group col-md-6">
-                {{ form.school }}
-                <label for={{ form.school.id_for_label }}>{{ form.school.label }}</label>
-            </div>
-            <div class="form-label-group col-md-6">
-                {{ form.program }}
-                <label for={{ form.program.id_for_label }}>{{ form.program.label }}</label>
-                {% if form.program.help_text %}
-                    <p class="help">{{ form.program.help_text|safe }}</p>
+                <label for={{ form.gpa.id_for_label }}>{{ form.gpa.label }}</label>
+                {{ form.gpa }}
+                {% if form.gpa.errors %}
+                    {{ form.gpa.errors }}
                 {% endif %}
             </div>
         </div>
+        <div class="rounded bg-secondary" style="height:35px;margin-bottom:10px;margin-top:15px;">
+            <h5 class="p-2">SELECTED SCHOOLS AND PROGRAMS</h5>
+        </div>
+        {% if program_error %}
+                <span class="text-danger">{{ program_error }}</span>
+        {% endif %}
         <div class="form-row">
+            <div class="form-label-group col-md-6">
+                <label for={{ form.school.id_for_label }}>{{ form.school.label }}</label>
+                {{ form.school }}
+            </div>
+            <div class="form-label-group col-md-6">
+                <label for={{ form.program.id_for_label }}>{{ form.program.label }}</label>
+                {{ form.program }}
+            </div>
+<!--        TODO: add a 'ADD' button to add more programs-->
+        </div>
+        <div class="form-row" style="margin-top:50px;">
             <div class="form-label-group col-md-6">
                 <input class="btn btn-lg btn-primary btn-block" type="submit" value="Save as Draft"
                        name="draft"/>

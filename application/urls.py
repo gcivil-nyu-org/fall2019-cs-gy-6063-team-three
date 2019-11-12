@@ -16,4 +16,5 @@ urlpatterns = [
         views.save_existing_application,
         name="draftExistingApplication",
     ),
+    path("ajax/load-programs/", views.load_programs, name="ajax_load_programs"),
 ]

@@ -4,7 +4,7 @@ from django.utils import timezone
 from .forms import HighSchoolApplicationForm, GENDER
 from .models import HighSchoolApplication
 from register.models import Student
-from high_school.models import HighSchool
+from high_school.models import HighSchool, Program
 
 
 def create_student(self):
@@ -38,6 +38,22 @@ def create_highschool(self):
     )
 
 
+def create_program(self):
+    return Program.objects.create(
+        high_school=self.school,
+        name="Academy of Engineering",
+        code="AE123",
+        description="New York State approved CTE Program that leads to national "
+        "certification aligned with industry standards and a "
+        "CTE-endorsed Regents Diploma. Interdisciplinary "
+        "project-based curriculum includes coursework in Introduction "
+        "to Engineering & Design, Digital Electronics, Principles of "
+        "Engineering, and Engineering Design & Development.",
+        number_of_seats=70,
+        offer_rate=0,
+    )
+
+
 class HighSchoolApplicationModelTest(TestCase):
     def create_application(self):
         return HighSchoolApplication.objects.create(
@@ -54,7 +70,7 @@ class HighSchoolApplicationModelTest(TestCase):
             parent_name="Rakesh Roshan",
             parent_phoneNumber="+15879879870",
             school=self.school,
-            program="CS",
+            program=self.program,
             is_draft=self.is_draft,
             submitted_date=self.submitted_date,
         )
@@ -62,6 +78,7 @@ class HighSchoolApplicationModelTest(TestCase):
     def setUp(self):
         self.student = create_student(self)
         self.school = create_highschool(self)
+        self.program = create_program(self)
         self.submitted_date = timezone.now()
         self.is_draft = False
 
@@ -82,7 +99,7 @@ class HighSchoolApplicationModelTest(TestCase):
         self.assertEqual(application.parent_name, "Rakesh Roshan")
         self.assertEqual(application.parent_phoneNumber, "+15879879870")
         self.assertEqual(application.school, self.school)
-        self.assertEqual(application.program, "CS")
+        self.assertEqual(application.program, self.program)
         self.assertEqual(application.is_draft, self.is_draft)
         self.assertEqual(application.submitted_date, self.submitted_date)
 

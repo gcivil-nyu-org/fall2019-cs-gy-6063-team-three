@@ -1,37 +1,43 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from .forms import HighSchoolApplicationForm
-from .models import HighSchoolApplication
 from django.utils import timezone
 from django.urls import reverse
 
+from .forms import HighSchoolApplicationForm
+from .models import HighSchoolApplication
+from high_school.models import Program
+
 
 def new_application(request, user_type):
-    if request.method == "POST":
-        # TODO user_id will be replaced by sessions
-        user_id = 1
-        form = HighSchoolApplicationForm(request.POST)
-        if form.is_valid():
-            f = form.save(commit=False)
-            f.user_id = user_id
-            f.application_number = (
-                str(user_id) + str(f.school.school_name) + str(f.program)
-            )
-            f.submitted_date = timezone.now()
-            try:
-                if "Submit" in request.POST.get("submit"):
+    try:
+        if request.method == "POST":
+            # TODO user_id will be replaced by sessions
+            user_id = 1
+            form = HighSchoolApplicationForm(request.POST)
+            if form.is_valid():
+                f = form.save(commit=False)
+                f.user_id = user_id
+                f.application_number = generate_application_number(
+                    user_id, f.school.dbn, f.program.pk
+                )
+                if HighSchoolApplication.objects.filter(
+                    application_number=f.application_number
+                ):
+                    raise ValueError("Duplicate school and program selected")
+                f.submitted_date = timezone.now()
+                if request.POST.get("submit") is not None:
                     f.is_draft = False
                 else:
                     f.is_draft = True
-            except:  # noqa: E722
-                pass
-            f.save()
-            return HttpResponseRedirect(
-                reverse("dashboard:application:all_applications", args=[user_type])
-            )
-    else:
-        form = HighSchoolApplicationForm()
-    context = {"form": form}
+                f.save()
+                return HttpResponseRedirect(
+                    reverse("dashboard:application:all_applications", args=[user_type])
+                )
+        else:
+            form = HighSchoolApplicationForm()
+        context = {"form": form}
+    except ValueError as e:
+        context = {"form": form, "program_error": e}
     return render(request, "application/application-form.html", context)
 
 
@@ -47,8 +53,8 @@ def save_existing_application(request, user_type, application_id):
             f.last_name = form.last_name
             f.school = form.school
             f.program = form.program
-            f.application_number = (
-                str(user_id) + str(f.school.school_name) + str(f.program)
+            f.application_number = generate_application_number(
+                user_id, f.school.dbn, f.program.pk
             )
             f.email_address = form.email_address
             f.phoneNumber = form.phoneNumber
@@ -108,3 +114,16 @@ def detail(request, user_type, application_id):
     }
     # TODO redirect to index
     return render(request, "application/application-overview.html", context)
+
+
+def generate_application_number(user_id, school_id, program_id):
+    return str(user_id) + str(school_id) + str(program_id)
+
+
+def load_programs(request):
+    school_id = request.GET.get("selected_school_id")
+    if school_id:
+        programs = Program.objects.filter(high_school_id=school_id)
+    else:
+        programs = None
+    return render(request, "application/loadPrograms.html", {"programs": programs})

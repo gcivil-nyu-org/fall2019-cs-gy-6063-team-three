@@ -88,6 +88,6 @@ def get_applications(admin_staff):
 def get_programs(applications):
     program_set = set()
     for application in applications:
-        program_set.add(application.program)
+        program_set.add(str(application.program))
     program_set.add(ALL)
     return list(sorted(program_set))
