@@ -8,38 +8,57 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='HighSchool',
+            name="HighSchool",
             fields=[
-                ('dbn', models.CharField(max_length=10, primary_key=True, serialize=False)),
-                ('school_name', models.CharField(max_length=200)),
-                ('boro', models.CharField(max_length=1)),
-                ('overview_paragraph', models.CharField(max_length=1000)),
-                ('neighborhood', models.CharField(max_length=100)),
-                ('location', models.CharField(max_length=100)),
-                ('phone_number', models.CharField(max_length=15)),
-                ('school_email', models.EmailField(max_length=254)),
-                ('website', models.CharField(max_length=70)),
-                ('total_students', models.IntegerField()),
-                ('start_time', models.CharField(max_length=6)),
-                ('end_time', models.CharField(max_length=6)),
-                ('graduation_rate', models.CharField(max_length=5)),
+                (
+                    "dbn",
+                    models.CharField(max_length=10, primary_key=True, serialize=False),
+                ),
+                ("school_name", models.CharField(max_length=200)),
+                ("boro", models.CharField(max_length=1)),
+                ("overview_paragraph", models.CharField(max_length=1000)),
+                ("neighborhood", models.CharField(max_length=100)),
+                ("location", models.CharField(max_length=100)),
+                ("phone_number", models.CharField(max_length=15)),
+                ("school_email", models.EmailField(max_length=254)),
+                ("website", models.CharField(max_length=70)),
+                ("total_students", models.IntegerField()),
+                ("start_time", models.CharField(max_length=6)),
+                ("end_time", models.CharField(max_length=6)),
+                ("graduation_rate", models.CharField(max_length=5)),
             ],
         ),
         migrations.CreateModel(
-            name='Program',
+            name="Program",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100)),
-                ('code', models.CharField(max_length=20, unique=True)),
-                ('description', models.CharField(blank=True, max_length=2000, null=True)),
-                ('number_of_seats', models.IntegerField(blank=True, null=True)),
-                ('offer_rate', models.IntegerField(blank=True, null=True)),
-                ('high_school', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='high_school.HighSchool')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=100)),
+                ("code", models.CharField(max_length=20, unique=True)),
+                (
+                    "description",
+                    models.CharField(blank=True, max_length=2000, null=True),
+                ),
+                ("number_of_seats", models.IntegerField(blank=True, null=True)),
+                ("offer_rate", models.IntegerField(blank=True, null=True)),
+                (
+                    "high_school",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="high_school.HighSchool",
+                    ),
+                ),
             ],
         ),
     ]

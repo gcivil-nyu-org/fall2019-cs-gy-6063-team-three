@@ -13,7 +13,8 @@ def split_string(val, arg):
 
 def get_req_params(val):
     # val will usually be like
-    # val = "http://oneapply.com/dashboard/all_schools/?query=q1&loc_bx=&loc_bk=on&page=2"
+    # val = "http://oneapply.com/dashboard/all_schools/
+    #       ?query=q1&loc_bx=&loc_bk=on&page=2"
     splits = split_string(val, "?")
     par_val = {}
     # if query params exist
@@ -48,7 +49,8 @@ def get_req_params(val):
 @register.filter(name="get_querystring")
 def get_querystring(val, arg):
     # val will usually be like
-    # val = "http://oneapply.com/dashboard/all_schools/?query=q1&loc_bx=&loc_bk=on&page=2"
+    # val = "http://oneapply.com/dashboard/all_schools/
+    #       ?query=q1&loc_bx=&loc_bk=on&page=2"
     # arg will be the param we need to update
     # arg = "page"
     path = str(val)
@@ -56,7 +58,11 @@ def get_querystring(val, arg):
     # is no params exist in path
     if not splits:
         if str(arg):
-            return path + "?" + str(arg) if path[len(path) - 1] == "/" else path + "/?" + str(arg)
+            return (
+                path + "?" + str(arg)
+                if path[len(path) - 1] == "/"
+                else path + "/?" + str(arg)
+            )
         else:
             return None
     # params exist in path
