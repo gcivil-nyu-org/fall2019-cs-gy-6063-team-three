@@ -143,7 +143,8 @@ class AdminStaffRegisterForm(ModelForm):
             "input_password",
             "confirm_password",
         )
-        exclude = ["password"]
+        # TODO: we need to include the school once sessions are in place
+        exclude = ["password", "school"]
         labels = {
             "supervisor_email": _("Supervisor's Email"),
             "input_password": _("Password"),

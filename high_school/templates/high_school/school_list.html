@@ -1,0 +1,135 @@
+{% block school_list %}
+    <div style="height: 90%; overflow-y: scroll; margin-bottom: 5%;">
+        <div class="list-group">
+            <div style="display: flex; flex-direction: row; width: 100%;">
+                <div class="high-school-search">
+                    <form name="search_filter_form" method='GET'>
+                        <div class="search-div">
+                        <span>
+                            <input class="search-input" type='text' name='q'
+                                   value='{{ request.GET.q }}' placeholder="Search for your school">
+                            <span onclick="search_filter_form.submit();" class="search-btn">
+                                <i class="fa fa-search mr-2"></i>
+                            </span>
+                        </span>
+                        </div>
+                        <div class="high-school-filter-div">
+                            <p class="mb-1">Filter using boroughs</p>
+                            <div class="form-group">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input"
+                                           id="loc_bx" name="loc_bx"
+                                           {% if request.GET.loc_bx %}checked=""{% endif %}
+                                           onchange="search_filter_form.submit();">
+                                    <label class="custom-control-label"
+                                           for="loc_bx">Bronx</label>
+                                </div>
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input"
+                                           id="loc_bk" name="loc_bk"
+                                           {% if request.GET.loc_bk %}checked=""{% endif %}
+                                           onchange="search_filter_form.submit();">
+                                    <label class="custom-control-label"
+                                           for="loc_bk">Brooklyn</label>
+                                </div>
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input"
+                                           id="loc_mn" name="loc_mn"
+                                           {% if request.GET.loc_mn %}checked=""{% endif %}
+                                           onchange="search_filter_form.submit();">
+                                    <label class="custom-control-label"
+                                           for="loc_mn">Manhattan</label>
+                                </div>
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input"
+                                           id="loc_qn" name="loc_qn"
+                                           {% if request.GET.loc_qn %}checked=""{% endif %}
+                                           onchange="search_filter_form.submit();">
+                                    <label class="custom-control-label"
+                                           for="loc_qn">Queens</label>
+                                </div>
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input"
+                                           id="loc_si" name="loc_si"
+                                           {% if request.GET.loc_si %}checked=""{% endif %}
+                                           onchange="search_filter_form.submit();">
+                                    <label class="custom-control-label"
+                                           for="loc_si">Staten Island</label>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="high-school-filters">
+                    <span class="filter-btn"><i class="fa fa-filter"></i></span>
+                </div>
+            </div>
+            {% for school in high_schools %}
+                {% if selected_school and selected_school.dbn == school.dbn %}
+                    <a href="{% url 'dashboard:high_school:overview'  school.dbn %}"
+                       class="list-group-item list-group-item-action active">
+                {% else %}
+                    <a href="{% url 'dashboard:high_school:overview'  school.dbn %}"
+                       class="list-group-item list-group-item-action">
+                {% endif %}
+            <div class="d-flex w-100 justify-content-between mb-2">
+                <h4 class="mb-1" style="width: 75%">{{ school.school_name }}</h4>
+                <small class="pt-1"
+                       style="width: 25%; text-align: right; vertical-align: middle;">
+                                    <span style="font-size: 14px; padding: 4px;"><i
+                                            class="fa fa-clock-o"></i></span>
+                    {{ school.start_time }} - {{ school.end_time }}
+                </small>
+            </div>
+            {#TODO: change this to school.boro instead and map it to full name#}
+            <h5 class="mb-2">{{ school.neighborhood }}</h5>
+            <div class="d-flex w-100 justify-content-between">
+                        <span style="font-size: 14px; padding: 4px;">
+                            <i class="fa fa-graduation-cap mr-2"></i>
+                            {% widthratio school.graduation_rate 1 100 %} %
+                        </span>
+                <h5 class="mb-0">{{ school.phone_number }}</h5>
+            </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="pagination-div">
+        {% if is_paginated %}
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}"
+                           tabindex="-1">Previous</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1"
+                           aria-disabled="true">Previous</a>
+                    </li>
+                {% endif %}
+                {% for i in paginator.page_range %}
+                    {% if page_obj.number == i %}
+                        <li class="page-item active" aria-current="page">
+                            <a class="page-link" href="#">{{ i }} <span
+                                    class="sr-only">(current)</span></a>
+                        </li>
+                    {% else %}
+                        <li class="page-item"><a class="page-link"
+                                                 href="?page={{ i }}">{{ i }}</a></li>
+                    {% endif %}
+                {% endfor %}
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link"
+                           href="?page={{ page_obj.next_page_number }}">Next</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#">Next</a>
+                    </li>
+                {% endif %}
+            </ul>
+        {% endif %}
+    </div>
+{% endblock %}

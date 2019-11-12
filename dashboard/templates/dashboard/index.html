@@ -1,0 +1,142 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{% static 'dashboard/dashboard.css' %}" rel="stylesheet">
+    <title>OneApply</title>
+</head>
+<body>
+<div style="display: flex; flex-direction: column; width: 100%; height: 100%;">
+    <div class="nav-container">
+        <nav class="navbar navbar-expand-md navbar-dark bg-primary">
+            <a class="navbar-brand" href="{% url 'dashboard:dashboard' %}">OneApply</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse"
+                    data-target="#navbarCollapse" aria-controls="navbarCollapse"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="navbar-nav mr-auto">
+
+                </ul>
+
+                <a class="nav-link" href='#'>Profile</a>
+                <a class="nav-link" href="{% url 'dashboard:logout' %}">Logout</a>
+
+            </div>
+        </nav>
+    </div>
+    <div class="nav-scroller mb-2">
+        {% if user_type == constant_ut_student %}
+            <nav class="nav d-flex justify-content-between">
+                <div class="nav nav-tabs d-flex justify-content-between" id="dashboard-tab"
+                     role="tablist" style="width: 100%;">
+                    {# TODO: update this    #}
+                    {# this has to be a user object and not a user_type string  #}
+                    <span class="nav-item nav-link p-2 active" id="nav-allSchools-tab"
+                          data-toggle="tab"
+                          data-url="{% url 'dashboard:high_school:index'  %}"
+                          role="tab" aria-controls="nav-allSchools">All Schools</span>
+                    <span class="nav-item nav-link p-2" id="nav-selectedSchools-tab"
+                          data-toggle="tab"
+                          data-url="#nav-selectedSchools" role="tab"
+                          aria-controls="nav-selectedSchools">Selected Schools</span>
+                    <span class="nav-item nav-link p-2" id="nav-applications-tab"
+                          data-toggle="tab" data-url="{% url 'dashboard:application:all_applications' 'ut_student' %}"
+                          role="tab" aria-controls="nav-applications">Application Forms</span>
+                    <span class="nav-item nav-link p-2" id="nav-apply-tab"
+                          data-toggle="tab" data-url="{% url 'dashboard:application:new_application' 'ut_student' %}"
+                          role="tab" aria-controls="nav-apply">Apply</span>
+                    <span class="nav-item nav-link p-2" id="nav-recommendations-tab"
+                          data-toggle="tab"
+                          data-url="#nav-recommendations" role="tab"
+                          aria-controls="nav-recommendations">Teacher Recommendations</span>
+                </div>
+            </nav>
+        {% elif user_type == constant_ut_adminStaff %}
+            <nav class="nav d-flex">
+                <a class="p-2 text-muted active" href="{% url 'dashboard:admissions:index' %}"
+                   data-toggle="tab">Student
+                    Applications</a>
+                <a class="p-2 text-muted" href="#school_informations" data-toggle="tab">School
+                    Informations</a>
+            </nav>
+        {% endif %}
+    </div>
+    {% if user_type == constant_ut_student %}
+        <div class="tab-content" id="dashboardTabContent">
+            <div class="tab-pane fade active" id="nav-allSchools" role="tabpanel"
+                 aria-labelledby="nav-allSchools-tab">
+                {% block all_high_schools %}
+                {% endblock %}
+            </div>
+            <div class="tab-pane fade" id="nav-selectedSchools" role="tabpanel"
+                 aria-labelledby="nav-selectedSchools-tab">
+                <h1>Hello, this is selected schools page</h1>
+            </div>
+            <div class="tab-pane fade" id="nav-applications" role="tabpanel"
+                 aria-labelledby="nav-applications-tab">
+                {% block all_applications %}
+                {% endblock %}
+            </div>
+            <div class="tab-pane fade" id="nav-apply" role="tabpanel"
+                 aria-labelledby="nav-apply-tab">
+                {% block app_apply %}
+                {% endblock %}
+            </div>
+            <div class="tab-pane fade" id="nav-recommendations" role="tabpanel"
+                 aria-labelledby="nav-recommendations-tab">
+                {% block recommendations %}
+                    Teacher recommendations tab
+                {% endblock %}
+            </div>
+        </div>
+    {% elif user_type == constant_ut_adminStaff %}
+        {% block content %}
+        {% endblock %}
+    {% endif %}
+    <footer class="blog-footer">
+        <p>
+            <a href="#">Back to top</a>
+        </p>
+    </footer>
+</div>
+</body>
+<!--bootstrap jquery and js-->
+<script src="//cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<script>
+    let toggleTabs = function (selected_tab) {
+        $('.nav-item').removeClass("active");
+        $(selected_tab).addClass("active");
+        let tab_target = selected_tab.attr("aria-controls");
+        $('.tab-pane').removeClass("active");
+        $('.tab-pane').removeClass("show");
+        $('#' + tab_target).addClass("active");
+        $('#' + tab_target).addClass("show");
+    };
+
+    $(document).ready(function () {
+        let currentPageUrl = $(location).attr('href'), anchorEl;
+        $('.nav-item').each(function () {
+            anchorEl = $(this).attr('data-url');
+            if (currentPageUrl.indexOf(anchorEl) >= 0) {
+                toggleTabs($(this));
+            }
+        });
+    });
+
+    $('#dashboard-tab span').on('click', function (e) {
+        let selected_tab = $(this);
+        toggleTabs(selected_tab);
+        window.location.href = selected_tab.attr("data-url")
+    })
+</script>
+
+</html>

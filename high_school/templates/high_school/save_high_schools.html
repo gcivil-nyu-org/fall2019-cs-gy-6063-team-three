@@ -1,0 +1,9 @@
+{% extends 'high_school/index.html' %}
+
+{% block save_highschool %}
+    <form action="{% url 'dashboard:high_school:save'  %}" method="POST">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Save"/>
+    </form>
+{% endblock %}

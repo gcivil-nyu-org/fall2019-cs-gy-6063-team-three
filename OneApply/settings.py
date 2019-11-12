@@ -27,20 +27,26 @@ SECRET_KEY = "_6vfgoyv5*7sc@r)tyhnq*t8x!90(16$4qi3k2u5rl6!p72v0("
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
+LOGIN_URL = "/"
 
 # Application definition
 
 INSTALLED_APPS = [
     "landingpage",
+    "dashboard",
     "logIn.apps.LogInConfig",
+    "admissions.apps.AdmissionsConfig",
     "register.apps.RegisterConfig",
+    "application.apps.ApplicationConfig",
+    "phonenumber_field",
+    "high_school.apps.HighSchoolConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "rest_framework",
 ]
 
 
@@ -132,5 +138,8 @@ EMAIL_HOST = "smtp.gmail.com"
 EMAIL_HOST_USER = "UserVerifOneApply@gmail.com"
 EMAIL_HOST_PASSWORD = "pwd@TeamThree"
 EMAIL_PORT = 587
+
+# configure phone number field
+PHONENUMBER_DB_FORMAT = "E164"
 
 django_heroku.settings(locals(), test_runner=False)

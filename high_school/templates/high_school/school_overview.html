@@ -1,0 +1,44 @@
+{% block school_overview %}
+    {% if selected_school %}
+        <div class="top-header">
+            <div class="blur-bg"></div>
+            <div class="right-pane-container">
+                <h3 class="mb-3">{{ selected_school.school_name }}</h3>
+                <h4 class="mb-2">{{ selected_school.neighborhood }}
+                    ({{ selected_school.boro }})</h4>
+                <h5 class="mb-4">{{ selected_school.location|slice:":-23" }}</h5>
+                <h5 class="mb-2">{{ selected_school.total_students }} students</h5>
+                <h5 class="mb-4">
+                    <span style="font-size: 14px; padding: 4px;">
+                        <i class="fa fa-graduation-cap mr-2"></i>
+                    </span>
+                    {% widthratio selected_school.graduation_rate 1 100 %} %</h5>
+                <div class="d-flex w-100 justify-content-between" style="font-size: 16px;">
+                    <a href="https://www.{{ selected_school.website }}" target="_blank"
+                       style="font-size: 16px;">Website</a>
+                    <span style="width: 25%; text-align: right;
+                    vertical-align: middle; font-size: 16px;">
+                                    <i class="fa fa-clock-o"></i>
+                         {{ selected_school.start_time }} - {{ selected_school.end_time }}</span>
+                </div>
+            </div>
+        </div>
+        <div style="margin: 7.5%" class="justify-content-between">
+            {{ selected_school.overview_paragraph }}
+        </div>
+        <button class="btn btn-lg btn-primary btn-block"
+                style="margin: 15% 12.5% 5% 12.5%; width: 75%">More Info
+        </button>
+    {% else %}
+        <div class="no-school-placeholder">
+            <div style="font-size: 18px;">
+                <span class="mb-3" style="font-size: 42px">
+                    <i class="fa fa-school fa-5x"></i>
+                </span>
+            </div>
+            <p class="mt-5" style="font-size: 18px;">
+                Please select a high school to get a brief overview
+            </p>
+        </div>
+    {% endif %}
+{% endblock %}
