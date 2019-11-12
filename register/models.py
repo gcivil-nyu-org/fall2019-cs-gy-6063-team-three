@@ -2,10 +2,7 @@
 
 from django.db import models
 from django.core import validators
-from django.core.validators import RegexValidator
-
-
-PHONE_REGEX = "r'^([0-9]{3}) [0-9]{3}-[0-9]{4}$'"
+from .validators import validate_not_used_email
 
 
 def auto_str(cls):
@@ -23,10 +20,7 @@ class User(models.Model):
     first_name = models.CharField(max_length=50, null=True, blank=True)
     last_name = models.CharField(max_length=50, null=True, blank=True)
     email_address = models.EmailField(
-        max_length=200, null=True, blank=False, validators=[validators.validate_email]
-    )
-    phoneNumber = models.CharField(
-        max_length=15, validators=[RegexValidator(PHONE_REGEX)]
+        max_length=200, null=True, blank=False, validators=[validators.validate_email, validate_not_used_email]
     )
     username = models.CharField(max_length=20, null=True, blank=False)
     password = models.CharField(max_length=256)

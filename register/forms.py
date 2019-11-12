@@ -33,16 +33,10 @@ class StudentRegisterForm(ModelForm):
             {"placeholder": "Password (Once more)"}
         )
 
-    def clean_email(self):
-        email = self.cleaned_data["email_address"]
-        if Student.objects.filter(email_address=email).exists():
-            raise ValidationError("Email already in use")
-        return email
-
     def clean_username(self):
         username = self.cleaned_data["username"]
         if Student.objects.filter(username=username).exists():
-            raise ValidationError("Username already exists")
+            raise ValidationError("Username already in use")
         return username
 
     def clean_input_password(self):
@@ -102,16 +96,10 @@ class AdminStaffRegisterForm(ModelForm):
                 {"class": "form-control", "placeholder": field.label}
             )
 
-    def clean_email(self):
-        email = self.cleaned_data["email_address"]
-        if Admin_Staff.objects.filter(email_address=email).exists():
-            raise ValidationError("email_address", "Email already in use")
-        return email
-
     def clean_username(self):
         username = self.cleaned_data["username"]
         if Admin_Staff.objects.filter(username=username).exists():
-            raise ValidationError("Username already exists")
+            raise ValidationError("Username already in use")
         return username
 
     def clean_supervisor_email(self):
