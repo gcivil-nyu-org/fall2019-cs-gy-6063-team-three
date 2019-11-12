@@ -73,8 +73,10 @@ def get_querystring(val, arg):
                 path += "&" + param + "=" + value
             else:
                 path += "?" + param + "=" + value
-
-    return path + "&" + str(arg) if str(arg) else path
+    if "?" in path:
+        return path + "&" + str(arg) if str(arg) else path
+    else:
+        return path + "?" + str(arg) if str(arg) else path
 
 
 @register.filter(name="split_string_single")
