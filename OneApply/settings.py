@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "admissions.apps.AdmissionsConfig",
     "register.apps.RegisterConfig",
     "application.apps.ApplicationConfig",
+    "recommendation.apps.RecommendationConfig",
     "phonenumber_field",
     "high_school.apps.HighSchoolConfig",
     "django.contrib.admin",

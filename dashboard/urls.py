@@ -15,4 +15,5 @@ urlpatterns = [
     path("", views.dashboard, name="dashboard"),
     path("logout", views.logout, name="logout"),
     path("", include("application.urls"), name="application"),
+    path("", include("recommendation.urls"), name="recommendation"),
 ]

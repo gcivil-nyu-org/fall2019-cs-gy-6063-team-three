@@ -52,10 +52,10 @@
 {#                    Todo; use this as reference for applications integration#}
 {#                    data-url -> 'dashboard:<applications_app_name>:<index_view>' 'ut_student'#}
 {#                    prefer not to change any other fields#}
-{#                    <span class="nav-item nav-link p-2" id="nav-recommendations-tab"#}
-{#                          data-toggle="tab"#}
-{#                          data-url="{% url 'dashboard:logIn:login_user' 'ut_student' %}" role="tab"#}
-{#                          aria-controls="nav-recommendations">Teacher Recommendations</span>#}
+                   <span class="nav-item nav-link p-2" id="nav-recommendations-tab"
+                         data-toggle="tab"
+                         data-url="{% url 'dashboard:recommendation:all_recommendation' 'ut_student' %}"
+                         role="tab" aria-controls="nav-recommendations">Teacher Recommendations</span>
                 </div>
             </nav>
         {% elif user_type == constant_ut_adminStaff %}
@@ -92,9 +92,9 @@
 {#                declare your block name here#}
 {#                extend dashboard/index.html in your app/template/app/<main>.html#}
 {#                also enclose all of your content in a block with the same name as provided here#}
-{#                {% block testing %}#}
-{#                    Testing#}
-{#                {% endblock %}#}
+              {% block all_recommendations %}
+                   All recommendations
+               {% endblock %}
             </div>
         </div>
     {% elif user_type == constant_ut_adminStaff %}
