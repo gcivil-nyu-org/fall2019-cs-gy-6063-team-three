@@ -12,7 +12,6 @@ def create_student(self):
         first_name="Hritik",
         last_name="Roshan",
         email_address="hrx@gmail.com",
-        phoneNumber="9567801234",
         username="hritik",
         password="hritikRoshan@10",
         current_school="NYU",
