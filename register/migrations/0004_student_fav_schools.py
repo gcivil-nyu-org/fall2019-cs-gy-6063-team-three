@@ -6,14 +6,14 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('high_school', '0002_auto_20191105_1536'),
-        ('register', '0003_auto_20191105_2317'),
+        ("high_school", "0002_auto_20191105_1536"),
+        ("register", "0003_auto_20191105_2317"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='student',
-            name='fav_schools',
-            field=models.ManyToManyField(blank=True, to='high_school.HighSchool'),
-        ),
+            model_name="student",
+            name="fav_schools",
+            field=models.ManyToManyField(blank=True, to="high_school.HighSchool"),
+        )
     ]
