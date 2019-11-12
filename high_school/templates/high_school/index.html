@@ -113,17 +113,7 @@
                         .addClass(item ? "" : "disabled")
                         .toggleClass("active", item === currentPage).append(
                         $("<a>").addClass("page-link").attr({
-                            {% with request.get_full_path as querystring  %}
-                                {% if 'query' in querystring or 'loc_bx' in querystring or 'loc_bk' in querystring or 'loc_mn' in querystring or 'loc_qn' in querystring or 'loc_si' in querystring %}
-                                    {% if 'page' in querystring %}
-                                        href: item ? "{{ querystring|slice:":-7" }}&page=" + item : "javascript.void(0)"
-                                    {% else %}
-                                        href: item ? "{{ querystring }}&page=" + item : "javascript.void(0)"
-                                    {% endif %}
-                                {% else %}
-                                    href: item ? "?page=" + item : "javascript.void(0)"
-                                {% endif %}
-                            {% endwith %}
+                            href: item ? "{{ request.get_full_path|get_querystring:"page"|escapejs }}=" + item : "javascript.void(0)"
                         }).text(item || "...")
                     ).insertBefore("#next-page");
                 });
@@ -136,44 +126,17 @@
             $(".pagination").append(
                 $("<li>").addClass("page-item").attr({id: "previous-page"}).append(
                     $("<a>").addClass("page-link").attr({
-                        {% with request.get_full_path as querystring  %}
-                            {% if 'query' in querystring or 'loc_bx' in querystring or 'loc_bk' in querystring or 'loc_mn' in querystring or 'loc_qn' in querystring or 'loc_si' in querystring %}
-                                {% if 'page' in querystring %}
-                                    href: {% if page_obj.has_previous %}
-                                        "{{ querystring|slice:":-7" }}&page={{ page_obj.previous_page_number }}"
-                                    {% else %} "javascript.void(0)" {% endif %}
-                                {% else %}
-                                    href: {% if page_obj.has_previous %}
-                                        "{{ querystring }}&page={{ page_obj.previous_page_number }}"
-                                        {% else %}"javascript.void(0)"{% endif %}
-                                {% endif %}
-                            {% else %}
-                                href: {% if page_obj.has_previous %}
-                                    "?page={{ page_obj.previous_page_number }}"
-                                    {% else %}"javascript.void(0)"{% endif %}
-                            {% endif %}
-                        {% endwith %}
+                        href: {% if page_obj.has_previous %}
+                            "{{ request.get_full_path|get_querystring:"page"|escapejs }}={{ page_obj.previous_page_number }}"
+                            {% else %}"javascript.void(0)"{% endif %}
                     }).text("Prev")
                 ),
                 $("<li>").addClass("page-item").attr({id: "next-page"}).append(
                     $("<a>").addClass("page-link").attr({
-                        {% with request.get_full_path as querystring  %}
-                            {% if 'query' in querystring or 'loc_bx' in querystring or 'loc_bk' in querystring or 'loc_mn' in querystring or 'loc_qn' in querystring or 'loc_si' in querystring %}
-                                {% if 'page' in querystring %}
-                                    href: {% if page_obj.has_next %}
-                                        "{{ querystring|slice:":-7" }}&page={{ page_obj.next_page_number }}"
-                                        {% else %}"javascript.void(0)"{% endif %}
-                                {% else %}
-                                    href: {% if page_obj.has_next %}
-                                        "{{ querystring }}&page={{ page_obj.next_page_number }}"
-                                        {% else %}"javascript.void(0)"{% endif %}
-                                {% endif %}
-                            {% else %}
-                                href: {% if page_obj.has_next %}
-                                    "?page={{ page_obj.next_page_number }}"
-                                    {% else %}"javascript.void(0)"{% endif %}
-                            {% endif %}
-                        {% endwith %}
+                        href: {% if page_obj.has_next %}
+                            "{{ request.get_full_path|get_querystring:"page"|escapejs }}={{ page_obj.next_page_number }}"
+                            {% else %}"javascript.void(0)"{% endif %}
+
                     }).text("Next")
                 )
             );
