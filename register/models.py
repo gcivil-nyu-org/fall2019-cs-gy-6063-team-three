@@ -25,6 +25,7 @@ class User(models.Model):
     is_active = models.BooleanField(default=False)
 
     class Meta:
+        ordering = ["first_name"]
         abstract = True
 
 
@@ -32,6 +33,7 @@ class User(models.Model):
 class Student(User):
     current_school = models.CharField(max_length=100, null=True, blank=True)
     borough = models.CharField(max_length=2)
+    fav_schools = models.ManyToManyField(HighSchool, blank=True)
 
 
 @auto_str

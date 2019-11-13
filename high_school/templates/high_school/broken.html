@@ -15,21 +15,40 @@
     {% endif %}
 {% endblock %}
 {% block empty_list %}
-    {% if empty_list %}
-    <div class="no-school-placeholder">
-        <div style="font-size: 18px;">
+    {#    for empty fav list #}
+    {% if empty_list == 2 %}
+        <div class="no-school-placeholder">
+            <div style="font-size: 18px;">
+                    <span class="mb-3" style="font-size: 48px">
+                        <i class="far fa-folder-open fa-5x"></i>
+                    </span>
+            </div>
+            <p class="mt-5" style="font-size: 18px;">
+                Your favorites will appear here.</p>
+            <p>Use the heart icon to add/remove a high school from your favorites.
+            </p>
+            <small class="pt-1">Contact oneapply_teamthree@gmail.com for more assistance.</small>
+            <a href="{% url 'dashboard:high_school:index' %}">
+                <button class="btn btn-lg btn-primary mt-4 mb-4">Add Favorites
+                </button>
+            </a>
+        </div>
+        {#        default for empty list#}
+    {% else %}
+        <div class="no-school-placeholder">
+            <div style="font-size: 18px;">
                     <span class="mb-3" style="font-size: 48px">
                         <i class="fa fa-unlink fa-5x"></i>
                     </span>
+            </div>
+            <p class="mt-5" style="font-size: 18px;">
+                Oops! We couldn't find what you're looking for...
+            </p>
+            <small class="pt-1">Contact oneapply_teamthree@gmail.com if the problem persists.</small>  {# noqa: E501 #}
+            <a href="{% url 'dashboard:high_school:index' %}">
+                <button class="btn btn-lg btn-primary mt-4 mb-4">Home
+                </button>
+            </a>
         </div>
-        <p class="mt-5" style="font-size: 18px;">
-            Oops! We couldn't find what you're looking for...
-        </p>
-        <small class="pt-1">Contact oneapply_teamthree@gmail.com if the problem persists.</small>
-        <a href="{% url 'dashboard:high_school:index'  %}">
-            <button class="btn btn-lg btn-primary mt-4 mb-4">Home
-            </button>
-        </a>
-    </div>
     {% endif %}
 {% endblock %}
