@@ -50,7 +50,7 @@
                           role="tab" aria-controls="nav-apply">Apply</span>
                     <span class="nav-item nav-link p-2" id="nav-recommendations-tab"
                           data-toggle="tab"
-                          data-url="#nav-recommendations" role="tab"
+                          data-url="{% url 'dashboard:recommendation:new_recommendation' %}" role="tab"
                           aria-controls="nav-recommendations">Teacher Recommendations</span>
                 </div>
             </nav>
@@ -83,8 +83,7 @@
             </div>
             <div class="tab-pane fade" id="nav-recommendations" role="tabpanel"
                  aria-labelledby="nav-recommendations-tab">
-                {% block recommendations %}
-                    Teacher recommendations tab
+                {% block recommend_form %}
                 {% endblock %}
             </div>
         </div>
@@ -115,7 +114,6 @@
         $('#' + tab_target).addClass("active");
         $('#' + tab_target).addClass("show");
     };
-
     $(document).ready(function () {
         let currentPageUrl = $(location).attr('href'), anchorEl;
         $('.nav-item').each(function () {
@@ -125,7 +123,6 @@
             }
         });
     });
-
     $('#dashboard-tab span').on('click', function (e) {
         let selected_tab = $(this);
         toggleTabs(selected_tab);

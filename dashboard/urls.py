@@ -11,4 +11,5 @@ urlpatterns = [
     path("", views.dashboard, name="dashboard"),
     path("logout", views.logout, name="logout"),
     path("application/", include("application.urls"), name="application"),
+    path("recommendation/", include("recommendation.urls"), name="recommendation"),
 ]
