@@ -6,7 +6,7 @@ from django.urls import reverse
 
 from OneApply.constants import UserType
 from application.models import HighSchoolApplication
-from high_school.models import HighSchool
+from high_school.models import HighSchool, Program
 from register.models import Admin_Staff, Student
 
 
@@ -54,7 +54,23 @@ def create_school():
     )
 
 
-def create_application(student, school):
+def create_program(school):
+    return Program.objects.create(
+        high_school=school,
+        name="Academy of Engineering",
+        code="AE123",
+        description="New York State approved CTE Program that leads to national "
+        "certification aligned with industry standards and a "
+        "CTE-endorsed Regents Diploma. Interdisciplinary "
+        "project-based curriculum includes coursework in Introduction "
+        "to Engineering & Design, Digital Electronics, Principles of "
+        "Engineering, and Engineering Design & Development.",
+        number_of_seats=70,
+        offer_rate=0,
+    )
+
+
+def create_application(student, school, program):
     return HighSchoolApplication.objects.create(
         id=1,
         application_number=754376,
@@ -70,7 +86,7 @@ def create_application(student, school):
         parent_name="Jonah Miller",
         parent_phoneNumber="+19135670125",
         school=school,
-        program="Science",
+        program=program,
         submitted_date=timezone.now(),
         is_draft=False,
     )
@@ -79,8 +95,9 @@ def create_application(student, school):
 def common_setup():
     student = create_student()
     school = create_school()
+    program = create_program(school)
     create_admission_staff(school)
-    create_application(student, school)
+    create_application(student, school, program)
 
 
 def update_session(client, username, user_type=UserType.ADMIN_STAFF):

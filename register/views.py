@@ -46,7 +46,7 @@ def register_user(request, user_type):
                 password = form.cleaned_data["input_password"]
                 f = form.save(commit=False)
                 # TODO: Get the ID from sessions, here it is hardcoded to 1
-                f.school = HighSchool.objects.get(id=1)
+                f.school = HighSchool.objects.get(pk=1)
                 f.password = password
                 f.save()
                 current_site = get_current_site(request)

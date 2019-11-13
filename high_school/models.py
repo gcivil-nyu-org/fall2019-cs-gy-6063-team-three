@@ -2,7 +2,7 @@ from django.db import models
 
 
 class HighSchool(models.Model):
-    dbn = models.CharField(max_length=10, blank=False, null=False)
+    dbn = models.CharField(primary_key=True, max_length=10, blank=False, null=False)
     school_name = models.CharField(max_length=200, blank=False, null=False)
     boro = models.CharField(max_length=1, blank=False, null=False)
     overview_paragraph = models.CharField(max_length=1000)
