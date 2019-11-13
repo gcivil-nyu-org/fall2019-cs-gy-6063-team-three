@@ -5,7 +5,7 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
 
-    dependencies = [("register", "0003_auto_20191105_2317")]
+    dependencies = [("register", "0001_initial")]
 
     operations = [
         migrations.RemoveField(model_name="admin_staff", name="phoneNumber"),

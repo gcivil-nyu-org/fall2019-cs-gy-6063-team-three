@@ -13,8 +13,7 @@ from .tokens import account_activation_token
 class AdmissionStaffViewTest(TestCase):
     def create_school(self):
         return HighSchool.objects.create(
-            id=1,
-            dbn="DBN1",
+            dbn="06M540",
             school_name="GMU",
             boro="B",
             overview_paragraph="Overview1",
@@ -88,8 +87,7 @@ class AdmissionStaffViewTest(TestCase):
 class AdmissionStaffModelTest(TestCase):
     def create_admission_staff(self):
         hs = HighSchool.objects.create(
-            id=1,
-            dbn="DBN1",
+            dbn="06M540",
             school_name="GMU",
             boro="B",
             overview_paragraph="Overview1",
@@ -180,8 +178,7 @@ class AdmissionsFormTest(TestCase):
 class AdmissionsViewActivateTest(TestCase):
     def create_admission_staff(self):
         hs = HighSchool.objects.create(
-            id=1,
-            dbn="DBN1",
+            dbn="06M540",
             school_name="GMU",
             boro="B",
             overview_paragraph="Overview1",
