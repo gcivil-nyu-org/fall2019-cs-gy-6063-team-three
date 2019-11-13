@@ -1,13 +1,15 @@
 {% block school_list %}
-    <div style="height: 90%; overflow-y: scroll; margin-bottom: 5%;">
+    {% load hs_filters %}
+    <div style="height: 90%; margin-bottom: 5%;">
         <div class="list-group">
             <div style="display: flex; flex-direction: row; width: 100%;">
                 <div class="high-school-search">
-                    <form name="search_filter_form" method='GET'>
+                    <form id="search_filter_form" name="search_filter_form" method='GET'>
                         <div class="search-div">
                         <span>
-                            <input class="search-input" type='text' name='q'
-                                   value='{{ request.GET.q }}' placeholder="Search for your school">
+                            <input class="search-input" type='text' name='query'
+                                   {% if request.GET.query %}value="{{ request.GET.query }}"
+                                   {% endif %} placeholder="Search for your school">
                             <span onclick="search_filter_form.submit();" class="search-btn">
                                 <i class="fa fa-search mr-2"></i>
                             </span>
@@ -65,13 +67,15 @@
                 </div>
             </div>
             {% for school in high_schools %}
-                {% if selected_school and selected_school.dbn == school.dbn %}
-                    <a href="{% url 'dashboard:high_school:overview'  school.dbn %}"
-                       class="list-group-item list-group-item-action active">
-                {% else %}
-                    <a href="{% url 'dashboard:high_school:overview'  school.dbn %}"
-                       class="list-group-item list-group-item-action">
-                {% endif %}
+                {% with request.get_full_path as querystring %}
+                    {% if querystring|split_string_single:"?" %}
+                        <a href="{% url 'dashboard:high_school:overview'  school.dbn %}?{{ querystring|split_string_single:"?" }}"
+                           class="list-group-item list-group-item-action {% if selected_school and selected_school.dbn == school.dbn %}active{% endif %}">
+                    {% else %}
+                        <a href="{% url 'dashboard:high_school:overview'  school.dbn %}"
+                           class="list-group-item list-group-item-action {% if selected_school and selected_school.dbn == school.dbn %}active{% endif %}">
+                    {% endif %}
+                {% endwith %}
             <div class="d-flex w-100 justify-content-between mb-2">
                 <h4 class="mb-1" style="width: 75%">{{ school.school_name }}</h4>
                 <small class="pt-1"
@@ -96,40 +100,10 @@
     </div>
     <div class="pagination-div">
         {% if is_paginated %}
-            <ul class="pagination">
-                {% if page_obj.has_previous %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}"
-                           tabindex="-1">Previous</a>
-                    </li>
-                {% else %}
-                    <li class="page-item disabled">
-                        <a class="page-link" href="#" tabindex="-1"
-                           aria-disabled="true">Previous</a>
-                    </li>
-                {% endif %}
-                {% for i in paginator.page_range %}
-                    {% if page_obj.number == i %}
-                        <li class="page-item active" aria-current="page">
-                            <a class="page-link" href="#">{{ i }} <span
-                                    class="sr-only">(current)</span></a>
-                        </li>
-                    {% else %}
-                        <li class="page-item"><a class="page-link"
-                                                 href="?page={{ i }}">{{ i }}</a></li>
-                    {% endif %}
-                {% endfor %}
-                {% if page_obj.has_next %}
-                    <li class="page-item">
-                        <a class="page-link"
-                           href="?page={{ page_obj.next_page_number }}">Next</a>
-                    </li>
-                {% else %}
-                    <li class="page-item disabled">
-                        <a class="page-link" href="#">Next</a>
-                    </li>
-                {% endif %}
-            </ul>
+            {% with request.get_full_path as querystring %}
+                <ul class="pagination">
+                </ul>
+            {% endwith %}
         {% endif %}
     </div>
 {% endblock %}
