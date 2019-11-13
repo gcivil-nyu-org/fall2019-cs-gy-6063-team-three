@@ -46,7 +46,8 @@ class IndexView(ListView):
         )
         # Todo - program filtering fails for string comparisons
         # not commented bc test cases might fail
-        # fix - the program shouldn't be compared directly, since that's a pk of int type
+        # fix - the program shouldn't be compared directly
+        # since that's a pk of int type
         try:
             self.program = self.request.GET.get("p")
         except KeyError:
