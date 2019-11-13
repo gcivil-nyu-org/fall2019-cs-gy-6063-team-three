@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, redirect
 from django.views.generic import ListView
 from sodapy import Socrata
 
@@ -89,9 +89,9 @@ def parse_result(result):
             # This result is a valid program, and not already in DB save it.
             program = Program()
             # TODO: change following statement to
-            #  program.high_school = HighSchool.objects.get(dbn=result.get("dbn"))
+            program.high_school = HighSchool.objects.get(dbn=result.get("dbn"))
             #  once the school model has dbn as unique/PK
-            program.high_school = HighSchool.objects.filter(dbn=result.get("dbn"))[0]
+            # program.high_school = HighSchool.objects.filter(dbn=result.get("dbn"))[0]
             program.code = result.get(code)
             program.name = result.get(program_name)
             program.description = result.get(description)
@@ -116,6 +116,7 @@ class HighSchoolListView(ListView):
     template_name = "high_school/index.html"
     model = HighSchool
     context_object_name = "high_schools"
+    # paginator_class = None
     paginate_by = 5
 
     def __init__(self, **kwargs):
@@ -133,13 +134,13 @@ class HighSchoolListView(ListView):
     def get_queryset(self):
         if "dbn" in self.kwargs:
             self.dbn = self.kwargs["dbn"]
-        self.query = self.request.GET.get("q")
+        self.query = self.request.GET.get("query")
         self.loc_filter["X"] = self.request.GET.get("loc_bx")
         self.loc_filter["K"] = self.request.GET.get("loc_bk")
         self.loc_filter["M"] = self.request.GET.get("loc_mn")
         self.loc_filter["Q"] = self.request.GET.get("loc_qn")
         self.loc_filter["R"] = self.request.GET.get("loc_si")
-        return HighSchool.objects.order_by("school_name")
+        return self.getHighSchools()
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(HighSchoolListView, self).get_context_data(**kwargs)
@@ -150,22 +151,23 @@ class HighSchoolListView(ListView):
             context["unauth"] = True
             context["high_schools"] = None
             context["selected_school"] = None
-            context["empty_list"] = False
+            context["empty_list"] = None
         else:
             context["unauth"] = False
-            if self.dbn:
-                context["selected_school"] = get_object_or_404(HighSchool, dbn=self.dbn)
-            else:
-                context["selected_school"] = None
-
-            high_schools = self.getHighSchools()
-            if high_schools:
-                context["high_schools"] = high_schools
-                context["empty_list"] = False
-            else:
-                context["high_schools"] = None
+            context["empty_list"] = False
+            if not context["high_schools"]:
                 context["empty_list"] = True
-
+            else:
+                if self.dbn:
+                    selected_school = HighSchool.objects.filter(dbn=self.dbn)
+                    if selected_school:
+                        context["selected_school"] = selected_school[0]
+                    else:
+                        context["selected_school"] = None
+                        context["high_schools"] = None
+                        context["empty_list"] = True
+                else:
+                    context["selected_school"] = None
         return context
 
     def getHighSchools(self):
