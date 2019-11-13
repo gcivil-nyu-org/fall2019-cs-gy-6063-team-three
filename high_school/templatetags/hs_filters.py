@@ -53,6 +53,7 @@ def get_querystring(val, arg):
     #       ?query=q1&loc_bx=&loc_bk=on&page=2"
     # arg will be the param we need to update
     # arg = "page"
+    # returns the same path with updated arg
     path = str(val)
     splits = split_string(path, "?")
     # is no params exist in path

@@ -42,10 +42,6 @@
                           data-toggle="tab"
                           data-url="{% url 'dashboard:high_school:index'  %}"
                           role="tab" aria-controls="nav-allSchools">All Schools</span>
-                    <span class="nav-item nav-link p-2" id="nav-selectedSchools-tab"
-                          data-toggle="tab"
-                          data-url="#nav-selectedSchools" role="tab"
-                          aria-controls="nav-selectedSchools">Selected Schools</span>
                     <span class="nav-item nav-link p-2" id="nav-applications-tab"
                           data-toggle="tab" data-url="{% url 'dashboard:application:all_applications' %}"
                           role="tab" aria-controls="nav-applications">Application Forms</span>
@@ -74,10 +70,6 @@
                  aria-labelledby="nav-allSchools-tab">
                 {% block all_high_schools %}
                 {% endblock %}
-            </div>
-            <div class="tab-pane fade" id="nav-selectedSchools" role="tabpanel"
-                 aria-labelledby="nav-selectedSchools-tab">
-                <h1>Hello, this is selected schools page</h1>
             </div>
             <div class="tab-pane fade" id="nav-applications" role="tabpanel"
                  aria-labelledby="nav-applications-tab">
