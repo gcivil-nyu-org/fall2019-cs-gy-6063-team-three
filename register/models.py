@@ -32,6 +32,7 @@ class User(models.Model):
     is_active = models.BooleanField(default=False)
 
     class Meta:
+        ordering = ['first_name']
         abstract = True
 
 

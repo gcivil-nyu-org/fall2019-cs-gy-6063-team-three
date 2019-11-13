@@ -154,6 +154,7 @@ class HighSchoolListView(ListView):
         self.query = None
         self.loc_filter = {}
         self.is_fav_on = 0
+        self.is_fav_empty = True
 
     def get(self, *args, **kwargs):
         if not self.request.session.get("is_login", None):
@@ -176,7 +177,6 @@ class HighSchoolListView(ListView):
         is_valid_user, temp_user, temp_user_type, temp_context = get_user(self.request)
         if not is_valid_user:
             self.user = None
-            return None
         else:
             self.user = temp_user
             self.user_type = temp_user_type
@@ -192,9 +192,11 @@ class HighSchoolListView(ListView):
             context["empty_list"] = None
         else:
             context["unauth"] = False
-            context["empty_list"] = False
+            context["empty_list"] = 0
             if not context["high_schools"]:
-                context["empty_list"] = True
+                context["empty_list"] = 1
+                if self.is_fav_empty and self.is_fav_on:
+                    context["empty_list"] = 2
             else:
                 if self.dbn:
                     selected_school = HighSchool.objects.filter(dbn=self.dbn)
@@ -203,10 +205,12 @@ class HighSchoolListView(ListView):
                     else:
                         context["selected_school"] = None
                         context["high_schools"] = None
-                        context["empty_list"] = True
+                        context["empty_list"] = 1
                 else:
                     context["selected_school"] = None
                 context["fav_schools"] = self.get_fav_schools()
+
+
         return context
 
     def getHighSchools(self):
@@ -240,28 +244,28 @@ class HighSchoolListView(ListView):
         return high_schools
 
     def get_fav_schools(self):
-        return self.user.fav_schools.all()
+        fav_schools = self.user.fav_schools.all()
+        if not fav_schools:
+            self.is_fav_empty = True
+        return fav_schools
 
 
 def update_fav_hs(request, school_dbn, is_fav):
-    high_school = None
     try:
         high_school = HighSchool.objects.get(dbn=school_dbn)
     except HighSchool.DoesNotExist:
-        # Todo : this needs to be changed once function is moved to HighSchoolListView
         pass
-
-    is_valid_user, temp_user, temp_user_type, temp_context = get_user(request)
-    if is_valid_user:
-        user = temp_user
-        if user.__class__ is Student:
-            if is_fav == 1:
-                user.fav_schools.add(high_school)
-                user.save()
-            else:
-                # user.fav_schools.clear()
-                print(high_school.student_set.all())
-                user.fav_schools.remove(high_school)
-                user.save()
+    else:
+        if high_school:
+            is_valid_user, temp_user, temp_user_type, temp_context = get_user(request)
+            if is_valid_user:
+                user = temp_user
+                if user.__class__ is Student:
+                    if is_fav == 1:
+                        user.fav_schools.add(high_school)
+                        user.save()
+                    else:
+                        user.fav_schools.remove(high_school)
+                        user.save()
 
     return redirect("dashboard:high_school:index")

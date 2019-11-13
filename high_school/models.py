@@ -16,6 +16,9 @@ class HighSchool(models.Model):
     end_time = models.CharField(max_length=6)
     graduation_rate = models.CharField(max_length=5)
 
+    class Meta:
+        ordering = ['school_name']
+
     def __str__(self):
         return self.school_name
 
@@ -30,6 +33,9 @@ class Program(models.Model):
     # Percent of fall 2017 offers that went to students in program's first priority
     # group for school's program
     offer_rate = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        ordering = ['name']
 
     def __str__(self):
         return self.name
