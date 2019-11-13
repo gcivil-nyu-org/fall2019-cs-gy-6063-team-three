@@ -34,6 +34,9 @@ class HighSchoolApplication(models.Model):
     program = models.ForeignKey(Program, on_delete=models.CASCADE)
     is_draft = models.BooleanField(default=True)
     submitted_date = models.DateTimeField()
+    application_status = models.IntegerField(
+        default=2
+    )  # 2 = "pending"; 1 = "accepted"; 0 ="rejected"
 
     def get_fields(self):
         return [
