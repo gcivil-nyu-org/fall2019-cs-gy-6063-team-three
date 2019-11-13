@@ -9,21 +9,40 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-        ('register', '0003_auto_20191105_2355'),
-    ]
+    dependencies = [("register", "0001_initial")]
 
     operations = [
         migrations.CreateModel(
-            name='Recommendation',
+            name="Recommendation",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('first_name', models.CharField(max_length=50)),
-                ('last_name', models.CharField(max_length=50)),
-                ('email_address', models.EmailField(max_length=50, validators=[django.core.validators.EmailValidator()])),
-                ('recommendation', models.TextField()),
-                ('submitted_date', models.DateTimeField()),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='student_recommending', to='register.Student')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("first_name", models.CharField(max_length=50)),
+                ("last_name", models.CharField(max_length=50)),
+                (
+                    "email_address",
+                    models.EmailField(
+                        max_length=50,
+                        validators=[django.core.validators.EmailValidator()],
+                    ),
+                ),
+                ("recommendation", models.TextField()),
+                ("submitted_date", models.DateTimeField()),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="student_recommending",
+                        to="register.Student",
+                    ),
+                ),
             ],
-        ),
+        )
     ]

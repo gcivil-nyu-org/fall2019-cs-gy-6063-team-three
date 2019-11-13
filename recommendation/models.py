@@ -13,8 +13,8 @@ class Recommendation(models.Model):
     email_address = models.EmailField(
         max_length=50, validators=[validators.validate_email]
     )
-    recommendation = models.TextField()
-    submitted_date = models.DateTimeField()
+    recommendation = models.TextField(null=True)
+    submitted_date = models.DateTimeField(null=True)
 
     def get_fields(self):
         return [

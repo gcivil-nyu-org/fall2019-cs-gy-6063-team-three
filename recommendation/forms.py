@@ -4,7 +4,6 @@ from .models import Recommendation
 
 
 class RecommendationForm(ModelForm):
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -15,4 +14,4 @@ class RecommendationForm(ModelForm):
 
     class Meta:
         model = Recommendation
-        exclude = ["student", "recommendation", "submitted_date"]
+        exclude = ["user", "recommendation", "submitted_date"]

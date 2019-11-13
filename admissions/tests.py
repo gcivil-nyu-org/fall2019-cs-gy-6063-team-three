@@ -4,8 +4,9 @@ from django.utils import timezone
 from django.test import TestCase
 from django.urls import reverse
 
+from OneApply.constants import UserType
 from application.models import HighSchoolApplication
-from high_school.models import HighSchool
+from high_school.models import HighSchool, Program
 from register.models import Admin_Staff, Student
 
 
@@ -53,7 +54,23 @@ def create_school():
     )
 
 
-def create_application(student, school):
+def create_program(school):
+    return Program.objects.create(
+        high_school=school,
+        name="Academy of Engineering",
+        code="AE123",
+        description="New York State approved CTE Program that leads to national "
+        "certification aligned with industry standards and a "
+        "CTE-endorsed Regents Diploma. Interdisciplinary "
+        "project-based curriculum includes coursework in Introduction "
+        "to Engineering & Design, Digital Electronics, Principles of "
+        "Engineering, and Engineering Design & Development.",
+        number_of_seats=70,
+        offer_rate=0,
+    )
+
+
+def create_application(student, school, program):
     return HighSchoolApplication.objects.create(
         id=1,
         application_number=754376,
@@ -69,16 +86,24 @@ def create_application(student, school):
         parent_name="Jonah Miller",
         parent_phoneNumber="+19135670125",
         school=school,
-        program="Science",
+        program=program,
         submitted_date=timezone.now(),
+        is_draft=False,
     )
 
 
 def common_setup():
     student = create_student()
     school = create_school()
+    program = create_program(school)
     create_admission_staff(school)
-    create_application(student, school)
+    create_application(student, school, program)
+
+
+def update_session(client, username, user_type=UserType.ADMIN_STAFF):
+    s = client.session
+    s.update({"username": username, "is_login": True, "user_type": user_type})
+    s.save()
 
 
 class AdmissionsIndexViewTest(TestCase):
@@ -86,37 +111,68 @@ class AdmissionsIndexViewTest(TestCase):
         common_setup()
 
     # This test needs to be added after adding sessions
-    # def test_invalid_admin(self):
-    #     # Test without creating admin user
-    #     url = reverse("admissions:index", args=[11])
-    #     response = self.client.post(url)
-    #     self.assertContains(response, "No applications are available.")
+    def test_no_admin_login(self):
+        # Test without creating admin user
+        url = reverse("dashboard:admissions:index")
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 302)
 
-    def test_valid_admin(self):
+    def test_valid_admin_login(self):
         # Check for admin staff who doesnt exist
-        url = reverse("admissions:index")
-        response = self.client.post(url)
+        update_session(self.client, "jwang")
+        url = reverse("dashboard:admissions:index")
+        response = self.client.get(url)
         self.assertEquals(response.status_code, 200)
         # Check if application number created is available in the rendered page
-        # self.assertContains(response, "754376")
+        self.assertContains(response, "754376")
+
+    def test_invalid_admin_login(self):
+        # Check for admin staff who doesnt exist
+        update_session(self.client, "abcd", UserType.STUDENT)
+        url = reverse("dashboard:admissions:index")
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
+        # Check if application number created is available in the rendered page
+        self.assertContains(response, "No applications are available.")
 
 
 class AdmissionsDetailViewTest(TestCase):
     def setUp(self):
         common_setup()
 
-    def test_invalid_application(self):
+    def test_invalid_application_no_admin_login(self):
         # Test without creating admin user
-        url = reverse("admissions:detail", args=[11])
+        url = reverse("dashboard:admissions:detail", args=[11])
         response = self.client.post(url)
+        self.assertEqual(response.status_code, 302)
+
+    def test_invalid_application_admin_login(self):
+        # Test without creating admin user
+        update_session(self.client, "jwang")
+        url = reverse("dashboard:admissions:detail", args=[11])
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, 200)
         self.assertContains(
             response, "The application you are looking for doesn't exist."
         )
 
-    def test_valid_admin(self):
-        # Check for admin staff who doesnt exist
-        url = reverse("admissions:detail", args=[1])
+    def test_valid_application_no_admin_login(self):
+        url = reverse("dashboard:admissions:detail", args=[1])
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, 302)
+
+    def test_valid_application_admin_login(self):
+        update_session(self.client, "jwang")
+        url = reverse("dashboard:admissions:detail", args=[1])
         response = self.client.post(url)
         self.assertEquals(response.status_code, 200)
         # Check if application number created is available in the rendered page
         self.assertContains(response, "754376")
+
+    def test_valid_application_student_login(self):
+        update_session(self.client, "jwang", UserType.STUDENT)
+        url = reverse("dashboard:admissions:detail", args=[1])
+        response = self.client.post(url)
+        self.assertEquals(response.status_code, 200)
+        # Check if application number created is available in the rendered page
+        self.assertNotContains(response, "754376")

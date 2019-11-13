@@ -7,16 +7,26 @@
         <meta charset="UTF-8">
         <title>OneApply</title>
         {% load static %}
+        {% load hs_filters %}
         <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
         <link rel="stylesheet" type="text/css"
               href="{% static 'high_schools/css/high_school.css' %}">
         <script src="https://kit.fontawesome.com/fc24e2383c.js" crossorigin="anonymous"></script>
+
     </head>
     <body>
     <div class="all-school-root">
         <div class="container-fluid">
             <div class="row">
-                {% if high_schools %}
+                {% if empty_list %}
+                    {% block empty_list %}
+                        {% include 'high_school/broken.html' %}
+                    {% endblock %}
+                {% elif unauth %}
+                    {% block unauth %}
+                        {% include 'high_school/broken.html' %}
+                    {% endblock %}
+                {% elif high_schools %}
                     <div class="col-md-6 left-pane">
                         {% block school_list %}
                             {% include 'high_school/school_list.html' %}
@@ -27,10 +37,6 @@
                             {% include 'high_school/school_overview.html' %}
                         {% endblock %}
                     </div>
-                {% else %}
-                    {% block broken %}
-                        {% include 'high_school/broken.html' %}
-                    {% endblock %}
                 {% endif %}
                 <div>
                     {% block save_highschool %}
@@ -40,6 +46,114 @@
         </div>
     </div>
     </body>
+    <!--bootstrap jquery and js-->
+    <script src="//cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+    <script src="//cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+    <script>
+        {#         for school list filter#}
+        $(".filter-btn").click(function (e) {
+            let high_school_div = $(".high-school-filter-div");
+            let is_div_visible = high_school_div.hasClass("active");
+            if (!is_div_visible) {
+                high_school_div.addClass("active");
+                high_school_div.show()
+            } else {
+                high_school_div.removeClass("active");
+                high_school_div.hide()
+            }
+        });
+        {# for restricting page numbers in pagination #}
+
+        function getPageList(totalPages, page, maxLength) {
+            if (maxLength < 5) throw "maxLength must be at least 5";
+
+            function range(start, end) {
+                return Array.from(Array(end - start + 1), (_, i) => i + start);
+            }
+
+            let sideWidth = maxLength < 9 ? 1 : 2;
+            let leftWidth = (maxLength - sideWidth * 2 - 3) >> 1;
+            let rightWidth = (maxLength - sideWidth * 2 - 2) >> 1;
+            if (totalPages <= maxLength) {
+                // no breaks in list
+                return range(1, totalPages);
+            }
+            if (page <= maxLength - sideWidth - 1 - rightWidth) {
+                // no break on left of page
+                return range(1, maxLength - sideWidth - 1)
+                    .concat([0])
+                    .concat(range(totalPages - sideWidth + 1, totalPages));
+            }
+            if (page >= totalPages - sideWidth - 1 - rightWidth) {
+                // no break on right of page
+                return range(1, sideWidth)
+                    .concat([0])
+                    .concat(range(totalPages - sideWidth - 1 - rightWidth - leftWidth, totalPages));
+            }
+            // Breaks on both sides
+            return range(1, sideWidth)
+                .concat([0])
+                .concat(range(page - leftWidth, page + rightWidth))
+                .concat([0])
+                .concat(range(totalPages - sideWidth + 1, totalPages));
+        }
+
+        $(function () {
+            let totalPages = {{ paginator.num_pages }};
+            let paginationSize = 7;
+            let currentPage;
+
+            function showPage(whichPage) {
+                if (whichPage < 1 || whichPage > totalPages) return false;
+                currentPage = whichPage;
+                $(".pagination li").slice(1, -1).remove();
+                getPageList(totalPages, currentPage, paginationSize).forEach(item => {
+                    $("<li>").addClass("page-item")
+                        .addClass(item ? "" : "disabled")
+                        .toggleClass("active", item === currentPage).append(
+                        $("<a>").addClass("page-link").attr({
+                            href: item ? "{{ request.get_full_path|get_querystring:"page"|escapejs }}=" + item : "javascript.void(0)"
+                        }).text(item || "...")
+                    ).insertBefore("#next-page");
+                });
+                // Disable prev/next when at first/last page:
+                $("#previous-page").toggleClass("disabled", currentPage === 1);
+                $("#next-page").toggleClass("disabled", currentPage === totalPages);
+                return true;
+            }
+
+            $(".pagination").append(
+                $("<li>").addClass("page-item").attr({id: "previous-page"}).append(
+                    $("<a>").addClass("page-link").attr({
+                        href: {% if page_obj.has_previous %}
+                            "{{ request.get_full_path|get_querystring:"page"|escapejs }}={{ page_obj.previous_page_number }}"
+                            {% else %}"javascript.void(0)"{% endif %}
+                    }).text("Prev")
+                ),
+                $("<li>").addClass("page-item").attr({id: "next-page"}).append(
+                    $("<a>").addClass("page-link").attr({
+                        href: {% if page_obj.has_next %}
+                            "{{ request.get_full_path|get_querystring:"page"|escapejs }}={{ page_obj.next_page_number }}"
+                            {% else %}"javascript.void(0)"{% endif %}
+
+                    }).text("Next")
+                )
+            );
+            showPage({% if request.GET.page %} {{ request.GET.page }} {% else %} 1 {% endif %});
+            // Use event delegation, as these items are recreated later
+            $(document).on("click", ".pagination li.current-page:not(.active)", function () {
+                return showPage(+$(this).text());
+            });
+            $("#next-page").on("click", function () {
+                return showPage(currentPage + 1);
+            });
+
+            $("#previous-page").on("click", function () {
+                return showPage(currentPage - 1);
+            });
+        });
+    </script>
     </html>
 
 {% endblock %}

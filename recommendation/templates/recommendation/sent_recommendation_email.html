@@ -1,0 +1,9 @@
+{% autoescape off %}
+Hi {{ user.first_name }} {{ user.last_name }},
+{{ user.user.first_name}} {{user.user.last_name }} has requested that you fill out a recommendation form for them.
+Please visit the below link to fill out the form:
+http://{{ domain }}
+
+Thank you,
+One Apply Team
+{% endautoescape %}
