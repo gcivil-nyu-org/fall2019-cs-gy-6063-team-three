@@ -1,5 +1,6 @@
 from django.db import models
 from django.core import validators
+from .validators import validate_not_used_student_email, validate_not_used_admin_email
 from high_school.models import HighSchool
 
 
@@ -17,9 +18,6 @@ def auto_str(cls):
 class User(models.Model):
     first_name = models.CharField(max_length=50, null=True, blank=True)
     last_name = models.CharField(max_length=50, null=True, blank=True)
-    email_address = models.EmailField(
-        max_length=200, null=True, blank=False, validators=[validators.validate_email]
-    )
     username = models.CharField(max_length=20, null=True, blank=False)
     password = models.CharField(max_length=256)
     is_active = models.BooleanField(default=False)
@@ -31,6 +29,12 @@ class User(models.Model):
 
 @auto_str
 class Student(User):
+    email_address = models.EmailField(
+        max_length=200,
+        null=True,
+        blank=False,
+        validators=[validators.validate_email, validate_not_used_student_email],
+    )
     current_school = models.CharField(max_length=100, null=True, blank=True)
     borough = models.CharField(max_length=2)
     fav_schools = models.ManyToManyField(HighSchool, blank=True)
@@ -38,6 +42,12 @@ class Student(User):
 
 @auto_str
 class Admin_Staff(User):
+    email_address = models.EmailField(
+        max_length=200,
+        null=True,
+        blank=False,
+        validators=[validators.validate_email, validate_not_used_admin_email],
+    )
     school = models.ForeignKey(HighSchool, on_delete=models.CASCADE)
     is_verified_employee = models.BooleanField(default=False)
     supervisor_email = models.EmailField(max_length=100, null=True, blank=True)
