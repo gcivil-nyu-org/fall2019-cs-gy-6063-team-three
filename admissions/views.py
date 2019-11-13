@@ -91,3 +91,17 @@ def get_programs(applications):
         program_set.add(application.program)
     program_set.add(ALL)
     return list(sorted(program_set))
+
+
+def reject(request, application_id):
+    application = HighSchoolApplication.objects.get(id=application_id)
+    application.application_status = "accepted"
+    application.save()
+    return redirect("dashboard:admissions:index")
+
+
+def accept(request, application_id):
+    application = HighSchoolApplication.objects.get(id=application_id)
+    application.application_status = "rejected"
+    application.save()
+    return redirect("dashboard:admissions:index")

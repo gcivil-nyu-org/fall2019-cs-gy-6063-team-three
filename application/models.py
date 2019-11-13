@@ -34,6 +34,7 @@ class HighSchoolApplication(models.Model):
     program = models.CharField(max_length=100)
     is_draft = models.BooleanField(default=True)
     submitted_date = models.DateTimeField()
+    application_status = models.CharField(default="pending", max_length=10)
 
     def get_fields(self):
         return [

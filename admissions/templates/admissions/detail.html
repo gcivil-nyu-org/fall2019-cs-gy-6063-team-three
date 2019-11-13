@@ -57,9 +57,20 @@ inherit; width: 75%; margin: 0 auto 2em;">
                 <th scope="row">Date of Submission</th>
                 <td colspan="2">{{ application.submitted_date }}</td>
             </tr>
+            <tr>
+                <th scope = "row"> status</th>>
+                <td> {{application.application_status}}</td>
+            </tr>
         {% else %}
             <p>The application you are looking for doesn't exist.</p>
         {% endif %}
         </tbody>
+
     </table>
+    {% if application.application_status == "pending" %}
+    <div class="nav d-flex justify-content-center">
+        <button class="btn btn-lg btn-primary mr-4"><a href="{% url 'dashboard:admissions:accept' application.id %}">Accept</a></button>
+        <button class="btn btn-lg btn-danger mr-4"><a href="{% url 'dashboard:admissions:reject' application.id %}">Reject</a></button>
+    </div>
+    {% endif %}
 {% endblock %}
