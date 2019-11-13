@@ -62,6 +62,25 @@ class AdmissionStaffViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(Admin_Staff.objects.filter(username="jwang").count(), 0)
 
+    def test_used_username_email_admin(self):
+        url = reverse("register:register_user", args=[UserType.ADMIN_STAFF])
+        response = self.client.post(url, self.adminStaff)
+        self.assertEqual(response.status_code, 200)
+        self.assertIsNotNone(Admin_Staff.objects.get(username="jwang"))
+        self.adminStaff = {
+            "username": "jwang",
+            "first_name": "Jenny",
+            "last_name": "Wang",
+            "email_address": "jenny.wang@gmail.com",
+            "supervisor_email": "jenny.wang@gmail.com",
+            "input_password": "Jenny@1234",
+            "confirm_password": "Jenny@1234",
+        }
+        url2 = reverse("register:register_user", args=[UserType.ADMIN_STAFF])
+        response = self.client.post(url2, self.adminStaff)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Admin_Staff.objects.filter(username="jwang").count(), 1)
+
     def tearDown(self):
         Admin_Staff.objects.all().delete()
 
@@ -347,6 +366,26 @@ class StudentViewTest(TestCase):
         response = self.client.post(url, data=data)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(Student.objects.filter(username="hritik").count(), 0)
+
+    def test_used_username_email(self):
+        data = {
+            "first_name": "Hritik",
+            "last_name": "Roshan",
+            "email_address": "hrx@gmail.com",
+            "username": "hritik",
+            "input_password": "hritikRoshan@10",
+            "confirm_password": "hritikRoshan@10",
+            "current_school": "NYU",
+            "borough": "MN",
+        }
+        url = reverse("register:register_user", args=[UserType.STUDENT])
+        response = self.client.post(url, data=data)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Student.objects.filter(username="hritik").count(), 1)
+        url2 = reverse("register:register_user", args=[UserType.STUDENT])
+        response = self.client.post(url2, data=data)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Student.objects.filter(username="hritik").count(), 1)
 
 
 class StudentViewActivateTest(TestCase):
