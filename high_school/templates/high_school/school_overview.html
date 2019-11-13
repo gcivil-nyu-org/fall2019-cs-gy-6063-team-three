@@ -1,7 +1,7 @@
 {% block school_overview %}
     {% if selected_school %}
-        <div class="top-header">
-            <div class="blur-bg"></div>
+        <div class="top-header" style="background: gray">
+            {#            <div class="blur-bg"></div>#}
             <div class="right-pane-container">
                 <h5 class="mb-3" style="font-size: 28px;">{{ selected_school.school_name }}</h5>
                 <h5 class="mb-2">{{ selected_school.neighborhood }}
@@ -23,12 +23,16 @@
                 </div>
             </div>
         </div>
-        <div style="margin: 7.5%" class="justify-content-between">
-            {{ selected_school.overview_paragraph }}
+        <div class="content-div justify-content-between">
+            <div style="margin: 5% 7.5%">
+                <div>
+                    {{ selected_school.overview_paragraph }}
+                </div>
+                <button class="btn btn-lg btn-primary btn-block"
+                        style="margin: 15% 12.5% 5% 12.5%; width: 75%">More Info
+                </button>
+            </div>
         </div>
-        <button class="btn btn-lg btn-primary btn-block"
-                style="margin: 15% 12.5% 5% 12.5%; width: 75%">More Info
-        </button>
     {% else %}
         <div class="no-school-placeholder">
             <div style="font-size: 18px;">

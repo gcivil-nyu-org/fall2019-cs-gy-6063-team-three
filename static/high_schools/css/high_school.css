@@ -15,20 +15,18 @@ body {
 }
 
 .left-pane {
-    height: 100vh !important;
-    /*background-color: #95a5a6;*/
     background-color: whitesmoke;
-    /*overflow-y: scroll;*/
-    /*overflow-x: hidden;*/
+    border-right: 2px solid gray;
 }
 
-.pagination-div{
+.pagination-div {
     margin: 0 7.5%;
 }
 
 .right-pane {
     background-color: whitesmoke;
-    height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 .blur-bg {
@@ -40,18 +38,20 @@ body {
     margin-right: -15px;
 }
 
-.right-pane-container {
-    position: absolute;
-    top: 1%;
-    margin: 2.5% 7.5%;
-    width: 80%;
+.right-pane .top-header {
+    width: 100%;
+    min-height: auto;
 }
 
-.right-pane .top-header {
-    height: 40%;
-    max-height: 45%;
-    /*background: url("../../logIn/images/bg_1.jpg");*/
-    /*background-size: cover;*/
+.right-pane-container {
+    display: flex;
+    flex-direction: column;
+    margin: 5% 7.5%;
+}
+
+.right-pane .content-div {
+    max-height: 70%;
+    min-height: 50%;
 }
 
 .no-school-placeholder {
@@ -63,18 +63,18 @@ body {
     width: 100%;
 }
 
-.high-school-search{
+.high-school-search {
     margin: 2% 2.5% 0 7.5%;
     width: 75%;
 }
 
-.high-school-search .search-div{
+.high-school-search .search-div {
     display: flex !important;
     flex-direction: column !important;
     position: relative !important;
 }
 
-.high-school-search .search-div .search-input{
+.high-school-search .search-div .search-input {
     width: 100%;
     height: 36px;
     padding: 15px 20px;
@@ -83,12 +83,12 @@ body {
     border-radius: 12px;
 }
 
-.high-school-search .search-div .search-input:focus{
+.high-school-search .search-div .search-input:focus {
     outline: none !important;
     border: 2px solid slategray !important;
 }
 
-.high-school-search .search-div .search-btn{
+.high-school-search .search-div .search-btn {
     color: slategray;
     position: absolute;
     left: 95%;
@@ -102,12 +102,14 @@ body {
     display: flex;
     font-size: 20px;
 }
-.high-school-filters .filter-btn{
+
+.high-school-filters .filter-btn {
     color: slategray;
     cursor: pointer;
     padding: 0 10px;
 }
-.high-school-filter-div{
+
+.high-school-filter-div {
     display: none;
     margin: 2% 0 0 0;
 }

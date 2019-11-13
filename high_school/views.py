@@ -90,9 +90,9 @@ def parse_result(result):
             # This result is a valid program, and not already in DB save it.
             program = Program()
             # TODO: change following statement to
-            #  program.high_school = HighSchool.objects.get(dbn=result.get("dbn"))
+            program.high_school = HighSchool.objects.get(dbn=result.get("dbn"))
             #  once the school model has dbn as unique/PK
-            program.high_school = HighSchool.objects.filter(dbn=result.get("dbn"))[0]
+            # program.high_school = HighSchool.objects.filter(dbn=result.get("dbn"))[0]
             program.code = result.get(code)
             program.name = result.get(program_name)
             program.description = result.get(description)
