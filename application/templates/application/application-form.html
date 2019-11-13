@@ -7,7 +7,7 @@
 
 <div style="margin-left:20%;height: 90%; margin-bottom: 5%; width:50%;">
     <h2>High School Application Form</h2>
-    <form action="{% url 'dashboard:application:new_application' 'ut_student' %}" prog-data-url="{% url 'dashboard:application:ajax_load_programs' %}" method="post" class="form-signup" style="padding-top: 10px;">
+    <form action="{% url 'dashboard:application:new_application' %}" prog-data-url="{% url 'dashboard:application:ajax_load_programs' %}" method="post" class="form-signup" style="padding-top: 10px;">
         {% csrf_token %}
         <div class="rounded bg-secondary" style="height:35px;margin-bottom:10px;">
             <h5 class="p-2">PERSONAL</h5>

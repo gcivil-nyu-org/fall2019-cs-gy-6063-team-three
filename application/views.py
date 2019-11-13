@@ -1,24 +1,33 @@
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.urls import reverse
 
 from .forms import HighSchoolApplicationForm
 from .models import HighSchoolApplication
+from register.models import Student
 from high_school.models import Program
+from OneApply.constants import UserType
 
 
-def new_application(request, user_type):
+def new_application(request):
+    user_type = request.session.get("user_type", None)
+    username = request.session.get("username", None)
+    if (
+        not request.session.get("is_login", None)
+        or not username
+        or user_type != UserType.STUDENT
+    ):
+        return redirect("landingpage:index")
     try:
         if request.method == "POST":
-            # TODO user_id will be replaced by sessions
-            user_id = 1
+            user = Student.objects.get(username=username)
             form = HighSchoolApplicationForm(request.POST)
             if form.is_valid():
                 f = form.save(commit=False)
-                f.user_id = user_id
+                f.user = user
                 f.application_number = generate_application_number(
-                    user_id, f.school.dbn, f.program.pk
+                    user.pk, f.school.dbn, f.program.pk
                 )
                 if HighSchoolApplication.objects.filter(
                     application_number=f.application_number
@@ -31,7 +40,7 @@ def new_application(request, user_type):
                     f.is_draft = True
                 f.save()
                 return HttpResponseRedirect(
-                    reverse("dashboard:application:all_applications", args=[user_type])
+                    reverse("dashboard:application:all_applications")
                 )
         else:
             form = HighSchoolApplicationForm()
@@ -41,12 +50,19 @@ def new_application(request, user_type):
     return render(request, "application/application-form.html", context)
 
 
-def save_existing_application(request, user_type, application_id):
+def save_existing_application(request, application_id):
+    user_type = request.session.get("user_type", None)
+    username = request.session.get("username", None)
+    if (
+        not request.session.get("is_login", None)
+        or not username
+        or user_type != UserType.STUDENT
+    ):
+        return redirect("landingpage:index")
     if request.method == "POST":
         form = HighSchoolApplicationForm(request.POST)
         if form.is_valid():
-            # TODO user_id will be replaced by sessions
-            user_id = 1
+            user = Student.objects.get(username=username)
             f = HighSchoolApplication.objects.get(pk=application_id)
             form = form.save(commit=False)
             f.first_name = form.first_name
@@ -54,7 +70,7 @@ def save_existing_application(request, user_type, application_id):
             f.school = form.school
             f.program = form.program
             f.application_number = generate_application_number(
-                user_id, f.school.dbn, f.program.pk
+                user.pk, f.school.dbn, f.program.pk
             )
             f.email_address = form.email_address
             f.phoneNumber = form.phoneNumber
@@ -71,7 +87,7 @@ def save_existing_application(request, user_type, application_id):
                 f.is_draft = True
             f.save()
             return HttpResponseRedirect(
-                reverse("dashboard:application:all_applications", args=[user_type])
+                reverse("dashboard:application:all_applications")
             )
     else:
         form = HighSchoolApplicationForm()
@@ -79,17 +95,31 @@ def save_existing_application(request, user_type, application_id):
     return render(request, "application/index.html", context)
 
 
-def all_applications(request, user_type):
-    # TODO user_id will be replaced by sessions
-    user_id = 1
-    context = {"applications": HighSchoolApplication.objects.filter(user_id=user_id)}
+def all_applications(request):
+    user_type = request.session.get("user_type", None)
+    username = request.session.get("username", None)
+    if (
+        not request.session.get("is_login", None)
+        or not username
+        or user_type != UserType.STUDENT
+    ):
+        return redirect("landingpage:index")
+    user = Student.objects.get(username=username)
+    context = {"applications": HighSchoolApplication.objects.filter(user_id=user.pk)}
     return render(request, "application/index.html", context)
 
 
-def detail(request, user_type, application_id):
+def detail(request, application_id):
+    user_type = request.session.get("user_type", None)
+    username = request.session.get("username", None)
+    if (
+        not request.session.get("is_login", None)
+        or not username
+        or user_type != UserType.STUDENT
+    ):
+        return redirect("landingpage:index")
     application = HighSchoolApplication.objects.get(pk=application_id)
-    # TODO user_id will be replaced by sessions
-    user_id = 1
+    user = Student.objects.get(username=username)
     data = {
         "pk": application.pk,
         "application_number": application.application_number,
@@ -108,7 +138,7 @@ def detail(request, user_type, application_id):
     }
     form = HighSchoolApplicationForm(data)
     context = {
-        "applications": HighSchoolApplication.objects.filter(user_id=user_id),
+        "applications": HighSchoolApplication.objects.filter(user_id=user.pk),
         "selected_app": application,
         "form": form,
     }

@@ -25,7 +25,9 @@
                     </table>
                 {% else %}
                     <h2>High School Application Form</h2>
-                    <form action="{% url 'dashboard:application:draftExistingApplication' 'ut_student' selected_app.pk %}" prog-data-url="{% url 'dashboard:application:ajax_load_programs' %}" method="post" class="form-signup" style="padding-top: 10px;">
+                    <form action="{% url 'dashboard:application:draftExistingApplication' selected_app.pk %}"
+                          prog-data-url="{% url 'dashboard:application:ajax_load_programs' %}" method="post"
+                          class="form-signup" style="padding-top: 10px;">
                         {% csrf_token %}
                         <div class="rounded bg-secondary" style="height:35px;margin-bottom:10px;">
                             <h5 class="p-2">PERSONAL</h5>
@@ -157,4 +159,5 @@
         </div>
     {% endif %}
 </div>
+
 {% endblock %}
