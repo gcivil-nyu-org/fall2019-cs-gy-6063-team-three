@@ -9,19 +9,19 @@ from .templatetags import hs_filters as filters
 
 
 def create_highschool(
-        dbn="06A231",
-        school_name="Testing High School for Bugs!",
-        phone_number="912-121-0911",
-        boro="K",
+    dbn="06A231",
+    school_name="Testing High School for Bugs!",
+    phone_number="912-121-0911",
+    boro="K",
 ):
     return HighSchool.objects.create(
         dbn=dbn,
         school_name=school_name,
         boro=boro,
         overview_paragraph="The mission of Testing High School for Bugs is to "
-                           "intellectually prepare, morally inspire, and socially "
-                           "motivate every bug to become non-existent in this "
-                           "vastly changing project.",  # noqa: E501
+        "intellectually prepare, morally inspire, and socially "
+        "motivate every bug to become non-existent in this "
+        "vastly changing project.",  # noqa: E501
         neighborhood="Downtown-Brooklyn",
         location="0 MTep Street, Brooklyn NY 00192(01.010101, -02.020202)",
         phone_number=phone_number,
@@ -177,7 +177,9 @@ class HighSchoolViewTests(TestCase):
         url = reverse("dashboard:high_school:index")
         response = self.client.get(url)
         self.assertEquals(response.status_code, 200)
-        self.assertTrue("empty_list" in response.context and response.context["empty_list"] == 1)
+        self.assertTrue(
+            "empty_list" in response.context and response.context["empty_list"] == 1
+        )
         self.assertContains(response, "Oops! We couldn't find what you're looking for")
         self.assertContains(
             response, "Contact oneapply_teamthree@gmail.com if the problem persists."
@@ -307,9 +309,11 @@ class FavHighSchoolTests(TestCase):
         response = self.client.get(url + "?is_fav_on=1")
         self.assertEquals(response.status_code, 200)
         self.assertTrue(
-            "empty_list" in response.context and response.context["empty_list"] == 2)
+            "empty_list" in response.context and response.context["empty_list"] == 2
+        )
         self.assertContains(
-            response, "Use the heart icon to add/remove a high school from your favorites."
+            response,
+            "Use the heart icon to add/remove a high school from your favorites.",
         )
         self.assertContains(
             response, "Contact oneapply_teamthree@gmail.com for more assistance."
@@ -335,8 +339,6 @@ class FavHighSchoolTests(TestCase):
         self.assertTrue(relations.count(), 2)
 
     def test_toggle_fav_views(self):
-        hs_2 = create_highschool(dbn="06A002", school_name="School 2")
-        hs_3 = create_highschool(dbn="06A003", school_name="School 3")
         # test toggle fav add url
         url = reverse("dashboard:high_school:toggle_fav", args=[self.hs_1.dbn, 1])
         response = self.client.get(url)
@@ -390,11 +392,11 @@ class ProgramModelTest(TestCase):
             name="Academy of Engineering",
             code=code,
             description="New York State approved CTE Program that leads to national "
-                        "certification aligned with industry standards and a "
-                        "CTE-endorsed Regents Diploma. Interdisciplinary "
-                        "project-based curriculum includes coursework in Introduction "
-                        "to Engineering & Design, Digital Electronics, Principles of "
-                        "Engineering, and Engineering Design & Development.",
+            "certification aligned with industry standards and a "
+            "CTE-endorsed Regents Diploma. Interdisciplinary "
+            "project-based curriculum includes coursework in Introduction "
+            "to Engineering & Design, Digital Electronics, Principles of "
+            "Engineering, and Engineering Design & Development.",
             number_of_seats=70,
             offer_rate=0,
         )
@@ -441,8 +443,7 @@ class HSFiltersTest(TestCase):
         self.assertFalse(response)
 
     def test_req_params(self):
-        val = \
-            "http://oneapply.com/dashboard/all_schools/?query=q1&loc_bx=on&page=2"
+        val = "http://oneapply.com/dashboard/all_schools/?query=q1&loc_bx=on&page=2"
         response = filters.get_req_params(val)
         self.assertTrue(len(response), 3)
         self.assertTrue("query" in response)
@@ -470,14 +471,14 @@ class HSFiltersTest(TestCase):
         response = filters.get_querystring(val, arg)
         self.assertTrue("?query" in response)
         # test updating params (when params exist)
-        val = \
-            "http://oneapply.com/dashboard/all_schools/?query=q1&loc_bx=on&&page=2"
+        val = "http://oneapply.com/dashboard/all_schools/?query=q1&loc_bx=on&&page=2"
         arg = "page"
         response = filters.get_querystring(val, arg)
-        self.assertTrue("?query" in response and "&loc_bx" in response and "&page" in response)
+        self.assertTrue(
+            "?query" in response and "&loc_bx" in response and "&page" in response
+        )
         # test updating params (only the same param exist)
         val = "http://oneapply.com/dashboard/all_schools/?page=2"
         arg = "page"
         response = filters.get_querystring(val, arg)
         self.assertTrue("?page" in response)
-

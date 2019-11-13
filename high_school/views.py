@@ -210,7 +210,6 @@ class HighSchoolListView(ListView):
                     context["selected_school"] = None
                 context["fav_schools"] = self.get_fav_schools()
 
-
         return context
 
     def getHighSchools(self):

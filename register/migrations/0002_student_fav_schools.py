@@ -5,15 +5,12 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('high_school', '0001_initial'),
-        ('register', '0001_initial'),
-    ]
+    dependencies = [("high_school", "0001_initial"), ("register", "0001_initial")]
 
     operations = [
         migrations.AddField(
-            model_name='student',
-            name='fav_schools',
-            field=models.ManyToManyField(blank=True, to='high_school.HighSchool'),
-        ),
+            model_name="student",
+            name="fav_schools",
+            field=models.ManyToManyField(blank=True, to="high_school.HighSchool"),
+        )
     ]

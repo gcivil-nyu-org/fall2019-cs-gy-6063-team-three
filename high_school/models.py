@@ -17,7 +17,7 @@ class HighSchool(models.Model):
     graduation_rate = models.CharField(max_length=5)
 
     class Meta:
-        ordering = ['school_name']
+        ordering = ["school_name"]
 
     def __str__(self):
         return self.school_name
@@ -35,7 +35,7 @@ class Program(models.Model):
     offer_rate = models.IntegerField(blank=True, null=True)
 
     class Meta:
-        ordering = ['name']
+        ordering = ["name"]
 
     def __str__(self):
         return self.name

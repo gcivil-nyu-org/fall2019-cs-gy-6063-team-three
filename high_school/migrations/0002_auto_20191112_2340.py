@@ -5,17 +5,11 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('high_school', '0001_initial'),
-    ]
+    dependencies = [("high_school", "0001_initial")]
 
     operations = [
         migrations.AlterModelOptions(
-            name='highschool',
-            options={'ordering': ['school_name']},
+            name="highschool", options={"ordering": ["school_name"]}
         ),
-        migrations.AlterModelOptions(
-            name='program',
-            options={'ordering': ['name']},
-        ),
+        migrations.AlterModelOptions(name="program", options={"ordering": ["name"]}),
     ]
