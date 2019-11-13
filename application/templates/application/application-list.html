@@ -20,8 +20,12 @@
                                 {{ app.application_number }} <br/>
                                 {% if app.is_draft %}
                                     Draft
-                                {% else %}
-                                    Submitted
+                                {% elif app.application_status == 2 %}
+                                    Pending
+                                {% elif app.application_status == 1 %}
+                                    Accepted
+                                {% elif app.application_status == 0 %}
+                                    Rejected
                                 {% endif %}
                             </small>
                         </div>

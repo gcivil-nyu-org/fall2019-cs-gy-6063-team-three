@@ -35,6 +35,7 @@ class StudentRegisterForm(ModelForm):
 
     def clean_username(self):
         username = self.cleaned_data["username"]
+        # TODO change below to get instead of filter and update test cases for the same
         if Student.objects.filter(username=username).exists():
             raise ValidationError("Username already in use")
         return username

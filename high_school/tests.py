@@ -2,8 +2,10 @@ from django.test import TestCase
 from django.urls import reverse
 
 from OneApply.constants import UserType
+from register.models import Student, Admin_Staff
 from .forms import SaveHighSchoolsForm
 from .models import HighSchool, Program
+from .templatetags import hs_filters as filters
 
 
 def create_highschool(
@@ -32,9 +34,21 @@ def create_highschool(
     )
 
 
-def update_session(client, username, user_type=UserType.STUDENT):
+def create_student(user_name="studentone", last_name="Doe"):
+    return Student.objects.create(
+        username=user_name,
+        first_name="John",
+        last_name="Doe",
+        email_address="john.doe@gmail.com",
+        current_school="NYU",
+        borough="B",
+        password="Something@123",
+    )
+
+
+def update_session(client, username, is_login=True, user_type=UserType.STUDENT):
     s = client.session
-    s.update({"username": username, "is_login": True, "user_type": user_type})
+    s.update({"username": username, "is_login": is_login, "user_type": user_type})
     s.save()
 
 
@@ -76,6 +90,14 @@ class HighSchoolModelTest(TestCase):
 
 
 class HighSchoolViewTests(TestCase):
+    def setUp(self):
+        create_student()
+
+    def test_no_login(self):
+        url = reverse("dashboard:high_school:index")
+        response = self.client.get(url)
+        self.assertTrue(response.status_code, 302)
+
     def test_no_student_login(self):
         url = reverse("dashboard:high_school:index")
         response = self.client.get(url)
@@ -90,7 +112,19 @@ class HighSchoolViewTests(TestCase):
         self.assertContains(response, "Testing High School for Bugs!")
 
     def test_invalid_student_login(self):
-        update_session(self.client, "studentone", user_type=UserType.ADMIN_STAFF)
+        hs = create_highschool()
+        Admin_Staff.objects.create(
+            first_name="Hritik",
+            last_name="Roshan",
+            email_address="hrx@gmail.com",
+            username="hritik",
+            password="hritikRoshan@10",
+            school=hs,
+            supervisor_email="hrx@gmail.com",
+            is_verified_employee=True,
+            is_active=True,
+        )
+        update_session(self.client, "adminstaff_one", user_type=UserType.ADMIN_STAFF)
         url = reverse("dashboard:high_school:index")
         response = self.client.get(url)
         self.assertEquals(response.status_code, 200)
@@ -143,7 +177,9 @@ class HighSchoolViewTests(TestCase):
         url = reverse("dashboard:high_school:index")
         response = self.client.get(url)
         self.assertEquals(response.status_code, 200)
-        self.assertTrue("empty_list" in response.context)
+        self.assertTrue(
+            "empty_list" in response.context and response.context["empty_list"] == 1
+        )
         self.assertContains(response, "Oops! We couldn't find what you're looking for")
         self.assertContains(
             response, "Contact oneapply_teamthree@gmail.com if the problem persists."
@@ -159,6 +195,17 @@ class HighSchoolViewTests(TestCase):
         self.assertContains(response, "Testing High School for Bugs!")
         self.assertContains(response, "0 MTep Street, Brooklyn NY 00192")
         self.assertContains(response, "912-121-0911")
+
+    def test_selected_school_empty(self):
+        create_highschool()
+        update_session(self.client, "studentone")
+        url = reverse("dashboard:high_school:overview", args=["06ACP9"])
+        response = self.client.get(url)
+        self.assertTrue(response.status_code, 200)
+        self.assertTrue("selected_school" in response.context)
+        self.assertFalse(response.context["selected_school"])
+        self.assertTrue("empty_list" in response.context)
+        self.assertTrue(response.context["empty_list"], 1)
 
     def test_filters(self):
         # Create 8 high_schools for search and filter tests
@@ -251,6 +298,72 @@ class HighSchoolViewTests(TestCase):
         self.assertTrue("empty_list" in response.context)
 
 
+class FavHighSchoolTests(TestCase):
+    def setUp(self):
+        self.student1 = create_student(user_name="student1", last_name="Doe1")
+        self.hs_1 = create_highschool(dbn="06A001", school_name="School 1")
+        update_session(self.client, "student1")
+
+    def test_empty_fav(self):
+        url = reverse("dashboard:high_school:index")
+        response = self.client.get(url + "?is_fav_on=1")
+        self.assertEquals(response.status_code, 200)
+        self.assertTrue(
+            "empty_list" in response.context and response.context["empty_list"] == 2
+        )
+        self.assertContains(
+            response,
+            "Use the heart icon to add/remove a high school from your favorites.",
+        )
+        self.assertContains(
+            response, "Contact oneapply_teamthree@gmail.com for more assistance."
+        )
+
+    def test_toggle_fav_model(self):
+        hs_2 = create_highschool(dbn="06A002")
+        hs_3 = create_highschool(dbn="06A003")
+        # test adding High School relations for man2many field in Student model
+        self.student1.fav_schools.add(self.hs_1)
+        self.student1.save()
+        relations = self.student1.fav_schools.all()
+        self.assertTrue(relations.count(), 1)
+        self.assertTrue(self.hs_1 in relations)
+        self.student1.fav_schools.add(hs_2)
+        self.student1.fav_schools.remove(self.hs_1)
+        self.student1.save()
+        relations = self.student1.fav_schools.all()
+        self.assertFalse(self.hs_1 in relations)
+        self.student1.fav_schools.add(hs_3)
+        self.student1.save()
+        relations = self.student1.fav_schools.all()
+        self.assertTrue(relations.count(), 2)
+
+    def test_toggle_fav_views(self):
+        # test toggle fav add url
+        url = reverse("dashboard:high_school:toggle_fav", args=[self.hs_1.dbn, 1])
+        response = self.client.get(url)
+        self.assertTrue(response.status_code, 302)
+        # test single fav entry
+        relations = self.student1.fav_schools.all()
+        self.assertTrue(relations.count(), 1)
+        url = reverse("dashboard:high_school:index")
+        response = self.client.get(url + "?is_fav_on=1")
+        self.assertTrue(response.status_code, 200)
+        self.assertTrue(len(response.context["high_schools"]), 1)
+        self.assertContains(response, "School 1")
+        # test toggle fav remove url
+        url = reverse("dashboard:high_school:toggle_fav", args=[self.hs_1.dbn, 0])
+        response = self.client.get(url)
+        self.assertTrue(response.status_code, 302)
+        # removing from model and empty list in view tested above
+        # test invalid high school dbn has no effect on model and view
+        url = reverse("dashboard:high_school:toggle_fav", args=["0X181C", 1])
+        response = self.client.get(url)
+        self.assertTrue(response.status_code, 302)
+        relations = self.student1.fav_schools.all()
+        self.assertFalse(relations.count())
+
+
 class SaveHighSchoolTests(TestCase):
     def test_valid_data(self):
         data = {"limit": 1}
@@ -314,3 +427,58 @@ class ProgramModelTest(TestCase):
         self.create_program()
         response = Program.objects.filter(code="Q83C").delete()
         self.assertIsNotNone(response)
+
+
+class HSFiltersTest(TestCase):
+    def test_split_string(self):
+        val = "str&test"
+        arg = "&"
+        response = filters.split_string(val, arg)
+        self.assertTrue(len(response), 2)
+        self.assertTrue("str", response[0])
+        self.assertTrue("test", response[1])
+        # test non occurrence
+        arg = "%"
+        response = filters.split_string(val, arg)
+        self.assertFalse(response)
+
+    def test_req_params(self):
+        val = "http://oneapply.com/dashboard/all_schools/?query=q1&loc_bx=on&page=2"
+        response = filters.get_req_params(val)
+        self.assertTrue(len(response), 3)
+        self.assertTrue("query" in response)
+        self.assertTrue("loc_bx" in response)
+        self.assertTrue("page" in response)
+        # test empty param
+        val = "http://oneapply.com/dashboard/all_schools/?query=&loc_bx=on&page=2"
+        response = filters.get_req_params(val)
+        self.assertTrue(len(response), 2)
+        self.assertFalse("query" in response)
+        # test empty single param
+        val = "http://oneapply.com/dashboard/all_schools/?query="
+        response = filters.get_req_params(val)
+        self.assertFalse(response)
+
+    def test_querystring(self):
+        # test invalid input
+        val = "http://oneapply.com/dashboard/all_schools"
+        arg = ""
+        response = filters.get_querystring(val, arg)
+        self.assertFalse(response)
+        # test adding a param
+        val = "http://oneapply.com/dashboard/all_schools"
+        arg = "query"
+        response = filters.get_querystring(val, arg)
+        self.assertTrue("?query" in response)
+        # test updating params (when params exist)
+        val = "http://oneapply.com/dashboard/all_schools/?query=q1&loc_bx=on&&page=2"
+        arg = "page"
+        response = filters.get_querystring(val, arg)
+        self.assertTrue(
+            "?query" in response and "&loc_bx" in response and "&page" in response
+        )
+        # test updating params (only the same param exist)
+        val = "http://oneapply.com/dashboard/all_schools/?page=2"
+        arg = "page"
+        response = filters.get_querystring(val, arg)
+        self.assertTrue("?page" in response)

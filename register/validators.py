@@ -2,6 +2,7 @@ from django.core.exceptions import ValidationError
 
 
 def validate_not_used_student_email(value):
+    # TODO move this out of the method adn resolve import error
     from register.models import Student
 
     if Student.objects.filter(email_address=value).exists():

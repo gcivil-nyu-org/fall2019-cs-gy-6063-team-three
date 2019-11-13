@@ -42,10 +42,6 @@
                           data-toggle="tab"
                           data-url="{% url 'dashboard:high_school:index'  %}"
                           role="tab" aria-controls="nav-allSchools">All Schools</span>
-                    <span class="nav-item nav-link p-2" id="nav-selectedSchools-tab"
-                          data-toggle="tab"
-                          data-url="#nav-selectedSchools" role="tab"
-                          aria-controls="nav-selectedSchools">Selected Schools</span>
                     <span class="nav-item nav-link p-2" id="nav-applications-tab"
                           data-toggle="tab" data-url="{% url 'dashboard:application:all_applications' %}"
                           role="tab" aria-controls="nav-applications">Application Forms</span>
@@ -54,7 +50,7 @@
                           role="tab" aria-controls="nav-apply">Apply</span>
                     <span class="nav-item nav-link p-2" id="nav-recommendations-tab"
                           data-toggle="tab"
-                          data-url="#nav-recommendations" role="tab"
+                          data-url="{% url 'dashboard:recommendation:new_recommendation' %}" role="tab"
                           aria-controls="nav-recommendations">Teacher Recommendations</span>
                 </div>
             </nav>
@@ -75,10 +71,6 @@
                 {% block all_high_schools %}
                 {% endblock %}
             </div>
-            <div class="tab-pane fade" id="nav-selectedSchools" role="tabpanel"
-                 aria-labelledby="nav-selectedSchools-tab">
-                <h1>Hello, this is selected schools page</h1>
-            </div>
             <div class="tab-pane fade" id="nav-applications" role="tabpanel"
                  aria-labelledby="nav-applications-tab">
                 {% block all_applications %}
@@ -91,8 +83,7 @@
             </div>
             <div class="tab-pane fade" id="nav-recommendations" role="tabpanel"
                  aria-labelledby="nav-recommendations-tab">
-                {% block recommendations %}
-                    Teacher recommendations tab
+                {% block recommend_form %}
                 {% endblock %}
             </div>
         </div>
@@ -123,7 +114,6 @@
         $('#' + tab_target).addClass("active");
         $('#' + tab_target).addClass("show");
     };
-
     $(document).ready(function () {
         let currentPageUrl = $(location).attr('href'), anchorEl;
         $('.nav-item').each(function () {
@@ -133,7 +123,6 @@
             }
         });
     });
-
     $('#dashboard-tab span').on('click', function (e) {
         let selected_tab = $(this);
         toggleTabs(selected_tab);
