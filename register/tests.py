@@ -13,7 +13,7 @@ from .tokens import account_activation_token
 class AdmissionStaffViewTest(TestCase):
     def create_school(self):
         return HighSchool.objects.create(
-            dbn=""06M540"",
+            dbn="06M540",
             school_name="GMU",
             boro="B",
             overview_paragraph="Overview1",

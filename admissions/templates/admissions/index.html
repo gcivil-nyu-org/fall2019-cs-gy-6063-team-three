@@ -36,7 +36,7 @@
                      style="margin-top: 3em; margin-left: 17em; margin-right: 17em; background-color: #F9F7F3">
                     <div class="card-header" style="background-color: #CDE6EC"><b>
                         {{ app.first_name }} {{ app.last_name }}
-                        <span style="float: right">{{ app.application_number }}
+                        <span style="float: right">{{ app.application_number }}/Pending
                     </span>
                     </b>
                     </div>
@@ -60,9 +60,9 @@
                 {% elif app.application_status == 1 %}
                  <div class="card"
                      style="margin-top: 3em; margin-left: 17em; margin-right: 17em; background-color: #F9F7F3">
-                    <div class="card-header" style="background-color: #90EE90"><b>
+                    <div class="card-header" style="background-color: #b3e6b3"><b>
                         {{ app.first_name }} {{ app.last_name }}
-                        <span style="float: right">{{ app.application_number }}
+                        <span style="float: right">{{ app.application_number }}/Accepted
                     </span>
                     </b>
                     </div>
@@ -86,9 +86,9 @@
                 {% elif app.application_status == 0 %}
                  <div class="card"
                      style="margin-top: 3em; margin-left: 17em; margin-right: 17em; background-color: #F9F7F3">
-                    <div class="card-header" style="background-color: #F08080"><b>
+                    <div class="card-header" style="background-color: #ffcccc"><b>
                         {{ app.first_name }} {{ app.last_name }}
-                        <span style="float: right">{{ app.application_number }}
+                        <span style="float: right">{{ app.application_number }}/Rejected
                     </span>
                     </b>
                     </div>
