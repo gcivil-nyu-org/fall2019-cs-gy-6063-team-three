@@ -9,6 +9,7 @@ from OneApply.constants import UserType
 
 
 def new_recommendation(request):
+    # TODO Add test cases to check for unauthorized access
     if request.method == "POST":
         user_type = request.session.get("user_type", None)
         username = request.session.get("username", None)
@@ -33,6 +34,7 @@ def new_recommendation(request):
             to_email = form.cleaned_data["email_address"]
             email = EmailMessage(mail_subject, message, to=[to_email])
             email.send()
+            # TODO Add redirect button with response
             return HttpResponse(
                 "An email has been sent to the teacher you added with instructions on how to fill out your recommendation!"  # noqa E501
             )
