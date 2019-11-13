@@ -1,0 +1,9 @@
+{% autoescape off %}
+Hi {{ user.first_name }} {{ user.last_name }},
+{{ user.user.first_name}} {{user.user.last_name }} has requested that you fill out a recommendation form for them.
+Please visit the below link to fill out the form:
+https://docs.google.com/forms/d/e/1FAIpQLSexiIFDjIVDeDxhtDQP_P8eHB03SzkLWi8FN_v8PPato3KdFA/viewform?usp=sf_link
+
+Thank you,
+One Apply Team
+{% endautoescape %}

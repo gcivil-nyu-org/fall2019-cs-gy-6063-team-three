@@ -24,7 +24,6 @@ class LoginStudentViewTest(TestCase):
             first_name="Hritik",
             last_name="Roshan",
             email_address="hrx@gmail.com",
-            phoneNumber="9567801234",
             username="hritik",
             password="hritikRoshan@10",
             current_school="NYU",
@@ -63,8 +62,7 @@ class LoginStudentViewTest(TestCase):
 class LoginAdminStaffViewTest(TestCase):
     def create_school(self):
         return HighSchool.objects.create(
-            id=1,
-            dbn="DBN1",
+            dbn="1",
             school_name="GMU",
             boro="B",
             overview_paragraph="Overview1",

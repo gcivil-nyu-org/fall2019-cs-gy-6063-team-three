@@ -33,6 +33,13 @@ class StudentRegisterForm(ModelForm):
             {"placeholder": "Password (Once more)"}
         )
 
+    def clean_username(self):
+        username = self.cleaned_data["username"]
+        # TODO change below to get instead of filter and update test cases for the same
+        if Student.objects.filter(username=username).exists():
+            raise ValidationError("Username already in use")
+        return username
+
     def clean_input_password(self):
         input_password = self.cleaned_data["input_password"]
         pattern = re.compile(REG_EX)
@@ -89,6 +96,20 @@ class AdminStaffRegisterForm(ModelForm):
             field.widget.attrs.update(
                 {"class": "form-control", "placeholder": field.label}
             )
+
+    def clean_username(self):
+        username = self.cleaned_data["username"]
+        if Admin_Staff.objects.filter(username=username).exists():
+            raise ValidationError("Username already in use")
+        return username
+
+    def clean_supervisor_email(self):
+        supervisor_email = self.cleaned_data["supervisor_email"]
+        email = self.cleaned_data["email_address"]
+        if supervisor_email and email:
+            if supervisor_email == email:
+                raise ValidationError("Supervisor email can not be the same as yours")
+        return supervisor_email
 
     def clean_input_password(self):
         input_password = self.cleaned_data["input_password"]

@@ -44,10 +44,15 @@ class IndexView(ListView):
         applications = get_applications(admin_staff=self.user).order_by(
             "-submitted_date"
         )
+        # Todo - program filtering fails for string comparisons
+        # not commented bc test cases might fail
+        # fix - the program shouldn't be compared directly
+        # since that's a pk of int type
         try:
             self.program = self.request.GET.get("p")
         except KeyError:
             self.program = None
+
         if self.program:
             if self.program == ALL:
                 return applications
@@ -88,6 +93,20 @@ def get_applications(admin_staff):
 def get_programs(applications):
     program_set = set()
     for application in applications:
-        program_set.add(application.program)
+        program_set.add(str(application.program))
     program_set.add(ALL)
     return list(sorted(program_set))
+
+
+def reject(request, application_id):
+    application = HighSchoolApplication.objects.get(id=application_id)
+    application.application_status = "0"
+    application.save()
+    return redirect("dashboard:admissions:index")
+
+
+def accept(request, application_id):
+    application = HighSchoolApplication.objects.get(id=application_id)
+    application.application_status = "1"
+    application.save()
+    return redirect("dashboard:admissions:index")

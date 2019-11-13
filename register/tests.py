@@ -13,8 +13,7 @@ from .tokens import account_activation_token
 class AdmissionStaffViewTest(TestCase):
     def create_school(self):
         return HighSchool.objects.create(
-            id=1,
-            dbn="DBN1",
+            dbn="06M540",
             school_name="GMU",
             boro="B",
             overview_paragraph="Overview1",
@@ -69,8 +68,7 @@ class AdmissionStaffViewTest(TestCase):
 class AdmissionStaffModelTest(TestCase):
     def create_admission_staff(self):
         hs = HighSchool.objects.create(
-            id=1,
-            dbn="DBN1",
+            dbn="1",
             school_name="GMU",
             boro="B",
             overview_paragraph="Overview1",
@@ -161,8 +159,7 @@ class AdmissionsFormTest(TestCase):
 class AdmissionsViewActivateTest(TestCase):
     def create_admission_staff(self):
         hs = HighSchool.objects.create(
-            id=1,
-            dbn="DBN1",
+            dbn="1",
             school_name="GMU",
             boro="B",
             overview_paragraph="Overview1",
@@ -245,7 +242,6 @@ class StudentModelTest(TestCase):
             first_name="Hritik",
             last_name="Roshan",
             email_address="hrx@gmail.com",
-            phoneNumber="9567801234",
             username="hritik",
             password="hritikRoshan@10",
             current_school="NYU",
@@ -276,7 +272,6 @@ class StudentFormTest(TestCase):
             "first_name": "Hritik",
             "last_name": "Roshan",
             "email_address": "hrx@gmail.com",
-            "phoneNumber": "9567801234",
             "username": "hritik",
             "input_password": "hritikRoshan@10",
             "confirm_password": "hritikRoshan@10",
@@ -291,7 +286,6 @@ class StudentFormTest(TestCase):
             "first_name": "Hritik",
             "last_name": "Roshan",
             "email_address": "hrx@gmail.com",
-            "phoneNumber": "9567801234",
             "username": "hritik",
             "input_password": "hritikroshan@",
             "confirm_password": "hritikroshan@",
@@ -307,7 +301,6 @@ class StudentFormTest(TestCase):
             "first_name": "Hritik",
             "last_name": "Roshan",
             "email_address": "hrx@gmail.com",
-            "phoneNumber": "9567801234",
             "username": "hritik",
             "input_password": "hritikRoshan@10",
             "confirm_password": "hritikRoshan@1",
@@ -325,7 +318,6 @@ class StudentViewTest(TestCase):
             "first_name": "Hritik",
             "last_name": "Roshan",
             "email_address": "hrx@gmail.com",
-            "phoneNumber": "9567801234",
             "username": "hritik",
             "input_password": "hritikRoshan@10",
             "confirm_password": "hritikRoshan@10",
@@ -342,7 +334,6 @@ class StudentViewTest(TestCase):
             "first_name": "Hritik",
             "last_name": "Roshan",
             "email_address": "hrx@gmail.com",
-            "phoneNumber": "9567801234",
             "username": "hritik",
             "input_password": "hritikRoshan@10",
             "confirm_password": "hritikRoshan@575",
@@ -361,7 +352,6 @@ class StudentViewActivateTest(TestCase):
             first_name="Hritik",
             last_name="Roshan",
             email_address="hrx@gmail.com",
-            phoneNumber="9567801234",
             username="hritik",
             password="hritikRoshan@10",
             current_school="NYU",

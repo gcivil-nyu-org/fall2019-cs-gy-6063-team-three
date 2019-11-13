@@ -4,10 +4,10 @@
         {% if applications %}
             {% for app in applications %}
                 {% if selected_app and selected_app.pk == app.pk %}
-                    <a href="{% url 'dashboard:application:overview' 'ut_student' app.pk %}"
+                    <a href="{% url 'dashboard:application:overview' app.pk %}"
                         class="list-group-item list-group-item-action active" style="margin-top:5px;">
                 {% else %}
-                    <a href="{% url 'dashboard:application:overview' 'ut_student' app.pk %}"
+                    <a href="{% url 'dashboard:application:overview' app.pk %}"
                         class="list-group-item list-group-item-action" style="margin-top:5px;">
                 {% endif %}
                         <div class="d-flex w-100 justify-content-between mb-2">
@@ -20,8 +20,12 @@
                                 {{ app.application_number }} <br/>
                                 {% if app.is_draft %}
                                     Draft
-                                {% else %}
-                                    Submitted
+                                {% elif app.application_status == 2 %}
+                                    Pending
+                                {% elif app.application_status == 1 %}
+                                    Accepted
+                                {% elif app.application_status == 0 %}
+                                    Rejected
                                 {% endif %}
                             </small>
                         </div>
