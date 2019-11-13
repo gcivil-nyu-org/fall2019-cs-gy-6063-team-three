@@ -29,7 +29,7 @@ class HighSchoolApplicationForm(ModelForm):
 
     class Meta:
         model = HighSchoolApplication
-        exclude = ["application_number", "user", "submitted_date", "is_draft"]
+        exclude = ["application_number", "user", "submitted_date", "is_draft", "application_status"]
         widgets = {
             "gender": forms.Select(
                 choices=GENDER, attrs={"class": "custom-select mr-sm-2"}

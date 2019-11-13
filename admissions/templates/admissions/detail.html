@@ -59,7 +59,13 @@ inherit; width: 75%; margin: 0 auto 2em;">
             </tr>
             <tr>
                 <th scope = "row"> status</th>>
-                <td> {{application.application_status}}</td>
+                {% if application.application_status == 2 %}
+                    <td>Pending</td>
+                {% elif application.application_status == 1 %}
+                    <td>Accepted</td>
+                {% elif application.application_status == 0 %}
+                    <td>Rejected</td>
+                {% endif %}
             </tr>
         {% else %}
             <p>The application you are looking for doesn't exist.</p>
@@ -67,10 +73,10 @@ inherit; width: 75%; margin: 0 auto 2em;">
         </tbody>
 
     </table>
-    {% if application.application_status == "pending" %}
+    {% if application.application_status == 2 %}
     <div class="nav d-flex justify-content-center">
-        <button class="btn btn-lg btn-primary mr-4"><a href="{% url 'dashboard:admissions:accept' application.id %}">Accept</a></button>
-        <button class="btn btn-lg btn-danger mr-4"><a href="{% url 'dashboard:admissions:reject' application.id %}">Reject</a></button>
+        <a class="btn btn-lg btn-primary mr-4" href="{% url 'dashboard:admissions:accept' application.id %}">Accept</a>
+        <a class="btn btn-lg btn-danger mr-4" href="{% url 'dashboard:admissions:reject' application.id %}">Reject</a>
     </div>
     {% endif %}
 {% endblock %}

@@ -95,13 +95,13 @@ def get_programs(applications):
 
 def reject(request, application_id):
     application = HighSchoolApplication.objects.get(id=application_id)
-    application.application_status = "accepted"
+    application.application_status = "0"
     application.save()
     return redirect("dashboard:admissions:index")
 
 
 def accept(request, application_id):
     application = HighSchoolApplication.objects.get(id=application_id)
-    application.application_status = "rejected"
+    application.application_status = "1"
     application.save()
     return redirect("dashboard:admissions:index")

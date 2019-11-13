@@ -31,8 +31,8 @@
                 {% endif %}
             </div>
             {% for app in applications %}
-                {% if app.application_status == "pending" %}
-                <div class="card"
+                {% if app.application_status == 2 %}
+                 <div class="card"
                      style="margin-top: 3em; margin-left: 17em; margin-right: 17em; background-color: #F9F7F3">
                     <div class="card-header" style="background-color: #CDE6EC"><b>
                         {{ app.first_name }} {{ app.last_name }}
@@ -56,11 +56,11 @@
                             </footer>
                         </div>
                     </div>
-                </div>
-                {% elif app.application_status == "accepted" %}
-                <div class="card"
+                 </div>
+                {% elif app.application_status == 1 %}
+                 <div class="card"
                      style="margin-top: 3em; margin-left: 17em; margin-right: 17em; background-color: #F9F7F3">
-                    <div class="card-header" style="background-color: success"><b>
+                    <div class="card-header" style="background-color: #90EE90"><b>
                         {{ app.first_name }} {{ app.last_name }}
                         <span style="float: right">{{ app.application_number }}
                     </span>
@@ -82,11 +82,11 @@
                             </footer>
                         </div>
                     </div>
-                </div>
-                {% elif app.application_status == "rejected" %}
-                <div class="card"
+                 </div>
+                {% elif app.application_status == 0 %}
+                 <div class="card"
                      style="margin-top: 3em; margin-left: 17em; margin-right: 17em; background-color: #F9F7F3">
-                    <div class="card-header" style="background-color: red"><b>
+                    <div class="card-header" style="background-color: #F08080"><b>
                         {{ app.first_name }} {{ app.last_name }}
                         <span style="float: right">{{ app.application_number }}
                     </span>
@@ -108,7 +108,7 @@
                             </footer>
                         </div>
                     </div>
-                </div>
+                 </div>
                 {% endif %}
             {% endfor %}
 
