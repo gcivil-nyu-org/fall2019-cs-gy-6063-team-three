@@ -43,10 +43,10 @@
                           data-url="{% url 'dashboard:high_school:index'  %}"
                           role="tab" aria-controls="nav-allSchools">All Schools</span>
                     <span class="nav-item nav-link p-2" id="nav-applications-tab"
-                          data-toggle="tab" data-url="{% url 'dashboard:application:all_applications' 'ut_student' %}"
+                          data-toggle="tab" data-url="{% url 'dashboard:application:all_applications' %}"
                           role="tab" aria-controls="nav-applications">Application Forms</span>
                     <span class="nav-item nav-link p-2" id="nav-apply-tab"
-                          data-toggle="tab" data-url="{% url 'dashboard:application:new_application' 'ut_student' %}"
+                          data-toggle="tab" data-url="{% url 'dashboard:application:new_application' %}"
                           role="tab" aria-controls="nav-apply">Apply</span>
                     <span class="nav-item nav-link p-2" id="nav-recommendations-tab"
                           data-toggle="tab"
@@ -102,6 +102,8 @@
 <!--bootstrap jquery and js-->
 <script src="//cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<script type="text/javascript" src="{% static 'application/js/application.js' %}"></script>
 
 <script>
     let toggleTabs = function (selected_tab) {

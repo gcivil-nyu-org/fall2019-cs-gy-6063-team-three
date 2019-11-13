@@ -63,7 +63,7 @@ class LoginStudentViewTest(TestCase):
 class LoginAdminStaffViewTest(TestCase):
     def create_school(self):
         return HighSchool.objects.create(
-            dbn="DBN1",
+            dbn="1",
             school_name="GMU",
             boro="B",
             overview_paragraph="Overview1",
