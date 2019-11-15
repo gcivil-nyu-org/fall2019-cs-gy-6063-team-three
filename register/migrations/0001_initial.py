@@ -3,6 +3,7 @@
 import django.core.validators
 from django.db import migrations, models
 import django.db.models.deletion
+import register.validators
 
 
 class Migration(migrations.Migration):
@@ -31,7 +32,10 @@ class Migration(migrations.Migration):
                     models.EmailField(
                         max_length=200,
                         null=True,
-                        validators=[django.core.validators.EmailValidator()],
+                        validators=[
+                            django.core.validators.EmailValidator(),
+                            register.validators.validate_not_used_student_email,
+                        ],
                     ),
                 ),
                 (
@@ -75,7 +79,10 @@ class Migration(migrations.Migration):
                     models.EmailField(
                         max_length=200,
                         null=True,
-                        validators=[django.core.validators.EmailValidator()],
+                        validators=[
+                            django.core.validators.EmailValidator(),
+                            register.validators.validate_not_used_admin_email,
+                        ],
                     ),
                 ),
                 (

@@ -52,7 +52,6 @@
 {#                 email and username blocks#}
                 <div class="form-row">
                     <div class="form-label-group col-md-6">
-                        {{ form.email_address.errors }}
                         {{ form.email_address }}
                         <label for={{ form.email_address.id_for_label }}>{{ form.email_address.label }}</label>
                         {% if form.email_address.errors %}
@@ -64,6 +63,9 @@
                         <label for={{ form.username.id_for_label }}>{{ form.username.label }}</label>
                         {% if form.username.help_text %}
                         <p class="help">{{ form.username.help_text|safe }}</p>
+                        {% endif %}
+                        {% if form.username.errors %}
+                        {{ form.username.errors }}
                         {% endif %}
                     </div>
                 </div>
