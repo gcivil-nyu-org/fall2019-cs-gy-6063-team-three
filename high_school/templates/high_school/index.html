@@ -57,6 +57,7 @@
                 high_school_div.hide()
             }
         });
+
         {# for restricting page numbers in pagination #}
 
         function getPageList(totalPages, page, maxLength) {
@@ -148,16 +149,33 @@
             });
         });
         {#to toggle fav high school for user#}
-        $(".school-fav-btn").click(function(e){
+        $(".school-fav-btn").click(function (e) {
             e.preventDefault();
             let school_dbn = $(this).attr("dbn_value");
             let is_fav = parseInt($(this).attr("is_fav"));
-            is_fav = is_fav===1?0:1;
+            is_fav = is_fav === 1 ? 0 : 1;
             $(this).attr("is_fav", is_fav);
             let url = "{% url 'dashboard:high_school:toggle_fav' 'school_dbn' '0000' %}";
-            url = url.replace('school_dbn',school_dbn);
-            url = url.replace('0000', "" +is_fav);
+            url = url.replace('school_dbn', school_dbn);
+            url = url.replace('0000', "" + is_fav);
             window.location.href = url;
+        });
+        {# school overview program card functions #}
+        let toggle_crd_div = function (_id, show) {
+            let div = $("#" + _id + "_container .card-header-right");
+            if (show) {
+                div.show();
+            } else {
+                div.hide();
+            }
+        };
+        $('.collapse').on('hidden.bs.collapse', function () {
+            let _id = $(this).attr("id").split("_")[0];
+            toggle_crd_div(_id, false)
+        });
+        $('.collapse').on('shown.bs.collapse', function () {
+            let _id = $(this).attr("id").split("_")[0];
+            toggle_crd_div(_id, true)
         })
     </script>
     </html>

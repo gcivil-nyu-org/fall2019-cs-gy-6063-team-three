@@ -199,8 +199,10 @@ class HighSchoolListView(ListView):
                     selected_school = HighSchool.objects.filter(dbn=self.dbn)
                     if selected_school:
                         context["selected_school"] = selected_school[0]
+                        context["selected_school_programs"] = self.get_hs_programs(selected_school[0])
                     else:
                         context["selected_school"] = None
+                        context["selected_school_programs"] = None
                         context["high_schools"] = None
                         context["empty_list"] = 1
                 else:
@@ -244,6 +246,12 @@ class HighSchoolListView(ListView):
         if not fav_schools:
             self.is_fav_empty = True
         return fav_schools
+
+    def get_hs_programs(self, selected_school):
+        if selected_school:
+            return Program.objects.filter(high_school=selected_school.dbn)
+        else:
+            return None
 
 
 def update_fav_hs(request, school_dbn, is_fav):

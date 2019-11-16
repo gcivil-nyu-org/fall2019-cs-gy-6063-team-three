@@ -27,6 +27,36 @@
                 <div>
                     {{ selected_school.overview_paragraph }}
                 </div>
+                <div style="display: flex; flex-direction: column; flex-flow: wrap;">
+                    {% for program in selected_school_programs %}
+                        <div class="card program-div" id="{{ program.code }}_container">
+
+                            <a class="" style="text-decoration: none !important;"
+                               data-toggle="collapse"
+                               href="#{{ program.code }}_collapse" role="button"
+                               aria-expanded="false"
+                               aria-controls="{{ program.code }}_collapse">
+                                <div class="card-header justify-content-between">
+                                    <div class="card-header-left justify-content-between">
+                                        <p class="mr-lg-5 mb-2"
+                                           style="text-decoration: none !important;">{{ program.name }}</p>
+                                        <span style="font-size: 14px;">{{ program.number_of_seats }} seats</span>
+                                    </div>
+                                    <div class="card-header-right" style="display: none">
+                                        <p class="mb-2" style="font-size: 16px;"><i
+                                                class="fa fa-chevron-up"></i></p>
+                                        <span>{{ program.offer_rate }} %</span>
+                                    </div>
+                                </div>
+                            </a>
+                            <div class="collapse" id="{{ program.code }}_collapse">
+                                <div class="card-body">
+                                    {{ program.description }}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
                 <button class="btn btn-lg btn-primary btn-block"
                         style="margin: 15% 12.5% 5% 12.5%; width: 75%">More Info
                 </button>
