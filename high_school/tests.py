@@ -515,3 +515,26 @@ class HSFiltersTest(TestCase):
         arg = "page"
         response = filters.get_querystring(val, arg)
         self.assertTrue("?page" in response)
+
+
+class ApiCallTests(TestCase):
+    def test_valid_api_call(self):
+        update_session(self.client, "studentone")
+        # assert empty objects
+        url = reverse("dashboard:high_school:save")
+        response = self.client.get(url)
+        self.assertTrue(response.status_code, 200)
+        self.assertFalse(HighSchool.objects.count())
+        self.assertFalse(Program.objects.count())
+        # get 1 object from api
+        data = {"limit": 1}
+        response = self.client.post(url, data=data)
+        self.assertTrue(response.status_code, 200)
+        high_schools = HighSchool.objects.get_queryset()
+        self.assertTrue(len(high_schools), 1)
+        self.assertTrue(Program.objects.filter(high_school=high_schools.first()))
+        self.assertFalse(response.context["errors"])
+        # assert HS duplicate key
+        response = self.client.post(url, data=data)
+        self.assertTrue(response.status_code, 200)
+        self.assertTrue(response.context["response"], "Errors")
