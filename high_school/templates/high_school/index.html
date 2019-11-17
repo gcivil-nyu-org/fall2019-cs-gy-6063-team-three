@@ -161,21 +161,35 @@
             window.location.href = url;
         });
         {# school overview program card functions #}
-        let toggle_crd_div = function (_id, show) {
-            let div = $("#" + _id + "_container .card-header-right");
-            if (show) {
-                div.show();
+        let toggle_program_icon = function (show_plus) {
+            let i_tag = $("#program_toggle_icon");
+            let select_div = $(".program-select-div");
+            let prg_header = $("#program-choose-header");
+            if (show_plus) {
+                i_tag.removeClass("fa-minus-circle");
+                i_tag.addClass("fa-plus-circle");
+                prg_header.text("Programs available ({{ selected_school_programs.count }})");
+                select_div.hide()
             } else {
-                div.hide();
+                i_tag.removeClass("fa-plus-circle");
+                i_tag.addClass("fa-minus-circle");
+                prg_header.text("Choose program");
+                $("#program-select").prop("selectedIndex", 0).trigger("change");
+                select_div.show()
             }
         };
         $('.collapse').on('hidden.bs.collapse', function () {
-            let _id = $(this).attr("id").split("_")[0];
-            toggle_crd_div(_id, false)
+            toggle_program_icon(true)
         });
-        $('.collapse').on('shown.bs.collapse', function () {
-            let _id = $(this).attr("id").split("_")[0];
-            toggle_crd_div(_id, true)
+        $('.collapse').on('show.bs.collapse', function () {
+            toggle_program_icon(false)
+        });
+        let toggle_selected_program = function(selected_option){
+           $(".program-desc-div").hide();
+           $("#"+selected_option+"_div").show()
+        };
+        $('#program-select').on('change', function () {
+            toggle_selected_program($(this).val())
         })
     </script>
     </html>

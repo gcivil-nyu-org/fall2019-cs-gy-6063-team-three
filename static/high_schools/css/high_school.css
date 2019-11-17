@@ -127,25 +127,16 @@ body {
     margin: 2% 0;
 }
 .program-div{
-    /*max-width: 40%;*/
-    margin: 10px 10px 10px 0;
+    width: fit-content;
+    margin: 5% 0;
+    border-radius: 4px;
 }
 .program-div .card-header{
     display: flex;
     flex-direction: row;
-    /* flex-flow: wrap; */
 }
-.program-div .card-header-left{
-    display: flex;
-    flex-direction: column;
-    flex-flow: wrap;
-    min-width: 50%;
-}
-.program-div .card-header-right{
-    display: flex;
-    flex-direction: column;
-    min-width: 50%;
-    align-items: flex-end;
+.program-select-div .form-control:focus{
+    box-shadow: none !important;
 }
 /*overriding bootstrap*/
 .list-group-item {
