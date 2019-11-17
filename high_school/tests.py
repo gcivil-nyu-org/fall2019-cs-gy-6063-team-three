@@ -46,6 +46,22 @@ def create_student(user_name="studentone", last_name="Doe"):
     )
 
 
+def create_program(code="Q83C"):
+    return Program.objects.create(
+        high_school=create_highschool("06A231", phone_number="912-121-0911"),
+        name="Academy of Engineering",
+        code=code,
+        description="New York State approved CTE Program that leads to national "
+        "certification aligned with industry standards and a "
+        "CTE-endorsed Regents Diploma. Interdisciplinary "
+        "project-based curriculum includes coursework in Introduction "
+        "to Engineering & Design, Digital Electronics, Principles of "
+        "Engineering, and Engineering Design & Development.",
+        number_of_seats=70,
+        offer_rate=0,
+    )
+
+
 def update_session(client, username, is_login=True, user_type=UserType.STUDENT):
     s = client.session
     s.update({"username": username, "is_login": is_login, "user_type": user_type})
@@ -207,6 +223,31 @@ class HighSchoolViewTests(TestCase):
         self.assertTrue("empty_list" in response.context)
         self.assertTrue(response.context["empty_list"], 1)
 
+    def test_selected_school_programs_empty(self):
+        # test empty programs
+        create_highschool()
+        update_session(self.client, "studentone")
+        url = reverse("dashboard:high_school:overview", args=["06A231"])
+        response = self.client.get(url)
+        self.assertTrue(response.status_code, 200)
+        self.assertTrue("selected_school" in response.context)
+        self.assertTrue("selected_school_programs" in response.context)
+        self.assertFalse(response.context["selected_school_programs"])
+        self.assertContains(response, "No programs available")
+
+    def test_selected_school_programs(self):
+        # test non empty programs
+        create_program()
+        update_session(self.client, "studentone")
+        url = reverse("dashboard:high_school:overview", args=["06A231"])
+        response = self.client.get(url)
+        self.assertTrue(response.status_code, 200)
+        self.assertTrue("selected_school" in response.context)
+        self.assertTrue("selected_school_programs" in response.context)
+        self.assertTrue(len(response.context["selected_school_programs"]), 1)
+        self.assertContains(response, "Programs available (1)")
+        self.assertContains(response, "Q83C")
+
     def test_filters(self):
         # Create 8 high_schools for search and filter tests
         number_of_hs = 10
@@ -296,6 +337,13 @@ class HighSchoolViewTests(TestCase):
         response = self.client.get(url + "?query=Long Island")
         self.assertTrue(response.status_code, 200)
         self.assertTrue("empty_list" in response.context)
+        # search and borough filters (will only return Brooklyn, not Bronx)
+        response = self.client.get(url + "?query=Br&loc_bk=on")
+        self.assertTrue(response.status_code, 200)
+        self.assertTrue(len(response.context["high_schools"]) == 2)
+        for school in response.context["high_schools"]:
+            self.assertTrue("Brooklyn" in school.school_name)
+            self.assertFalse("The Bronx" in school.school_name)
 
 
 class FavHighSchoolTests(TestCase):
@@ -386,23 +434,8 @@ class SaveHighSchoolTests(TestCase):
 
 
 class ProgramModelTest(TestCase):
-    def create_program(self, code="Q83C"):
-        return Program.objects.create(
-            high_school=create_highschool("06A231", phone_number="912-121-0911"),
-            name="Academy of Engineering",
-            code=code,
-            description="New York State approved CTE Program that leads to national "
-            "certification aligned with industry standards and a "
-            "CTE-endorsed Regents Diploma. Interdisciplinary "
-            "project-based curriculum includes coursework in Introduction "
-            "to Engineering & Design, Digital Electronics, Principles of "
-            "Engineering, and Engineering Design & Development.",
-            number_of_seats=70,
-            offer_rate=0,
-        )
-
     def test_create_program(self):
-        program = self.create_program()
+        program = create_program()
         self.assertEqual(isinstance(program, Program), True)
         self.assertEqual(program.code, "Q83C")
         self.assertEqual(program.name, "Academy of Engineering")
@@ -419,12 +452,12 @@ class ProgramModelTest(TestCase):
         )
 
     def test_get_program(self):
-        program = self.create_program()
+        program = create_program()
         response = Program.objects.get(code="Q83C")
         self.assertTrue(response.code, program.code)
 
     def test_delete_program(self):
-        self.create_program()
+        create_program()
         response = Program.objects.filter(code="Q83C").delete()
         self.assertIsNotNone(response)
 
