@@ -6,6 +6,7 @@ from django.http import HttpResponse
 from .forms import RecommendationForm
 from register.models import Student
 from OneApply.constants import UserType
+from .models import Recommendation
 
 
 def new_recommendation(request):
@@ -21,6 +22,9 @@ def new_recommendation(request):
             return redirect("landingpage:index")
         user = Student.objects.get(username=username)
         form = RecommendationForm(request.POST)
+        context = {"form": form,
+                   "recommendations": Recommendation.objects.filter(user_id=user.pk)
+                   }
         if form.is_valid():
             f = form.save(commit=False)
             f.user_id = user.pk
@@ -40,14 +44,12 @@ def new_recommendation(request):
             )
     else:
         form = RecommendationForm()
-    context = {"form": form}
+        context = {"form": form}
     return render(request, "recommendation/recommendation_form.html", context)
 
 
-"""
-TODO:: SHOW NAMES OF PEOPLE REQUESTED TO FILL OUT RECOMMENDATION
 def all_recommendation(request):
-   user_type = request.session.get("user_type", None)
+    user_type = request.session.get("user_type", None)
     username = request.session.get("username", None)
     if (
         not request.session.get("is_login", None)
@@ -58,4 +60,3 @@ def all_recommendation(request):
     user = Student.objects.get(username=username)
     context = {"recommendations": Recommendation.objects.filter(user_id=user.pk)}
     return render(request, "recommendation/index.html", context)
-"""
