@@ -14,3 +14,4 @@ sodapy
 djangorestframework
 django-phonenumber-field
 phonenumbers
+django-select2==7.1.1

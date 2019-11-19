@@ -7,7 +7,6 @@ from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 
 from OneApply.constants import UserType
-from high_school.models import HighSchool
 from register.models import Student, Admin_Staff
 from .forms import StudentRegisterForm, AdminStaffRegisterForm
 from .tokens import account_activation_token
@@ -45,8 +44,6 @@ def register_user(request, user_type):
             if form is not None and form.is_valid():
                 password = form.cleaned_data["input_password"]
                 f = form.save(commit=False)
-                # TODO: Get the ID from sessions, here it is hardcoded to "06M540"
-                f.school = HighSchool.objects.get(dbn="06M540")
                 f.password = password
                 f.save()
                 current_site = get_current_site(request)

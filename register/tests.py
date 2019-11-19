@@ -29,11 +29,11 @@ class AdmissionStaffViewTest(TestCase):
         )
 
     def setUp(self):
-        self.create_school()
         self.adminStaff = {
             "username": "jwang",
             "first_name": "Jenny",
             "last_name": "Wang",
+            "school": create_high_school().dbn,
             "email_address": "jenny.wang@gmail.com",
             "supervisor_email": "jack.w@nyu.edu",
             "input_password": "Jenny@1234",
@@ -65,23 +65,28 @@ class AdmissionStaffViewTest(TestCase):
         Admin_Staff.objects.all().delete()
 
 
+def create_high_school():
+    hs = HighSchool.objects.create(
+        dbn="1",
+        school_name="GMU",
+        boro="B",
+        overview_paragraph="Overview1",
+        neighborhood="Neighborhood1",
+        location="1, ABCD Street",
+        phone_number=9173924885,
+        school_email="school@gmu.com",
+        website="www.gmu.com",
+        total_students=1000,
+        start_time=123,
+        end_time=124,
+        graduation_rate=80,
+    )
+    return hs
+
+
 class AdmissionStaffModelTest(TestCase):
     def create_admission_staff(self):
-        hs = HighSchool.objects.create(
-            dbn="1",
-            school_name="GMU",
-            boro="B",
-            overview_paragraph="Overview1",
-            neighborhood="Neighborhood1",
-            location="1, ABCD Street",
-            phone_number=9173924885,
-            school_email="school@gmu.com",
-            website="www.gmu.com",
-            total_students=1000,
-            start_time=123,
-            end_time=124,
-            graduation_rate=80,
-        )
+        hs = create_high_school()
         return Admin_Staff.objects.create(
             username="jwang",
             first_name="Jenny",
@@ -120,6 +125,7 @@ class AdmissionsFormTest(TestCase):
             "first_name": "Jenny",
             "last_name": "Wang",
             "email_address": "jenny.wang@gmail.com",
+            "school": create_high_school().dbn,
             "supervisor_email": "jack.w@nyu.edu",
             "input_password": "Jenny@1234",
             "confirm_password": "Jenny@1234",
@@ -133,6 +139,7 @@ class AdmissionsFormTest(TestCase):
             "first_name": "Jenny",
             "last_name": "Wang",
             "email_address": "jenny.wang@gmail.com",
+            "school": create_high_school().dbn,
             "supervisor_email": "jack.w@nyu.edu",
             "input_password": "Jenny1234",
             "confirm_password": "Jenny1234",
@@ -147,6 +154,7 @@ class AdmissionsFormTest(TestCase):
             "first_name": "Jenny",
             "last_name": "Wang",
             "email_address": "jenny.wang@gmail.com",
+            "school": create_high_school().dbn,
             "supervisor_email": "jack.w@nyu.edu",
             "input_password": "Jenny@1234",
             "confirm_password": "Jenny@1234567",
