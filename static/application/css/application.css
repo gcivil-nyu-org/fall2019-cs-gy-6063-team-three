@@ -17,10 +17,7 @@ body {
 
 .left-pane {
     height: 100vh !important;
-    /*background-color: #95a5a6;*/
     background-color: whitesmoke;
-    /*overflow-y: scroll;*/
-    /*overflow-x: hidden;*/
 }
 
 .right-pane {
@@ -47,8 +44,6 @@ body {
 .right-pane .top-header {
     height: 40%;
     max-height: 45%;
-    /*background: url("../../logIn/images/bg_1.jpg");*/
-    /*background-size: cover;*/
 }
 
 .no-app-placeholder {
@@ -60,7 +55,6 @@ body {
     width: 100%;
 }
 
-/*overriding bootstrap*/
 .list-group-item {
     width: 85% !important;
     margin: 5% 7.5% 0% 7.5% !important;
@@ -69,4 +63,9 @@ body {
 
 .list-group-item:last-child {
     margin-bottom: 5% !important;
+}
+
+.form-label-group {
+  position: relative;
+  margin-bottom: 1rem;
 }

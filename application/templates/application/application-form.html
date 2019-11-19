@@ -4,7 +4,7 @@
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'application/css/application.css' %}">
 
-<div style="margin-left:20%;height: 90%; margin-bottom: 5%; width:50%;">
+<div style="margin-left:20%; height: 90%; margin-bottom: 5%; width:50%; margin-top: 2%;">
     <h2>High School Application Form</h2>
     <form action="{% url 'dashboard:application:new_application' %}" prog-data-url="{% url 'dashboard:application:ajax_load_programs' %}" method="post" class="form-signup" style="padding-top: 10px;">
         {% csrf_token %}
