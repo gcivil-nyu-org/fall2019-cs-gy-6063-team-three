@@ -1,9 +1,12 @@
-from django.forms import ValidationError
+from django.forms import ValidationError, ModelChoiceField
 from django.forms import ModelForm
 from django import forms
 from django.utils.translation import gettext_lazy as _
 import re
+
+from high_school.models import HighSchool
 from .models import Student, Admin_Staff
+from django_select2.forms import Select2Widget
 
 BOROUGH_CHOICES = [
     ("", "Borough"),
@@ -88,6 +91,12 @@ class StudentRegisterForm(ModelForm):
 class AdminStaffRegisterForm(ModelForm):
     input_password = forms.CharField(widget=forms.PasswordInput, required=True)
     confirm_password = forms.CharField(widget=forms.PasswordInput, required=True)
+    school = ModelChoiceField(
+        queryset=HighSchool.objects.all(),
+        widget=Select2Widget,
+        empty_label="---Select School---",
+        required=True,
+    )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -144,8 +153,7 @@ class AdminStaffRegisterForm(ModelForm):
             "input_password",
             "confirm_password",
         )
-        # TODO: we need to include the school once sessions are in place
-        exclude = ["password", "school"]
+        exclude = ["password"]
         labels = {
             "supervisor_email": _("Supervisor's Email"),
             "input_password": _("Password"),
