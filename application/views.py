@@ -20,8 +20,8 @@ def new_application(request):
     ):
         return redirect("landingpage:index")
     try:
+        user = Student.objects.get(username=username)
         if request.method == "POST":
-            user = Student.objects.get(username=username)
             form = HighSchoolApplicationForm(request.POST)
             if form.is_valid():
                 f = form.save(commit=False)
@@ -43,7 +43,13 @@ def new_application(request):
                     reverse("dashboard:application:all_applications")
                 )
         else:
-            form = HighSchoolApplicationForm()
+            form = HighSchoolApplicationForm(
+                initial={
+                    "first_name": user.first_name,
+                    "last_name": user.last_name,
+                    "email_address": user.email_address,
+                }
+            )
         context = {"form": form}
     except ValueError as e:
         context = {"form": form, "program_error": e}
@@ -60,10 +66,13 @@ def save_existing_application(request, application_id):
     ):
         return redirect("landingpage:index")
     if request.method == "POST":
-        form = HighSchoolApplicationForm(request.POST)
+        f = HighSchoolApplication.objects.get(pk=application_id)
+        new_req = request.POST.copy()
+        new_req["school"] = f.school.pk
+        new_req["program"] = f.program.pk
+        form = HighSchoolApplicationForm(new_req)
         if form.is_valid():
             user = Student.objects.get(username=username)
-            f = HighSchoolApplication.objects.get(pk=application_id)
             form = form.save(commit=False)
             f.first_name = form.first_name
             f.last_name = form.last_name
@@ -136,14 +145,18 @@ def detail(request, application_id):
         "school": application.school,
         "program": application.program,
     }
-    form = HighSchoolApplicationForm(data)
+    form = HighSchoolApplicationForm(
+        initial={"program": application.program, "school": application.school},
+        data=data,
+        disable=True,
+    )
     context = {
         "applications": HighSchoolApplication.objects.filter(user_id=user.pk),
         "selected_app": application,
         "form": form,
     }
     # TODO redirect to index
-    return render(request, "application/application-overview.html", context)
+    return render(request, "application/index.html", context)
 
 
 def generate_application_number(user_id, school_id, program_id):
