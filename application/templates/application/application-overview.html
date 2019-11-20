@@ -1,16 +1,15 @@
 {% block app_overview %}
 
 {% load static %}
-<link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'application/css/application.css' %}">
 
-<div style="height: 90%; margin-bottom: 5%;">
-    {% if selected_app %}
+<div style="width:60%; margin-top: 5%; margin-bottom: 5%;">
         <div class="top-header">
-            <div class="right-pane-container">
+            <div class="right-pane-container" style="top:0%; margin-top: 3%;">
+            <a href="{% url 'dashboard:application:all_applications' %}" class="btn btn-primary ">Go to List</a>
                 {% if not selected_app.is_draft %}
                     <h5 style="margin: 1em; text-align: center;">
-                        <b>Application Form</b>
+                        <b>Submitted Application</b>
                     </h5>
                     <table class="table table-striped" style="border: 1px solid black; border-collapse:
                         inherit; width: 75%; margin: 0 auto 2em;">
@@ -24,7 +23,7 @@
                         </tbody>
                     </table>
                 {% else %}
-                    <h2>High School Application Form</h2>
+                    <h2 style="margin-top: 20px;">High School Application Form</h2>
                     <form action="{% url 'dashboard:application:draftExistingApplication' selected_app.pk %}"
                           prog-data-url="{% url 'dashboard:application:ajax_load_programs' %}" method="post"
                           class="form-signup" style="padding-top: 10px;">
@@ -146,18 +145,6 @@
                 {% endif %}
             </div>
         </div>
-    {% else %}
-        <div class="no-app-placeholder">
-            <div style="font-size: 18px;">
-                <span class="mb-3" style="font-size: 42px">
-                    <i class="fa-5x far fa-file-alt"></i>
-                </span>
-            </div>
-                <p class="mt-5" style="font-size: 18px;">
-                    Please select an application to get a brief overview
-                </p>
-        </div>
-    {% endif %}
 </div>
 
 {% endblock %}

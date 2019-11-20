@@ -3,22 +3,24 @@ from django.core.mail import EmailMessage
 from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.http import HttpResponse
-from .forms import RecommendationForm
+from django.contrib import messages
+from django.utils import timezone
+from .forms import RecommendationForm, RecommendationRatingForm
 from register.models import Student
 from OneApply.constants import UserType
+from .models import Recommendation
 
 
 def new_recommendation(request):
-    # TODO Add test cases to check for unauthorized access
+    user_type = request.session.get("user_type", None)
+    username = request.session.get("username", None)
+    if (
+        not request.session.get("is_login", None)
+        or not username
+        or user_type != UserType.STUDENT
+    ):
+        return redirect("landingpage:index")
     if request.method == "POST":
-        user_type = request.session.get("user_type", None)
-        username = request.session.get("username", None)
-        if (
-            not request.session.get("is_login", None)
-            or not username
-            or user_type != UserType.STUDENT
-        ):
-            return redirect("landingpage:index")
         user = Student.objects.get(username=username)
         form = RecommendationForm(request.POST)
         if form.is_valid():
@@ -29,15 +31,21 @@ def new_recommendation(request):
             mail_subject = "Teacher Recommendation."
             message = render_to_string(
                 "recommendation/sent_recommendation_email.html",
-                {"user": f, "domain": current_site.domain},
+                {
+                    "user": f,
+                    "domain": current_site.domain,
+                    "uid1": f.pk,
+                    "uid2": f.user.pk,
+                },
             )
             to_email = form.cleaned_data["email_address"]
             email = EmailMessage(mail_subject, message, to=[to_email])
             email.send()
-            # TODO Add redirect button with response
-            return HttpResponse(
-                "An email has been sent to the teacher you added with instructions on how to fill out your recommendation!"  # noqa E501
+            messages.info(
+                request,
+                "An email has been sent to the teacher you added with instructions on how to fill out your recommendation!",  # noqa: E501
             )
+            return redirect("dashboard:recommendation:new_recommendation")
     else:
         form = RecommendationForm()
     context = {"form": form}
@@ -45,9 +53,8 @@ def new_recommendation(request):
 
 
 """
-TODO:: SHOW NAMES OF PEOPLE REQUESTED TO FILL OUT RECOMMENDATION
 def all_recommendation(request):
-   user_type = request.session.get("user_type", None)
+    user_type = request.session.get("user_type", None)
     username = request.session.get("username", None)
     if (
         not request.session.get("is_login", None)
@@ -59,3 +66,52 @@ def all_recommendation(request):
     context = {"recommendations": Recommendation.objects.filter(user_id=user.pk)}
     return render(request, "recommendation/index.html", context)
 """
+
+
+def recommendation_rating(request, uid1, uid2):
+    teacherRecommendation = Recommendation
+    try:
+        teacherRecommendation = Recommendation.objects.get(pk=uid1)
+    except (TypeError, ValueError, OverflowError, teacherRecommendation.DoesNotExist):
+        return HttpResponse("Teacher Recommendation Does Not Exist")
+    if not teacherRecommendation.submitted_date:
+        if request.method == "POST":
+            form = RecommendationRatingForm(request.POST)
+            if form.is_valid():
+                f = form.save(commit=False)
+                teacherRecommendation.known_length = f.known_length
+                teacherRecommendation.known_strength = request.POST.get(
+                    "known_strength"
+                )
+                teacherRecommendation.known_location = request.POST.get(
+                    "known_location"
+                )
+                teacherRecommendation.rating_concepts = request.POST.get(
+                    "rating_concepts"
+                )
+                teacherRecommendation.rating_creativity = request.POST.get(
+                    "rating_creativity"
+                )
+                teacherRecommendation.rating_mathematical = request.POST.get(
+                    "rating_mathematical"
+                )
+                teacherRecommendation.rating_written = request.POST.get(
+                    "rating_written"
+                )
+                teacherRecommendation.rating_oral = request.POST.get("rating_oral")
+                teacherRecommendation.rating_goals = request.POST.get("rating_goals")
+                teacherRecommendation.rating_socialization = request.POST.get(
+                    "rating_socialization"
+                )
+                teacherRecommendation.rating_analyzing = request.POST.get(
+                    "rating_analyzing"
+                )
+                teacherRecommendation.submitted_date = timezone.now()
+                teacherRecommendation.save()
+                return HttpResponse("Successfully submitted!")
+        else:
+            form = RecommendationRatingForm()
+        context = {"form": form, "teacher_recommendation": teacherRecommendation}
+        return render(request, "recommendation/recommendation_rating.html", context)
+    else:
+        return HttpResponse("You have already completed the recommendation!")

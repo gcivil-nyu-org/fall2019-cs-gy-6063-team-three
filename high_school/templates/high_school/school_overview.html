@@ -1,7 +1,6 @@
 {% block school_overview %}
     {% if selected_school %}
         <div class="top-header" style="background: gray">
-            {#            <div class="blur-bg"></div>#}
             <div class="right-pane-container">
                 <h5 class="mb-3" style="font-size: 28px;">{{ selected_school.school_name }}</h5>
                 <h5 class="mb-2">{{ selected_school.neighborhood }}
@@ -28,7 +27,59 @@
                 <div>
                     {{ selected_school.overview_paragraph }}
                 </div>
-                <button class="btn btn-lg btn-primary btn-block"
+                <div class="card text-white bg-primary program-div">
+                    <div class="card-header justify-content-between">
+                        {% if selected_school_programs %}
+                            <div style="display: flex; flex-direction: column;">
+                                <span class="mr-5" id="program-choose-header">
+                                    Programs available ({{ selected_school_programs.count }})
+                                </span>
+                                <div class="mt-2 program-select-div" style="display: none;">
+                                    <label>
+                                        <select class="form-control" id="program-select">
+                                            {% for program in selected_school_programs %}
+                                                <option value="{{ program.code }}">{{ program.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </label>
+                                </div>
+
+                            </div>
+                            <a class="" style="text-decoration: none !important;"
+                               data-toggle="collapse"
+                               href="#program_collapse" role="button"
+                               aria-expanded="false"
+                               aria-controls="program_collapse">
+                            <span class="ml-5" style="font-size: 18px;">
+                                <i id="program_toggle_icon" class="fa fa-plus-circle">
+                                </i>
+                            </span>
+                            </a>
+                        {% else %}
+                            <span class="mr-5">No programs available</span>
+                        {% endif %}
+                    </div>
+                    <div class="collapse" id="program_collapse">
+                        <div class="card-body card-text">
+                            {% for program in selected_school_programs %}
+                                <div class="program-desc-div" id="{{ program.code }}_div"
+                                     style="display: none;">
+                                    <div class="card-subtitle"
+                                         style="display: flex; flex-direction: column;">
+                                        <h5 class="mb-1">{{ program.name }}</h5>
+                                        <span class="mb-3">
+                                             {% if program.number_of_seats %}
+                                                 {{ program.number_of_seats }} seats
+                                             {% endif %}</span>
+
+                                    </div>
+                                    <p class="mb-0">{{ program.description }}</p>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-lg btn-outline-primary btn-block"
                         style="margin: 15% 12.5% 5% 12.5%; width: 75%">More Info
                 </button>
             </div>

@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.views.generic import ListView
 from sodapy import Socrata
 
+from django.conf import settings
 from OneApply.constants import ApiInfo, UserType
 from high_school.models import Program
 from .forms import SaveHighSchoolsForm
@@ -17,10 +18,16 @@ def save_highschool_data(request):
         form = SaveHighSchoolsForm(request.POST)
         if form.is_valid():
             limit = form.cleaned_data["limit"]
-            response = save_high_schools(limit)
-            if response:
+            response, errors = save_high_schools(limit)
+            context = {}
+            if errors:
+                context["response"] = "Errors"
+                context["errors"] = errors
+            elif response:
+                context["response"] = response
+                context["errors"] = None
                 save_programs(limit)
-            return render(request, "high_school/index.html", {"response": response})
+            return render(request, "high_school/index.html", context)
 
     else:
         form = SaveHighSchoolsForm()
@@ -62,10 +69,11 @@ def save_high_schools(limit):
             # if there is no end time provided in the info set it to N/A
             serializer.initial_data[x]["end_time"] = "N/A"
     if serializer.is_valid():
-        return serializer.save()
+        return serializer.save(), None
     else:
-        print(serializer.errors)
-        return None
+        if settings.DEBUG:
+            print(serializer.errors)
+        return None, serializer.errors
 
 
 def extract_offer_rate(offer_rate_data):
@@ -89,10 +97,7 @@ def parse_result(result):
         ):
             # This result is a valid program, and not already in DB save it.
             program = Program()
-            # TODO: change following statement to
             program.high_school = HighSchool.objects.get(dbn=result.get("dbn"))
-            #  once the school model has dbn as unique/PK
-            # program.high_school = HighSchool.objects.filter(dbn=result.get("dbn"))[0]
             program.code = result.get(code)
             program.name = result.get(program_name)
             program.description = result.get(description)
@@ -202,8 +207,12 @@ class HighSchoolListView(ListView):
                     selected_school = HighSchool.objects.filter(dbn=self.dbn)
                     if selected_school:
                         context["selected_school"] = selected_school[0]
+                        context["selected_school_programs"] = self.get_hs_programs(
+                            selected_school[0]
+                        )
                     else:
                         context["selected_school"] = None
+                        context["selected_school_programs"] = None
                         context["high_schools"] = None
                         context["empty_list"] = 1
                 else:
@@ -247,6 +256,10 @@ class HighSchoolListView(ListView):
         if not fav_schools:
             self.is_fav_empty = True
         return fav_schools
+
+    def get_hs_programs(self, selected_school):
+        if selected_school:
+            return Program.objects.filter(high_school=selected_school.dbn)
 
 
 def update_fav_hs(request, school_dbn, is_fav):
