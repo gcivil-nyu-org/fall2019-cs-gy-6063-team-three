@@ -1,0 +1,189 @@
+
+{% load static %}
+<link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="{% static 'recommendation/css/recommendation.css' %}">
+<!-- Load bootstrap css, jquery, bootstrap js -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+<script src="https://kit.fontawesome.com/fc24e2383c.js" crossorigin="anonymous"></script>
+<!-- Custom styles for this template -->
+<link href="{% static 'dashboard/dashboard.css' %}" rel="stylesheet">
+
+<div class="nav-container">
+    <nav class="navbar navbar-expand-md navbar-dark bg-primary">
+        <a class="navbar-brand" href="{% url 'landingpage:index' %}">OneApply</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarCollapse" aria-controls="navbarCollapse"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </nav>
+</div>
+
+<div style="margin-left:20%;height: 90%; margin-bottom: 5%; width:50%; margin-top: 2%">
+    {% if teacher_recommendation %}
+    <h3>Teacher Recommendation for <mark><u>{{teacher_recommendation.user.first_name}} {{teacher_recommendation.user.last_name}}</u></mark></h3>
+    <h4>Name of Reviewer: {{teacher_recommendation.first_name}} {{teacher_recommendation.last_name}}</h4>
+    <form action="{% url 'recommendation_rating' teacher_recommendation.pk teacher_recommendation.user.pk %}" method="post" class="form-signup" style="padding-top: 10px;">
+        {% csrf_token %}
+        <div class="rounded bg-secondary" style="height:35px;margin-bottom:10px;">
+            <h5 class="p-2">I. Knowledge of Applicant</h5>
+        </div>
+        <div class="form-row">
+            <div class="form-label-group">
+                <span>Approximately how long have you known the applicant? (In years)</span> {{form.known_length}}
+                <br>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-label-group">
+                <span>How well do you feel like you know the applicant?</span><br>
+                <input type="radio" name="known_strength" value=0 required> Casually<br>
+                <input type="radio" name="known_strength" value=1> Well<br>
+                <input type="radio" name="known_strength" value=2> Very Well<br>
+                <br>
+            </div>
+
+        </div>
+        <div class="form-row">
+            <div class="form-label-group">
+                <span>What was the nature of your contact with the applicant?</span><br>
+                <input type="radio" name="known_location" value=0 required> Teacher in One Class<br>
+                <input type="radio" name="known_location" value=1> Teacher in Multiple Classes<br>
+                <input type="radio" name="known_location" value=2> Advisor<br>
+                <input type="radio" name="known_location" value=3> Mentor<br>
+                <input type="radio" name="known_location" value=4> Other<br>
+                <br>
+            </div>
+        </div>
+        <div class="rounded bg-secondary" style="height:35px;margin-bottom:10px;margin-top:15px;">
+            <h5 class="p-2">II. Relative Rating of the Applicant</h5>
+        </div>
+        <div class="form-row">
+            <p>Please rate the applicant in the areas indicated below by comparing him or her to a reference group of other students. </p>
+        </div>
+        <div class="form-row">
+            <table>
+                <tr>
+                    <th></th>
+                    <th>Top 1-2%</th>
+                    <th>Top 5%</th>
+                    <th>Top 10%</th>
+                    <th>Top 25%</th>
+                    <th>2nd 25%</th>
+                    <th>3rd 25%</th>
+                    <th>Last 25%</th>
+                    <th>Unable To Rate</th>
+                </tr>
+                <tr>
+                    <th> Ability to grasp new concepts </th>
+                    <th><input type="radio" name="rating_concepts" value=1 required></th>
+                    <th><input type="radio" name="rating_concepts" value=2></th>
+                    <th><input type="radio" name="rating_concepts" value=3></th>
+                    <th><input type="radio" name="rating_concepts" value=4></th>
+                    <th><input type="radio" name="rating_concepts" value=5></th>
+                    <th><input type="radio" name="rating_concepts" value=6></th>
+                    <th><input type="radio" name="rating_concepts" value=7></th>
+                    <th><input type="radio" name="rating_concepts" value=0></th>
+                </tr>
+                <tr>
+                    <th> Originality, intellectual creativity </th>
+                    <th><input type="radio" name="rating_creativity" value=1 required></th>
+                    <th><input type="radio" name="rating_creativity" value=2></th>
+                    <th><input type="radio" name="rating_creativity" value=3></th>
+                    <th><input type="radio" name="rating_creativity" value=4></th>
+                    <th><input type="radio" name="rating_creativity" value=5></th>
+                    <th><input type="radio" name="rating_creativity" value=6></th>
+                    <th><input type="radio" name="rating_creativity" value=7></th>
+                    <th><input type="radio" name="rating_creativity" value=0></th>
+                </tr>
+                <tr>
+                    <th> Mathematical and logical thought </th>
+                    <th><input type="radio" name="rating_mathematical" value=1 required></th>
+                    <th><input type="radio" name="rating_mathematical" value=2></th>
+                    <th><input type="radio" name="rating_mathematical" value=3></th>
+                    <th><input type="radio" name="rating_mathematical" value=4></th>
+                    <th><input type="radio" name="rating_mathematical" value=5></th>
+                    <th><input type="radio" name="rating_mathematical" value=6></th>
+                    <th><input type="radio" name="rating_mathematical" value=7></th>
+                    <th><input type="radio" name="rating_mathematical" value=0></th>
+                </tr>
+                <tr>
+                    <th> Written expression </th>
+                    <th><input type="radio" name="rating_written" value=1 required></th>
+                    <th><input type="radio" name="rating_written" value=2></th>
+                    <th><input type="radio" name="rating_written" value=3></th>
+                    <th><input type="radio" name="rating_written" value=4></th>
+                    <th><input type="radio" name="rating_written" value=5></th>
+                    <th><input type="radio" name="rating_written" value=6></th>
+                    <th><input type="radio" name="rating_written" value=7></th>
+                    <th><input type="radio" name="rating_written" value=0></th>
+                </tr>
+                <tr>
+                    <th> Oral expression </th>
+                    <th><input type="radio" name="rating_oral" value=1 required></th>
+                    <th><input type="radio" name="rating_oral" value=2></th>
+                    <th><input type="radio" name="rating_oral" value=3></th>
+                    <th><input type="radio" name="rating_oral" value=4></th>
+                    <th><input type="radio" name="rating_oral" value=5></th>
+                    <th><input type="radio" name="rating_oral" value=6></th>
+                    <th><input type="radio" name="rating_oral" value=7></th>
+                    <th><input type="radio" name="rating_oral" value=0></th>
+                </tr>
+                <tr>
+                    <th> Perserverance toward goals </th>
+                    <th><input type="radio" name="rating_goals" value=1 required></th>
+                    <th><input type="radio" name="rating_goals" value=2></th>
+                    <th><input type="radio" name="rating_goals" value=3></th>
+                    <th><input type="radio" name="rating_goals" value=4></th>
+                    <th><input type="radio" name="rating_goals" value=5></th>
+                    <th><input type="radio" name="rating_goals" value=6></th>
+                    <th><input type="radio" name="rating_goals" value=7></th>
+                    <th><input type="radio" name="rating_goals" value=0></th>
+                </tr>
+                <tr>
+                    <th> Ability to get along with others </th>
+                    <th><input type="radio" name="rating_socialization" value=1 required></th>
+                    <th><input type="radio" name="rating_socialization" value=2></th>
+                    <th><input type="radio" name="rating_socialization" value=3></th>
+                    <th><input type="radio" name="rating_socialization" value=4></th>
+                    <th><input type="radio" name="rating_socialization" value=5></th>
+                    <th><input type="radio" name="rating_socialization" value=6></th>
+                    <th><input type="radio" name="rating_socialization" value=7></th>
+                    <th><input type="radio" name="rating_socialization" value=0></th>
+                </tr>
+                <tr>
+                    <th> Ability to analyze problems and formulate solutions </th>
+                    <th><input type="radio" name="rating_analyzing" value=1 required></th>
+                    <th><input type="radio" name="rating_analyzing" value=2></th>
+                    <th><input type="radio" name="rating_analyzing" value=3></th>
+                    <th><input type="radio" name="rating_analyzing" value=4></th>
+                    <th><input type="radio" name="rating_analyzing" value=5></th>
+                    <th><input type="radio" name="rating_analyzing" value=6></th>
+                    <th><input type="radio" name="rating_analyzing" value=7></th>
+                    <th><input type="radio" name="rating_analyzing" value=0></th>
+                </tr>
+            </table>
+        </div>
+        <div class="form-row" style="margin-top:50px;">
+                            <div class="form-label-group col-md-6">
+                            </div>
+                            <div class="form-label-group col-md-6">
+                                <input class="btn btn-lg btn-primary btn-block" type="submit" value="Submit" name="submit"/>
+                            </div>
+                        </div>
+    </form>
+    {% else %}
+        <div class="no-app-placeholder">
+            <div style="font-size: 18px;">
+                <span class="mb-3" style="font-size: 42px">
+                    <i class="fa-5x far fa-file-alt"></i>
+                </span>
+            </div>
+                <p class="mt-5" style="font-size: 18px;">
+                    Teacher Recommendation not yet assigned
+                </p>
+        </div>
+    {% endif %}
+</div>
