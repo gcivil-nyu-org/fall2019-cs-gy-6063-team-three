@@ -17,10 +17,7 @@ body {
 
 .left-pane {
     height: 100vh !important;
-    /*background-color: #95a5a6;*/
     background-color: whitesmoke;
-    /*overflow-y: scroll;*/
-    /*overflow-x: hidden;*/
 }
 
 .right-pane {
@@ -47,8 +44,6 @@ body {
 .right-pane .top-header {
     height: 40%;
     max-height: 45%;
-    /*background: url("../../logIn/images/bg_1.jpg");*/
-    /*background-size: cover;*/
 }
 
 .no-app-placeholder {
@@ -60,7 +55,6 @@ body {
     width: 100%;
 }
 
-/*overriding bootstrap*/
 .list-group-item {
     width: 85% !important;
     margin: 5% 7.5% 0% 7.5% !important;
@@ -69,4 +63,52 @@ body {
 
 .list-group-item:last-child {
     margin-bottom: 5% !important;
+}
+
+.form-label-group {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.select2-container .select2-selection--single {
+    display: block;
+    line-height: 1.5;
+    height: 37px !important;
+    width: 375px !important;
+    padding: 3px 6px 3px 6px;
+    border: 1px solid #ced4da;
+    color: #7b8a8b;
+}
+
+.select2-container{
+    color: #7b8a8b;
+    font-size: 15px;
+    font-weight: normal;
+    font-family: Sans-Serif;
+}
+
+select2 {
+    color: #7b8a8b;
+}
+
+.select2-selection__rendered .select2-selection .select2-selection--single {
+    width: 100%;
+    font-weight: normal;
+    font-size: 15px;
+    display: block;
+    white-space: pre;
+    min-height: 1.2em;
+    line-height: 1.5;
+    white-space: pre;
+}
+
+.select2-selection__arrow {
+    margin-top: 3px;
+}
+
+span.select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #7b8a8b;
+    font-family: Arial;
+    font-weight: lighter;
+    font-size: 15px;
 }
