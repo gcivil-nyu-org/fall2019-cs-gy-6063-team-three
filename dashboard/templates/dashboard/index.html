@@ -30,11 +30,11 @@
 
                 <div class="dropdown">
                     <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {{request.session.username}}
                      </button>
                     <div class="dropdown-menu dropdown-menu-sm-right" aria-labelledby="dropdown03">
-                        <button class="dropdown-item">Profile</button>
                         <button class="dropdown-item">Change Password</button>
-                        <button class="dropdown-item" href="{% url 'dashboard:logout' %}">Logout</button>
+                        <a class="dropdown-item" href="{% url 'dashboard:logout' %}">Logout</a>
                     </div>
                 </div>
             </div>
