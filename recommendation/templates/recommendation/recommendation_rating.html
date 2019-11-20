@@ -23,7 +23,7 @@
 
 <div style="margin-left:20%;height: 90%; margin-bottom: 5%; width:50%; margin-top: 2%">
     {% if teacher_recommendation %}
-    <h3>Teacher Recommendation for <mark><u>{{teacher_recommendation.user.first_name}} {{teacher_recommendation.user.last_name}}</u></mark></h3>
+    <h3>Teacher Recommendation for <u>{{teacher_recommendation.user.first_name}} {{teacher_recommendation.user.last_name}}</u></h3>
     <h4>Name of Reviewer: {{teacher_recommendation.first_name}} {{teacher_recommendation.last_name}}</h4>
     <form action="{% url 'recommendation_rating' teacher_recommendation.pk teacher_recommendation.user.pk %}" method="post" class="form-signup" style="padding-top: 10px;">
         {% csrf_token %}
