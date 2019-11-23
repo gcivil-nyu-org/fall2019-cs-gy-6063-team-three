@@ -176,7 +176,7 @@ class HighSchoolListView(ListView):
         self.loc_filter["Q"] = self.request.GET.get("loc_qn")
         self.loc_filter["R"] = self.request.GET.get("loc_si")
         if self.request.GET.get("is_fav_on"):
-            self.is_fav_on = int(self.request.GET.get("is_fav_on"))
+            self.is_fav_on = 1
         else:
             self.is_fav_on = 0
         is_valid_user, temp_user, temp_user_type, temp_context = get_user(self.request)
@@ -229,25 +229,22 @@ class HighSchoolListView(ListView):
                 borough_filter += boro + " , "
         borough_filter = borough_filter[:-3]
 
-        if self.query:
-            if borough_filter:
-                high_schools = HighSchool.objects.filter(
-                    school_name__icontains=self.query, boro__in=borough_filter
-                ).order_by(
-                    "school_name"
-                )  # noqa: E501
-            else:
-                high_schools = HighSchool.objects.filter(
-                    school_name__icontains=self.query
-                ).order_by("school_name")
-        elif borough_filter:
-            high_schools = HighSchool.objects.filter(boro__in=borough_filter).order_by(
-                "school_name"
-            )
-        elif self.is_fav_on and self.is_fav_on == 1:
+        if self.is_fav_on and self.is_fav_on == 1:
             high_schools = self.get_fav_schools()
         else:
             high_schools = HighSchool.objects.order_by("school_name")
+
+        if self.query:
+            if borough_filter and high_schools:
+                high_schools = high_schools.filter(
+                    school_name__icontains=self.query, boro__in=borough_filter
+                ) # noqa: E501
+            elif high_schools:
+                high_schools = high_schools.filter(
+                    school_name__icontains=self.query
+                ).order_by("school_name")
+        elif borough_filter and high_schools:
+            high_schools = high_schools.filter(boro__in=borough_filter)
 
         return high_schools
 
@@ -280,4 +277,4 @@ def update_fav_hs(request, school_dbn, is_fav):
                         user.fav_schools.remove(high_school)
                         user.save()
 
-    return redirect("dashboard:high_school:index")
+    # return redirect("dashboard:high_school:index")

@@ -151,15 +151,50 @@
         {#to toggle fav high school for user#}
         $(".school-fav-btn").click(function (e) {
             e.preventDefault();
-            let school_dbn = $(this).attr("dbn_value");
-            let is_fav = parseInt($(this).attr("is_fav"));
+            let form = $(this).find("form");
+            let school_dbn = form.attr("id").split("_")[1];
+            let is_fav = form.find("input.with-font").attr("checked") ? 1 : 0;
             is_fav = is_fav === 1 ? 0 : 1;
-            $(this).attr("is_fav", is_fav);
             let url = "{% url 'dashboard:high_school:toggle_fav' 'school_dbn' '0000' %}";
             url = url.replace('school_dbn', school_dbn);
             url = url.replace('0000', "" + is_fav);
-            window.location.href = url;
-        });
+            {% comment %}form.submit(function () {
+                $.ajax({
+                    url: url,
+                    type: "POST",
+                    data: {
+                        csrfmiddlewaretoken:form.find('input[name=csrfmiddlewaretoken]').val(),
+                    },
+                    success: function (data) {
+                        console.log("success")
+                    },
+                    error: function (data) {
+                        console.log("error")
+                    }
+                });
+                return true;
+            });{% endcomment %}
+            {#$.ajax(url);#}
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: {
+                    csrfmiddlewaretoken:form.find('input[name=csrfmiddlewaretoken]').val(),
+                },
+                success: function (data) {
+                    console.log("success")
+                },
+                error: function (data) {
+                    console.log("error")
+                }
+            });
+            $(this).attr("is_fav", is_fav);
+            let i_tag = $(this).find("i");
+            i_tag.removeClass("fa-heart-o");
+            i_tag.removeClass("fa-heart");
+            i_tag.addClass(is_fav ? "fa-heart" : "fa-heart-o");
+        })
+        ;
         {# school overview program card functions #}
         let toggle_program_icon = function (show_plus) {
             let i_tag = $("#program_toggle_icon");
@@ -184,9 +219,9 @@
         $('.collapse').on('show.bs.collapse', function () {
             toggle_program_icon(false)
         });
-        let toggle_selected_program = function(selected_option){
-           $(".program-desc-div").hide();
-           $("#"+selected_option+"_div").show()
+        let toggle_selected_program = function (selected_option) {
+            $(".program-desc-div").hide();
+            $("#" + selected_option + "_div").show()
         };
         $('#program-select').on('change', function () {
             toggle_selected_program($(this).val())

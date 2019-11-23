@@ -2,9 +2,9 @@
     {% load hs_filters %}
     <div style="height: 90%; margin-bottom: 5%;">
         <div class="list-group">
-            <div class="util-div" style="display: flex; flex-direction: row; width: 100%;">
-                <div class="high-school-search">
-                    <form id="search_filter_form" name="search_filter_form" method='GET'>
+            <div class="util-div">
+                <form id="search_filter_form" name="search_filter_form" method='GET'>
+                    <div class="hs-search-filters">
                         <div class="search-div">
                         <span>
                             <input class="search-input" type='text' name='query'
@@ -15,6 +15,19 @@
                             </span>
                         </span>
                         </div>
+                        <div class="filters-div">
+                            <span class="filter-btn"><i class="fa fa-filter"></i></span>
+                            <label class="fav-btn">
+                                <input name="is_fav_on" type="checkbox" class="with-font hide"
+                                       {% if request.GET.is_fav_on %}checked=""{% endif %}
+                                       onchange="search_filter_form.submit();"/>
+                                <i {% if request.GET.is_fav_on %} class="fa fa-heart" {% else %}
+                                                                  class="fa fa-heart-o"{% endif %}>
+                                </i>
+                            </label>
+                        </div>
+                    </div>
+                    <div>
                         <div class="high-school-filter-div">
                             <p class="mb-1">Filter using boroughs</p>
                             <div class="form-group">
@@ -63,21 +76,8 @@
                         <div class="high-school-fav-div {% if not request.GET.is_fav_on or request.GET.is_fav_on == "0" %} hide-fav {% endif %}">
                             <span>These are your favorite schools...</span>
                         </div>
-                    </form>
-                </div>
-                <div class="high-school-filters">
-                    <span class="filter-btn"><i class="fa fa-filter"></i></span>
-                    <form id="fav_form" name="fav_form" method="GET">
-                        <input name="is_fav_on" type="hidden"
-                                {% if not request.GET.is_fav_on or request.GET.is_fav_on == "0" %}
-                               value="1"
-                               {% else %}value="0"{% endif %}>
-                        <span class="fav-btn" onclick="fav_form.submit()"><i
-                                {% if request.GET.is_fav_on and request.GET.is_fav_on == "1" %}
-                                    class="fa fa-heart"{% else %}
-                                    class="fa fa-heart-o" {% endif %}></i></span>
-                    </form>
-                </div>
+                    </div>
+                </form>
             </div>
             {% for school in high_schools %}
                 {% with request.get_full_path as querystring %}
@@ -91,16 +91,20 @@
                 {% endwith %}
             <div class="d-flex w-100 justify-content-between mb-2">
                 <h4 class="mb-1" style="width: 75%">{{ school.school_name }}</h4>
-                <div>
-                <span class="school-fav-btn" dbn_value="{{ school.dbn }}"
-                        {% if school in fav_schools %}
-                      is_fav="1" {% else %} is_fav="0" {% endif %}
-                      style="font-size: 18px; padding: 4px;">
-                <i{% if school in fav_schools %} class="fa fa-heart"{% else %}
-                                                 class="fa fa-heart-o" {% endif %}></i></span>
+                <div class="school-fav-btn">
+                    <form id="favform_{{ school.dbn }}" name="favform_{{ school.dbn }}"
+                          method="POST">
+                        {% csrf_token %}
+                        <label>
+                            <input name="school_fav_on" type="checkbox" class="with-font hide"
+                                   {% if school in fav_schools %}checked=""{% endif %}/>
+                            <i {% if school in fav_schools %} class="fa fa-heart" {% else %}
+                                                              class="fa fa-heart-o"{% endif %}>
+                            </i>
+                        </label>
+                    </form>
                 </div>
             </div>
-            {#TODO: change this to school.boro instead and map it to full name#}
             <div class="d-flex w-100 justify-content-between mb-2">
                 <h5 class="mb-2">{{ school.neighborhood }}</h5>
                 <small class="pt-1"
