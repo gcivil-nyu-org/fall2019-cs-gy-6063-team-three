@@ -100,13 +100,13 @@ body {
 .hs-search-filters .search-div .search-btn {
     color: slategray;
     position: absolute;
-    left: 95%;
+    left: 92%;
     top: 15%;
     cursor: pointer;
 }
 
 .filters-div{
-    margin: 0 2.5% 0 4%;
+    margin-left: 2.5%;
     padding: 2px;
     display: flex;
     font-size: 20px;
@@ -144,7 +144,7 @@ body {
 .filters-div .fav-btn{
     color: slategray;
     cursor: pointer;
-    padding: 0 10px;
+    padding-left: 10px;
 }
 .hide{
     display: none !important;
