@@ -6,7 +6,7 @@ from .models import HighSchoolApplication
 from high_school.models import Program
 
 
-GENDER = [("", "Gender"), ("M", "Male"), ("F", "Female")]
+GENDER = [("", "Gender"), ("Male", "Male"), ("Female", "Female")]
 
 
 class HighSchoolApplicationForm(ModelForm):

@@ -1,13 +1,12 @@
 {% extends "dashboard/index.html" %}
 {% load static %}
 {% block content %}
+
     {% if exception %}
         <p>{{ exception }}</p>
     {% else %}
         {% if applications %}
-{#            todo - update this when program bug fixed for addmissions#}
-{#            fix - remove display: none; from style#}
-            <div class="dropdown" style="text-align: right; line-height: 2.5; display: none;"><b>Filter
+            <div class="dropdown" style="text-align: right; line-height: 2.5;"><b>Filter
                 by
                 Program:</b>
                 <a class="btn btn-secondary dropdown-toggle" href="#" role="button"
@@ -19,9 +18,11 @@
 
                 {% if programs %}
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <a class="dropdown-item"
+                               href="{% url "dashboard:admissions:index" %}">ALL</a>
                         {% for program in programs %}
                             <a class="dropdown-item"
-                               href="{% url "dashboard:admissions:index" %}?p={{ program }}">{{ program }}</a>
+                               href="{% url "dashboard:admissions:index" %}?p={{ program.id }}">{{ program.name }}</a>
                         {% endfor %}
                     </div>
                 {% endif %}
