@@ -55,19 +55,7 @@
     </div>
     </body>
     <script>
-        {#         for school list filter#}
-        $(".filter-btn").click(function (e) {
-            let high_school_div = $(".high-school-filter-div");
-            let is_div_visible = high_school_div.hasClass("active");
-            if (!is_div_visible) {
-                high_school_div.addClass("active");
-                high_school_div.show()
-            } else {
-                high_school_div.removeClass("active");
-                high_school_div.hide()
-            }
-        });
-
+        let should_reset_filters = true;
         {# for restricting page numbers in pagination #}
 
         function getPageList(totalPages, page, maxLength) {
@@ -215,12 +203,10 @@
         $('.collapse').on('show.bs.collapse', function () {
             toggle_program_icon(false)
         });
-        let toggle_selected_program = function (selected_option) {
-            $(".program-desc-div").hide();
-            $("#" + selected_option + "_div").show()
-        };
         $('#program-select').on('change', function () {
-            toggle_selected_program($(this).val())
+            let selected_option = $(this).val();
+            $(".program-desc-div").hide();
+            $("#" + selected_option + "_div").show();
         });
         let show_toast = function (message) {
             $(".toast-body span").text(message);
@@ -229,6 +215,81 @@
                 $('.toast').css({'opacity': 0});
             }, 3000)
         };
+        {#         for school list filter#}
+        let toggle_filter_div = function (show) {
+            let high_school_div = $(".high-school-filter-div");
+            if (show) {
+                high_school_div.addClass("active");
+                high_school_div.show();
+                $(".filter-info-div").hide();
+                $(".filter-action-div").show();
+            } else {
+                high_school_div.removeClass("active");
+                high_school_div.hide();
+                $(".filter-action-div").hide();
+                $(".filter-info-div").show();
+            }
+        };
+        $(".filter-info-div").click(function (e) {
+            toggle_filter_div(true);
+        });
+        let reset_filters = function () {
+            if (should_reset_filters) {
+                $(".high-school-filter-div .form-group input[type=checkbox]:checked").each(function () {
+                    $(this).prop("checked", false);
+                });
+                {% for boro_filter in search_filter_params.borough %}
+                    $(".form-group #{{ boro_filter }}").prop("checked", true);
+                {% endfor %}
+            }
+        };
+        $(".filter-action").click(function () {
+            let elem_class = $(this).attr("class");
+            if (elem_class.indexOf("apply-filters") !== -1) {
+                should_reset_filters = false;
+                $("#search_filter_form").submit();
+            } else {
+                reset_filters();
+            }
+            toggle_filter_div(false);
+        });
+        $(function () {
+            let search_form_submit = document.search_filter_form.submit;
+            document.search_filter_form.submit = function () {
+                reset_filters();
+                search_form_submit.apply(document.search_filter_form);
+                return false;
+            };
+        });
+        $('#search_filter_form').keydown(function (e) {
+            let key = e.which;
+            if (key === 13) {
+                e.preventDefault();
+                $('#search_filter_form').submit();
+                return false;
+            }
+            return true;
+        });
+        $(".high-school-filter-div .form-group input[type=checkbox]").click(function () {
+            let _id = $(this).attr("id");
+            let checked_state = $(this).prop("checked");
+            if (_id === "loc_all") {
+                $(".high-school-filter-div .form-group input[type=checkbox]:checked").each(function () {
+                    $(this).prop("checked", false);
+                });
+                $(this).prop("checked", true);
+            } else {
+                if (checked_state) {
+                    $(".all_boroughs input[type=checkbox]").prop("checked", false);
+                    $(this).prop("checked", true)
+                } else {
+                    let checked_count = $(".individual_boroughs input[type=checkbox]:checked").length;
+                    if (checked_count === 0) {
+                        $(".all_boroughs input[type=checkbox]").prop("checked", true);
+                    }
+                }
+            }
+        });
     </script>
     </html>
 

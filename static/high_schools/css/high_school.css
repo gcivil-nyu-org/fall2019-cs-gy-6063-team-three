@@ -110,13 +110,30 @@ body {
     padding: 2px;
     display: flex;
     font-size: 20px;
+    align-items: center;
 }
 
-.filters-div .filter-btn {
+.filters-div .filter-info-div {
+    display: flex;
+    flex-direction: row;
     color: slategray;
     cursor: pointer;
     padding: 0 10px;
 }
+
+.filters-div .filter-action-div{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.filter-action-div .apply-filters,
+.filter-action-div .cancel-filters{
+    color: slategray;
+    cursor: pointer;
+    padding: 0 10px;
+}
+
 
 .high-school-filter-div {
     display: none;
@@ -127,7 +144,7 @@ body {
 .filters-div .fav-btn{
     color: slategray;
     cursor: pointer;
-    padding-left: 20px;
+    padding: 0 10px;
 }
 .hide{
     display: none !important;

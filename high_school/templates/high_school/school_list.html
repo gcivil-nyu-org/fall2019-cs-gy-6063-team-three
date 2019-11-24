@@ -8,7 +8,7 @@
                         <div class="search-div">
                         <span>
                             <input class="search-input" type='text' name='query'
-                                   {% if request.GET.query %}value="{{ request.GET.query }}"
+                                   {% if search_filter_params.query %}value="{{ request.GET.query }}"
                                    {% endif %} placeholder="Search for your school">
                             <span onclick="search_filter_form.submit();" class="search-btn">
                                 <i class="fa fa-search mr-2"></i>
@@ -16,13 +16,23 @@
                         </span>
                         </div>
                         <div class="filters-div">
-                            <span class="filter-btn"><i class="fa fa-filter"></i></span>
-                            <label class="fav-btn">
+                            <div class="filter-btn" title="Show applied filters" style="border-right: 2px solid slategray;">
+                                <div class="filter-info-div">
+                                    <span><i class="fa fa-filter"></i></span>
+                                    <sub>{{ search_filter_params.filter_count }}</sub>
+                                </div>
+                                <div class="filter-action-div" style="display: none;">
+                                    <span class="filter-action apply-filters mr-2" title="Apply changes"><i class="fa fa-check-circle"></i></span>
+                                    <span class="filter-action cancel-filters mr-2" title="Discard changes"><i class="fa fa-times-circle"></i></span>
+                                </div>
+                            </div>
+                            <label class="fav-btn ml-2 mb-0" title="{% if search_filter_params.is_fav_on %}Hide{% else %}Show{% endif %} favorites">
                                 <input name="is_fav_on" type="checkbox" class="with-font hide"
-                                       {% if request.GET.is_fav_on %}checked=""{% endif %}
+                                       {% if search_filter_params.is_fav_on %}checked=""{% endif %}
                                        onchange="search_filter_form.submit();"/>
-                                <i {% if request.GET.is_fav_on %} class="fa fa-heart" {% else %}
-                                                                  class="fa fa-heart-o"{% endif %}>
+                                <i {% if search_filter_params.is_fav_on %}
+                                    class="fa fa-heart" {% else %}
+                                    class="fa fa-heart-o"{% endif %}>
                                 </i>
                             </label>
                         </div>
@@ -33,44 +43,54 @@
                         </div>
                         <div class="high-school-filter-div">
                             <p class="mb-1">Filtered using boroughs</p>
-                            <div class="form-group">
+                            <div class="form-group all_boroughs">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input"
+                                           id="loc_all" name="loc_all"
+                                           {% if search_filter_params.borough.loc_all %}checked=""{% endif %}
+                                    >
+                                    <label class="custom-control-label"
+                                           for="loc_all">All</label>
+                                </div>
+                            </div>
+                            <div class="form-group individual_boroughs">
                                 <div class="custom-control custom-checkbox">
                                     <input type="checkbox" class="custom-control-input"
                                            id="loc_bx" name="loc_bx"
-                                           {% if request.GET.loc_bx %}checked=""{% endif %}
-                                           onchange="search_filter_form.submit();">
+                                           {% if search_filter_params.borough.loc_bx %}checked=""{% endif %}
+                                    >
                                     <label class="custom-control-label"
                                            for="loc_bx">Bronx</label>
                                 </div>
                                 <div class="custom-control custom-checkbox">
                                     <input type="checkbox" class="custom-control-input"
                                            id="loc_bk" name="loc_bk"
-                                           {% if request.GET.loc_bk %}checked=""{% endif %}
-                                           onchange="search_filter_form.submit();">
+                                           {% if search_filter_params.borough.loc_bk %}checked=""{% endif %}
+                                    >
                                     <label class="custom-control-label"
                                            for="loc_bk">Brooklyn</label>
                                 </div>
                                 <div class="custom-control custom-checkbox">
                                     <input type="checkbox" class="custom-control-input"
                                            id="loc_mn" name="loc_mn"
-                                           {% if request.GET.loc_mn %}checked=""{% endif %}
-                                           onchange="search_filter_form.submit();">
+                                           {% if search_filter_params.borough.loc_mn %}checked=""{% endif %}
+                                    >
                                     <label class="custom-control-label"
                                            for="loc_mn">Manhattan</label>
                                 </div>
                                 <div class="custom-control custom-checkbox">
                                     <input type="checkbox" class="custom-control-input"
                                            id="loc_qn" name="loc_qn"
-                                           {% if request.GET.loc_qn %}checked=""{% endif %}
-                                           onchange="search_filter_form.submit();">
+                                           {% if search_filter_params.borough.loc_qn %}checked=""{% endif %}
+                                    >
                                     <label class="custom-control-label"
                                            for="loc_qn">Queens</label>
                                 </div>
                                 <div class="custom-control custom-checkbox">
                                     <input type="checkbox" class="custom-control-input"
                                            id="loc_si" name="loc_si"
-                                           {% if request.GET.loc_si %}checked=""{% endif %}
-                                           onchange="search_filter_form.submit();">
+                                           {% if search_filter_params.borough.loc_si %}checked=""{% endif %}
+                                    >
                                     <label class="custom-control-label"
                                            for="loc_si">Staten Island</label>
                                 </div>
