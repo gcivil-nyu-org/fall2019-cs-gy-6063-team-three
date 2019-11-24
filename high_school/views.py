@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.views.generic import ListView
 from sodapy import Socrata
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 from django.conf import settings
 from OneApply.constants import ApiInfo, UserType
@@ -51,8 +53,8 @@ def save_high_schools(limit):
             if serializer.initial_data[x]["start_time"]:
                 am_loc = serializer.initial_data[x]["start_time"].find("am")
                 serializer.initial_data[x]["start_time"] = serializer.initial_data[x][
-                    "start_time"
-                ][: am_loc + 2]
+                                                               "start_time"
+                                                           ][: am_loc + 2]
         except KeyError:
             # if there is no start time provided in the info set it to N/A
             serializer.initial_data[x]["start_time"] = "N/A"
@@ -63,8 +65,8 @@ def save_high_schools(limit):
             if serializer.initial_data[x]["end_time"]:
                 pm_loc = serializer.initial_data[x]["end_time"].find("pm")
                 serializer.initial_data[x]["end_time"] = serializer.initial_data[x][
-                    "end_time"
-                ][: pm_loc + 2]
+                                                             "end_time"
+                                                         ][: pm_loc + 2]
         except KeyError:
             # if there is no end time provided in the info set it to N/A
             serializer.initial_data[x]["end_time"] = "N/A"
@@ -92,8 +94,8 @@ def parse_result(result):
         description = "prgdesc" + str(i)
         offer_rate = "offer_rate" + str(i)
         if (
-            result.get(code)
-            and Program.objects.filter(code=result.get(code)).count() == 0
+                result.get(code)
+                and Program.objects.filter(code=result.get(code)).count() == 0
         ):
             # This result is a valid program, and not already in DB save it.
             program = Program()
@@ -126,20 +128,21 @@ def get_user(request):
     user_name = request.session.get("username", None)
     user_type = request.session.get("user_type", None)
     is_valid_user = False
+    user = None
     if not user_name or user_type != UserType.STUDENT:
         context["unauth"] = True
         context["high_schools"] = None
         context["selected_school"] = None
         context["empty_list"] = None
-    user = None
-    try:
-        user = Student.objects.get(username=user_name)
-        is_valid_user = True
-    except Student.DoesNotExist:
-        context["unauth"] = True
-        context["high_schools"] = None
-        context["selected_school"] = None
-        context["empty_list"] = None
+    else:
+        try:
+            user = Student.objects.get(username=user_name)
+            is_valid_user = True
+        except Student.DoesNotExist:
+            context["unauth"] = True
+            context["high_schools"] = None
+            context["selected_school"] = None
+            context["empty_list"] = None
 
     return is_valid_user, user, user_type, context
 
@@ -222,7 +225,6 @@ class HighSchoolListView(ListView):
         return context
 
     def getHighSchools(self):
-        high_schools = None
         borough_filter = ""
         for boro in self.loc_filter:
             if self.loc_filter[boro]:
@@ -238,7 +240,7 @@ class HighSchoolListView(ListView):
             if borough_filter and high_schools:
                 high_schools = high_schools.filter(
                     school_name__icontains=self.query, boro__in=borough_filter
-                ) # noqa: E501
+                )  # noqa: E501
             elif high_schools:
                 high_schools = high_schools.filter(
                     school_name__icontains=self.query
@@ -259,22 +261,32 @@ class HighSchoolListView(ListView):
             return Program.objects.filter(high_school=selected_school.dbn)
 
 
+@api_view(['POST'])
 def update_fav_hs(request, school_dbn, is_fav):
-    try:
-        high_school = HighSchool.objects.get(dbn=school_dbn)
-    except HighSchool.DoesNotExist:
-        pass
-    else:
+    response = {}
+    if request.method == "POST":
+        try:
+            high_school = HighSchool.objects.get(dbn=school_dbn)
+        except HighSchool.DoesNotExist:
+            high_school = None
         if high_school:
-            is_valid_user, temp_user, temp_user_type, temp_context = get_user(request)
+            is_valid_user, user, _, _ = get_user(request)
             if is_valid_user:
-                user = temp_user
-                if user.__class__ is Student:
-                    if is_fav == 1:
-                        user.fav_schools.add(high_school)
-                        user.save()
-                    else:
-                        user.fav_schools.remove(high_school)
-                        user.save()
-
-    # return redirect("dashboard:high_school:index")
+                if is_fav == 1:
+                    user.fav_schools.add(high_school)
+                    user.save()
+                else:
+                    user.fav_schools.remove(high_school)
+                    user.save()
+                response['status'] = 200
+                response['message'] = "Success"
+            else:
+                response['status'] = 403
+                response['message'] = "Forbidden - invalid user"
+        else:
+            response['status'] = 404
+            response['message'] = "No matching high school found"
+    else:
+        response['status'] = 405
+        response['message'] = "Invalid method type"
+    return Response(response)

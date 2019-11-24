@@ -42,6 +42,16 @@
                 </div>
             </div>
         </div>
+        <div class="toast" style="position: absolute; top: 15%; right: 43%;">
+            <div class="toast-header">
+                <strong class="mr-auto text-primary">Info</strong>
+                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;
+                </button>
+            </div>
+            <div class="toast-body">
+                <span></span>
+            </div>
+        </div>
     </div>
     </body>
     <script>
@@ -151,50 +161,36 @@
         {#to toggle fav high school for user#}
         $(".school-fav-btn").click(function (e) {
             e.preventDefault();
-            let form = $(this).find("form");
-            let school_dbn = form.attr("id").split("_")[1];
-            let is_fav = form.find("input.with-font").attr("checked") ? 1 : 0;
+            let school_fav_btn = $(this);
+            let school_dbn = $(this).attr("dbn_value");
+            let is_fav = parseInt($(this).attr("is_fav"));
             is_fav = is_fav === 1 ? 0 : 1;
+            school_fav_btn.attr("is_fav", is_fav);
             let url = "{% url 'dashboard:high_school:toggle_fav' 'school_dbn' '0000' %}";
             url = url.replace('school_dbn', school_dbn);
             url = url.replace('0000', "" + is_fav);
-            {% comment %}form.submit(function () {
-                $.ajax({
-                    url: url,
-                    type: "POST",
-                    data: {
-                        csrfmiddlewaretoken:form.find('input[name=csrfmiddlewaretoken]').val(),
-                    },
-                    success: function (data) {
-                        console.log("success")
-                    },
-                    error: function (data) {
-                        console.log("error")
-                    }
-                });
-                return true;
-            });{% endcomment %}
-            {#$.ajax(url);#}
+            let is_fav_on = "{{ request.GET.is_fav_on }}";
             $.ajax({
                 url: url,
                 type: "POST",
-                data: {
-                    csrfmiddlewaretoken:form.find('input[name=csrfmiddlewaretoken]').val(),
-                },
                 success: function (data) {
-                    console.log("success")
+                    console.log("success " + data);
+                    let i_tag = school_fav_btn.find("i");
+                    i_tag.removeClass("fa-heart-o");
+                    i_tag.removeClass("fa-heart");
+                    i_tag.addClass(is_fav ? "fa-heart" : "fa-heart-o");
+                    if (is_fav_on) {
+                        show_toast("The page will reload in 5 seconds", true);
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 5000);
+                    }
                 },
                 error: function (data) {
                     console.log("error")
                 }
             });
-            $(this).attr("is_fav", is_fav);
-            let i_tag = $(this).find("i");
-            i_tag.removeClass("fa-heart-o");
-            i_tag.removeClass("fa-heart");
-            i_tag.addClass(is_fav ? "fa-heart" : "fa-heart-o");
-        })
-        ;
+        });
         {# school overview program card functions #}
         let toggle_program_icon = function (show_plus) {
             let i_tag = $("#program_toggle_icon");
@@ -225,7 +221,14 @@
         };
         $('#program-select').on('change', function () {
             toggle_selected_program($(this).val())
-        })
+        });
+        let show_toast = function (message) {
+            $(".toast-body span").text(message);
+            $('.toast').css({'opacity': 1});
+            setTimeout(function () {
+                $('.toast').css({'opacity': 0});
+            }, 3000)
+        };
     </script>
     </html>
 

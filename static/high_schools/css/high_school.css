@@ -121,19 +121,21 @@ body {
 .high-school-filter-div {
     display: none;
     margin-top: 2%;
+    font-size: 16px;
+    color: slategray;
 }
 .filters-div .fav-btn{
     color: slategray;
     cursor: pointer;
     padding-left: 20px;
 }
-.hide-fav{
-    display: none;
+.hide{
+    display: none !important;
 }
 .high-school-fav-div{
-    font-size: 18px;
+    font-size: 16px;
     color: slategray;
-    margin: 2% 0;
+    margin: 2% 0 1% 0;
 }
 .program-div{
     width: fit-content;

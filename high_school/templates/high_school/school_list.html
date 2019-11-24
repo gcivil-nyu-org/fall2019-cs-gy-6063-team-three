@@ -28,8 +28,11 @@
                         </div>
                     </div>
                     <div>
+                        <div class="high-school-fav-div {% if not request.GET.is_fav_on or request.GET.is_fav_on == "0" %} hide {% endif %}">
+                            <span>These are your favorite schools...</span>
+                        </div>
                         <div class="high-school-filter-div">
-                            <p class="mb-1">Filter using boroughs</p>
+                            <p class="mb-1">Filtered using boroughs</p>
                             <div class="form-group">
                                 <div class="custom-control custom-checkbox">
                                     <input type="checkbox" class="custom-control-input"
@@ -73,9 +76,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="high-school-fav-div {% if not request.GET.is_fav_on or request.GET.is_fav_on == "0" %} hide-fav {% endif %}">
-                            <span>These are your favorite schools...</span>
-                        </div>
                     </div>
                 </form>
             </div>
@@ -91,18 +91,14 @@
                 {% endwith %}
             <div class="d-flex w-100 justify-content-between mb-2">
                 <h4 class="mb-1" style="width: 75%">{{ school.school_name }}</h4>
-                <div class="school-fav-btn">
-                    <form id="favform_{{ school.dbn }}" name="favform_{{ school.dbn }}"
-                          method="POST">
-                        {% csrf_token %}
-                        <label>
-                            <input name="school_fav_on" type="checkbox" class="with-font hide"
-                                   {% if school in fav_schools %}checked=""{% endif %}/>
-                            <i {% if school in fav_schools %} class="fa fa-heart" {% else %}
-                                                              class="fa fa-heart-o"{% endif %}>
-                            </i>
-                        </label>
-                    </form>
+                <div>
+                    <span class="school-fav-btn" dbn_value="{{ school.dbn }}"
+                            {% if school in fav_schools %}
+                          is_fav="1" {% else %} is_fav="0" {% endif %}
+                          style="font-size: 18px; padding: 4px;">
+                        <i{% if school in fav_schools %} class="fa fa-heart"{% else %}
+                                                         class="fa fa-heart-o" {% endif %}></i>
+                    </span>
                 </div>
             </div>
             <div class="d-flex w-100 justify-content-between mb-2">
