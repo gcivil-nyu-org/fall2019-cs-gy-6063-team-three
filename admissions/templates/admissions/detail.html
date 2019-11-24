@@ -58,7 +58,7 @@ inherit; width: 75%; margin: 0 auto 2em;">
                 <td colspan="2">{{ application.submitted_date }}</td>
             </tr>
             <tr>
-                <th scope = "row"> status</th>>
+                <th scope = "row"> Status</th>
                 {% if application.application_status == 2 %}
                     <td>Pending</td>
                 {% elif application.application_status == 1 %}
@@ -74,7 +74,7 @@ inherit; width: 75%; margin: 0 auto 2em;">
 
     </table>
     {% if application.application_status == 2 %}
-    <div class="nav d-flex justify-content-center">
+    <div class="nav d-flex justify-content-center" style="padding-bottom: 2em">
         <a class="btn btn-lg btn-primary mr-4" href="{% url 'dashboard:admissions:accept' application.id %}">Accept</a>
         <a class="btn btn-lg btn-danger mr-4" href="{% url 'dashboard:admissions:reject' application.id %}">Reject</a>
     </div>
