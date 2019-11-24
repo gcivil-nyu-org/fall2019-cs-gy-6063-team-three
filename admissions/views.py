@@ -103,7 +103,7 @@ def get_programs(applications):
     for application in applications:
         if application.program not in p_list:
             p_list.append(application.program)
-    p_list = sorted(p_list)
+        p_list.sort(key=lambda x: x.name)
     return p_list
 
 
