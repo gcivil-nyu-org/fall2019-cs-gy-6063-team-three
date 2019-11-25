@@ -126,6 +126,18 @@ body {
     color: slategray;
     margin: 2% 0;
 }
+.program-div{
+    width: fit-content;
+    margin: 5% 0;
+    border-radius: 4px;
+}
+.program-div .card-header{
+    display: flex;
+    flex-direction: row;
+}
+.program-select-div .form-control:focus{
+    box-shadow: none !important;
+}
 /*overriding bootstrap*/
 .list-group-item {
     width: 85% !important;
@@ -135,4 +147,13 @@ body {
 
 .list-group-item:last-child {
     margin-bottom: 5% !important;
+}
+.page-link {
+    background-color: #008067;
+}
+.page-item.disabled .page-link{
+    background-color: #4f9c8c;
+}
+.page-item.active .page-link{
+    background-color: #004f40;
 }

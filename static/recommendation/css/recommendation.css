@@ -62,3 +62,18 @@ body {
 .list-group-item:last-child {
     margin-bottom: 5% !important;
 }
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 3px solid #dddddd;
+  text-align: center;
+  padding: 8px;
+}
+
+mark {
+    background-color: red;
+}

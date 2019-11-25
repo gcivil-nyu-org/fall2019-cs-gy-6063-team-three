@@ -3,8 +3,9 @@
 
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'application/css/application.css' %}">
+{{ form.media.css }}
 
-<div style="margin-left:20%;height: 90%; margin-bottom: 5%; width:50%;">
+<div style="margin-left:20%; height: 90%; margin-bottom: 5%; width:50%; margin-top: 2%;">
     <h2>High School Application Form</h2>
     <form action="{% url 'dashboard:application:new_application' %}" prog-data-url="{% url 'dashboard:application:ajax_load_programs' %}" method="post" class="form-signup" style="padding-top: 10px;">
         {% csrf_token %}
@@ -107,7 +108,7 @@
         {% endif %}
         <div class="form-row">
             <div class="form-label-group col-md-6">
-                <label for={{ form.school.id_for_label }}>{{ form.school.label }}</label>
+                <label for={{ form.school.id_for_label }} style="width:320px;">{{ form.school.label }}</label>
                 {{ form.school }}
             </div>
             <div class="form-label-group col-md-6">
@@ -127,4 +128,7 @@
         </div>
     </form>
 </div>
+
+{{ form.media.js }}
+
 {% endblock %}
