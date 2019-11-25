@@ -53,8 +53,8 @@ def save_high_schools(limit):
             if serializer.initial_data[x]["start_time"]:
                 am_loc = serializer.initial_data[x]["start_time"].find("am")
                 serializer.initial_data[x]["start_time"] = serializer.initial_data[x][
-                                                               "start_time"
-                                                           ][: am_loc + 2]
+                    "start_time"
+                ][: am_loc + 2]
         except KeyError:
             # if there is no start time provided in the info set it to N/A
             serializer.initial_data[x]["start_time"] = "N/A"
@@ -65,8 +65,8 @@ def save_high_schools(limit):
             if serializer.initial_data[x]["end_time"]:
                 pm_loc = serializer.initial_data[x]["end_time"].find("pm")
                 serializer.initial_data[x]["end_time"] = serializer.initial_data[x][
-                                                             "end_time"
-                                                         ][: pm_loc + 2]
+                    "end_time"
+                ][: pm_loc + 2]
         except KeyError:
             # if there is no end time provided in the info set it to N/A
             serializer.initial_data[x]["end_time"] = "N/A"
@@ -94,8 +94,8 @@ def parse_result(result):
         description = "prgdesc" + str(i)
         offer_rate = "offer_rate" + str(i)
         if (
-                result.get(code)
-                and Program.objects.filter(code=result.get(code)).count() == 0
+            result.get(code)
+            and Program.objects.filter(code=result.get(code)).count() == 0
         ):
             # This result is a valid program, and not already in DB save it.
             program = Program()
@@ -302,7 +302,7 @@ class HighSchoolListView(ListView):
         return obj
 
 
-@api_view(['POST'])
+@api_view(["POST"])
 def update_fav_hs(request, school_dbn, is_fav):
     response = {}
     if request.method == "POST":
@@ -319,15 +319,13 @@ def update_fav_hs(request, school_dbn, is_fav):
                 else:
                     user.fav_schools.remove(high_school)
                     user.save()
-                response['status'] = 200
-                response['message'] = "Success"
+                response["status"] = 200
+                response["message"] = "Success"
             else:
-                response['status'] = 403
-                response['message'] = "Forbidden - invalid user"
+                response["status"] = 403
+                response["message"] = "Forbidden - invalid user"
         else:
-            response['status'] = 404
-            response['message'] = "No matching high school found"
-    else:
-        response['status'] = 405
-        response['message'] = "Invalid method type"
+            response["status"] = 404
+            response["message"] = "No matching high school found"
+
     return Response(response)
