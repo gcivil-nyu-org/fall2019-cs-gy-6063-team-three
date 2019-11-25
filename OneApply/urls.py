@@ -10,10 +10,10 @@ from register.views import (
 )
 from recommendation.views import recommendation_rating
 
-favicon_view = RedirectView.as_view(url='/static/favicon.ico', permanent=True)
+favicon_view = RedirectView.as_view(url="/static/favicon.ico", permanent=True)
 
 urlpatterns = [
-    re_path(r'^favicon\.ico$', favicon_view),
+    re_path(r"^favicon\.ico$", favicon_view),
     path("", include("landingpage.urls", namespace="landingpage")),
     path("login/", include("logIn.urls")),
     path("register/", include("register.urls")),
