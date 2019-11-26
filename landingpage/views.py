@@ -4,6 +4,7 @@ from OneApply.constants import UserType
 
 # Create your views here.
 
+
 def index(request):
     if request.session.get("is_login", None):
         return redirect("dashboard:dashboard")
