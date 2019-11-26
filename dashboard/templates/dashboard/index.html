@@ -1,12 +1,13 @@
-{% load staticfiles %}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <!-- Load bootstrap css, jquery, bootstrap js -->
     <!-- common across all applications inheriting from dashboard -->
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'js/popper.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
     <script src="https://kit.fontawesome.com/fc24e2383c.js" crossorigin="anonymous"></script>
     <!-- Custom styles for this template -->
     <link href="{% static 'dashboard/dashboard.css' %}" rel="stylesheet">
@@ -28,9 +29,15 @@
 
                 </ul>
 
-                <a class="nav-link" href='#'>Profile</a>
-                <a class="nav-link" href="{% url 'dashboard:logout' %}">Logout</a>
-
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {{request.session.username}}
+                     </button>
+                    <div class="dropdown-menu dropdown-menu-sm-right" aria-labelledby="dropdown03">
+                        <button class="dropdown-item">Change Password</button>
+                        <a class="dropdown-item" href="{% url 'dashboard:logout' %}">Logout</a>
+                    </div>
+                </div>
             </div>
         </nav>
     </div>
@@ -59,12 +66,21 @@
                 </div>
             </nav>
         {% elif user_type == constant_ut_adminStaff %}
-            <nav class="nav d-flex">
-                <a class="p-2 text-muted active" href="{% url 'dashboard:admissions:index' %}"
-                   data-toggle="tab">Student
-                    Applications</a>
-                <a class="p-2 text-muted" href="#school_informations" data-toggle="tab">School
-                    Informations</a>
+            <nav class="nav d-flex justify-content-between">
+                <div class="nav nav-tabs d-flex justify-content-between" id="dashboard-tab"
+                     role="tablist" style="width: 100%;">
+                    {# TODO: update this    #}
+                    {# this has to be a user object and not a user_type string  #}
+                    <span class="nav-item nav-link p-2 active" id="nav-student-apps-tab"
+                          data-toggle="tab"
+                          data-url="{% url 'dashboard:admissions:index'  %}"
+                          role="tab" aria-controls="nav-student-apps-tab">Student Applications</span>
+
+{#                    todo Make this active when School Information tab is implemented#}
+{#                    <span class="nav-item nav-link p-2" id="nav-school-info-tab"#}
+{#                          data-toggle="tab"#}
+{#                          role="tab" aria-controls="nav-school-info-tab">School Information</span>#}
+                </div>
             </nav>
         {% endif %}
     </div>
