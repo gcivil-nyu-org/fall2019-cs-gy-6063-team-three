@@ -1,82 +1,107 @@
 {% extends "dashboard/index.html" %}
+{% load static %}
 {% block content %}
-    <h5 style="margin: 1em; text-align: center;"><b>Application Form</b></h5>
-    <table class="table table-striped" style="border: 1px solid black; border-collapse:
-inherit; width: 75%; margin: 0 auto 2em;">
-        <tbody>
-        {% if application %}
-            <tr>
-                <th scope="row">Application Number</th>
-                <td>{{ application.application_number }}</td>
-            </tr>
-            <tr>
-                <th scope="row">First Name</th>
-                <td>{{ application.first_name }}</td>
-            </tr>
-            <tr>
-                <th scope="row">Last Name</th>
-                <td colspan="2">{{ application.last_name }}</td>
-            </tr>
-            <tr>
-                <th scope="row">Email Address</th>
-                <td>{{ application.email_address }}</td>
-            </tr>
-            <tr>
-                <th scope="row">Phone Number</th>
-                <td>{{ application.phoneNumber }}</td>
-            </tr>
-            <tr>
-                <th scope="row">Address</th>
-                <td>{{ application.address }}</td>
-            </tr>
-            <tr>
-                <th scope="row">Gender</th>
-                <td>{{ application.gender }}</td>
-            </tr>
-            <tr>
-                <th scope="row">Date of Birth</th>
-                <td>{{ application.date_of_birth }}</td>
-            </tr>
-            <tr>
-                <th scope="row">GPA</th>
-                <td>{{ application.gpa }}</td>
-            </tr>
-            <tr>
-                <th scope="row">Parent/Guardian Name</th>
-                <td>{{ application.parent_name }}</td>
-            </tr>
-            <tr>
-                <th scope="row">Parent/Guardian Phone Number</th>
-                <td>{{ application.parent_phoneNumber }}</td>
-            </tr>
-            <tr>
-                <th scope="row">Program Name</th>
-                <td colspan="2">{{ application.program }}</td>
-            </tr>
-            <tr>
-                <th scope="row">Date of Submission</th>
-                <td colspan="2">{{ application.submitted_date }}</td>
-            </tr>
-            <tr>
-                <th scope = "row"> status</th>>
-                {% if application.application_status == 2 %}
-                    <td>Pending</td>
-                {% elif application.application_status == 1 %}
-                    <td>Accepted</td>
-                {% elif application.application_status == 0 %}
-                    <td>Rejected</td>
-                {% endif %}
-            </tr>
-        {% else %}
-            <p>The application you are looking for doesn't exist.</p>
-        {% endif %}
-        </tbody>
-
-    </table>
-    {% if application.application_status == 2 %}
-    <div class="nav d-flex justify-content-center">
-        <a class="btn btn-lg btn-primary mr-4" href="{% url 'dashboard:admissions:accept' application.id %}">Accept</a>
-        <a class="btn btn-lg btn-danger mr-4" href="{% url 'dashboard:admissions:reject' application.id %}">Reject</a>
+    <link rel="stylesheet" type="text/css"
+              href="{% static 'high_schools/css/high_school.css' %}">
+{% if application %}
+    <div style="width:60%; margin-top: 3%; margin-left: 7%;">
+        <a href="/dashboard/ut_admin_staff" class="btn btn-primary ">Go to List</a>
     </div>
     {% endif %}
+    <div style="width: 100%;">
+        <div class="container-fluid">
+                {% if application %}
+                    <h5 style="margin: 1em; text-align: center;"><b>Application Form</b>
+                    </h5>
+                    <table class="table table-striped" style="border: 1px solid black; border-collapse:
+inherit; width: 75%; margin: 0 auto 2em;">
+                        <tbody>
+                        <tr>
+                            <th scope="row">Application Number</th>
+                            <td>{{ application.application_number }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">First Name</th>
+                            <td>{{ application.first_name }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Last Name</th>
+                            <td colspan="2">{{ application.last_name }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Email Address</th>
+                            <td>{{ application.email_address }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Phone Number</th>
+                            <td>{{ application.phoneNumber }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Address</th>
+                            <td>{{ application.address }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Gender</th>
+                            <td>{{ application.gender }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Date of Birth</th>
+                            <td>{{ application.date_of_birth }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">GPA</th>
+                            <td>{{ application.gpa }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Parent/Guardian Name</th>
+                            <td>{{ application.parent_name }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Parent/Guardian Phone Number</th>
+                            <td>{{ application.parent_phoneNumber }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Program Name</th>
+                            <td colspan="2">{{ application.program }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Date of Submission</th>
+                            <td colspan="2">{{ application.submitted_date }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row"> Status</th>
+                            {% if application.application_status == 2 %}
+                                <td>Pending</td>
+                            {% elif application.application_status == 1 %}
+                                <td>Accepted</td>
+                            {% elif application.application_status == 0 %}
+                                <td>Rejected</td>
+                            {% endif %}
+                        </tr>
+
+                        </tbody>
+
+                    </table>
+                {% else %}
+                    {% if unauth %}
+                        {% block broken %}
+                            {% include 'admissions/broken.html' %}
+                        {% endblock %}
+                    {% elif not applications %}
+                        {% block empty_list %}
+                            {% include 'admissions/broken.html' %}
+                        {% endblock %}
+                    {% endif %}
+                {% endif %}
+                {% if application.application_status == 2 %}
+                    <div class="container"
+                         style="padding-bottom: 2em; text-align: center">
+                        <a class="btn btn-lg btn-primary"
+                           href="{% url 'dashboard:admissions:accept' application.id %}">Accept</a>
+                        <a class="btn btn-lg btn-danger"
+                           href="{% url 'dashboard:admissions:reject' application.id %}">Reject</a>
+                    </div>
+                {% endif %}
+            </div>
+    </div>
 {% endblock %}
