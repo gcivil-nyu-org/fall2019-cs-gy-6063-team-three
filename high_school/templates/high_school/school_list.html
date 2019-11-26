@@ -2,82 +2,102 @@
     {% load hs_filters %}
     <div style="height: 90%; margin-bottom: 5%;">
         <div class="list-group">
-            <div class="util-div" style="display: flex; flex-direction: row; width: 100%;">
-                <div class="high-school-search">
-                    <form id="search_filter_form" name="search_filter_form" method='GET'>
+            <div class="util-div">
+                <form id="search_filter_form" name="search_filter_form" method='GET'>
+                    <div class="hs-search-filters">
                         <div class="search-div">
                         <span>
                             <input class="search-input" type='text' name='query'
-                                   {% if request.GET.query %}value="{{ request.GET.query }}"
+                                   {% if search_filter_params.query %}value="{{ request.GET.query }}"
                                    {% endif %} placeholder="Search for your school">
                             <span onclick="search_filter_form.submit();" class="search-btn">
                                 <i class="fa fa-search mr-2"></i>
                             </span>
                         </span>
                         </div>
+                        <div class="filters-div">
+                            <div class="filter-btn" title="Show applied filters" style="border-right: 2px solid slategray;">
+                                <div class="filter-info-div">
+                                    <span><i class="fa fa-filter"></i></span>
+                                    <sub>{{ search_filter_params.filter_count }}</sub>
+                                </div>
+                                <div class="filter-action-div" style="display: none;">
+                                    <span class="filter-action apply-filters mr-2" title="Apply changes"><i class="fa fa-check-circle"></i></span>
+                                    <span class="filter-action cancel-filters mr-2" title="Discard changes"><i class="fa fa-times-circle"></i></span>
+                                </div>
+                            </div>
+                            <label class="fav-btn ml-2 mb-0" title="{% if search_filter_params.is_fav_on %}Hide{% else %}Show{% endif %} favorites">
+                                <input name="is_fav_on" type="checkbox" class="with-font hide"
+                                       {% if search_filter_params.is_fav_on %}checked=""{% endif %}
+                                       onchange="search_filter_form.submit();"/>
+                                <i {% if search_filter_params.is_fav_on %}
+                                    class="fa fa-heart" {% else %}
+                                    class="fa fa-heart-o"{% endif %}>
+                                </i>
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="high-school-fav-div {% if not request.GET.is_fav_on or request.GET.is_fav_on == "0" %} hide {% endif %}">
+                            <span>These are your favorite schools...</span>
+                        </div>
                         <div class="high-school-filter-div">
-                            <p class="mb-1">Filter using boroughs</p>
-                            <div class="form-group">
+                            <p class="mb-1">Filtered using boroughs</p>
+                            <div class="form-group all_boroughs">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input"
+                                           id="loc_all" name="loc_all"
+                                           {% if search_filter_params.borough.loc_all %}checked=""{% endif %}
+                                    >
+                                    <label class="custom-control-label"
+                                           for="loc_all">All</label>
+                                </div>
+                            </div>
+                            <div class="form-group individual_boroughs">
                                 <div class="custom-control custom-checkbox">
                                     <input type="checkbox" class="custom-control-input"
                                            id="loc_bx" name="loc_bx"
-                                           {% if request.GET.loc_bx %}checked=""{% endif %}
-                                           onchange="search_filter_form.submit();">
+                                           {% if search_filter_params.borough.loc_bx %}checked=""{% endif %}
+                                    >
                                     <label class="custom-control-label"
                                            for="loc_bx">Bronx</label>
                                 </div>
                                 <div class="custom-control custom-checkbox">
                                     <input type="checkbox" class="custom-control-input"
                                            id="loc_bk" name="loc_bk"
-                                           {% if request.GET.loc_bk %}checked=""{% endif %}
-                                           onchange="search_filter_form.submit();">
+                                           {% if search_filter_params.borough.loc_bk %}checked=""{% endif %}
+                                    >
                                     <label class="custom-control-label"
                                            for="loc_bk">Brooklyn</label>
                                 </div>
                                 <div class="custom-control custom-checkbox">
                                     <input type="checkbox" class="custom-control-input"
                                            id="loc_mn" name="loc_mn"
-                                           {% if request.GET.loc_mn %}checked=""{% endif %}
-                                           onchange="search_filter_form.submit();">
+                                           {% if search_filter_params.borough.loc_mn %}checked=""{% endif %}
+                                    >
                                     <label class="custom-control-label"
                                            for="loc_mn">Manhattan</label>
                                 </div>
                                 <div class="custom-control custom-checkbox">
                                     <input type="checkbox" class="custom-control-input"
                                            id="loc_qn" name="loc_qn"
-                                           {% if request.GET.loc_qn %}checked=""{% endif %}
-                                           onchange="search_filter_form.submit();">
+                                           {% if search_filter_params.borough.loc_qn %}checked=""{% endif %}
+                                    >
                                     <label class="custom-control-label"
                                            for="loc_qn">Queens</label>
                                 </div>
                                 <div class="custom-control custom-checkbox">
                                     <input type="checkbox" class="custom-control-input"
                                            id="loc_si" name="loc_si"
-                                           {% if request.GET.loc_si %}checked=""{% endif %}
-                                           onchange="search_filter_form.submit();">
+                                           {% if search_filter_params.borough.loc_si %}checked=""{% endif %}
+                                    >
                                     <label class="custom-control-label"
                                            for="loc_si">Staten Island</label>
                                 </div>
                             </div>
                         </div>
-                        <div class="high-school-fav-div {% if not request.GET.is_fav_on or request.GET.is_fav_on == "0" %} hide-fav {% endif %}">
-                            <span>These are your favorite schools...</span>
-                        </div>
-                    </form>
-                </div>
-                <div class="high-school-filters">
-                    <span class="filter-btn"><i class="fa fa-filter"></i></span>
-                    <form id="fav_form" name="fav_form" method="GET">
-                        <input name="is_fav_on" type="hidden"
-                                {% if not request.GET.is_fav_on or request.GET.is_fav_on == "0" %}
-                               value="1"
-                               {% else %}value="0"{% endif %}>
-                        <span class="fav-btn" onclick="fav_form.submit()"><i
-                                {% if request.GET.is_fav_on and request.GET.is_fav_on == "1" %}
-                                    class="fa fa-heart"{% else %}
-                                    class="fa fa-heart-o" {% endif %}></i></span>
-                    </form>
-                </div>
+                    </div>
+                </form>
             </div>
             {% for school in high_schools %}
                 {% with request.get_full_path as querystring %}
@@ -92,15 +112,15 @@
             <div class="d-flex w-100 justify-content-between mb-2">
                 <h4 class="mb-1" style="width: 75%">{{ school.school_name }}</h4>
                 <div>
-                <span class="school-fav-btn" dbn_value="{{ school.dbn }}"
-                        {% if school in fav_schools %}
-                      is_fav="1" {% else %} is_fav="0" {% endif %}
-                      style="font-size: 18px; padding: 4px;">
-                <i{% if school in fav_schools %} class="fa fa-heart"{% else %}
-                                                 class="fa fa-heart-o" {% endif %}></i></span>
+                    <span class="school-fav-btn" dbn_value="{{ school.dbn }}"
+                            {% if school in fav_schools %}
+                          is_fav="1" {% else %} is_fav="0" {% endif %}
+                          style="font-size: 18px; padding: 4px;">
+                        <i{% if school in fav_schools %} class="fa fa-heart"{% else %}
+                                                         class="fa fa-heart-o" {% endif %}></i>
+                    </span>
                 </div>
             </div>
-            {#TODO: change this to school.boro instead and map it to full name#}
             <div class="d-flex w-100 justify-content-between mb-2">
                 <h5 class="mb-2">{{ school.neighborhood }}</h5>
                 <small class="pt-1"
