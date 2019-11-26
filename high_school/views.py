@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.views.generic import ListView
 from sodapy import Socrata
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 from django.conf import settings
 from OneApply.constants import ApiInfo, UserType
@@ -126,20 +128,21 @@ def get_user(request):
     user_name = request.session.get("username", None)
     user_type = request.session.get("user_type", None)
     is_valid_user = False
+    user = None
     if not user_name or user_type != UserType.STUDENT:
         context["unauth"] = True
         context["high_schools"] = None
         context["selected_school"] = None
         context["empty_list"] = None
-    user = None
-    try:
-        user = Student.objects.get(username=user_name)
-        is_valid_user = True
-    except Student.DoesNotExist:
-        context["unauth"] = True
-        context["high_schools"] = None
-        context["selected_school"] = None
-        context["empty_list"] = None
+    else:
+        try:
+            user = Student.objects.get(username=user_name)
+            is_valid_user = True
+        except Student.DoesNotExist:
+            context["unauth"] = True
+            context["high_schools"] = None
+            context["selected_school"] = None
+            context["empty_list"] = None
 
     return is_valid_user, user, user_type, context
 
@@ -160,6 +163,7 @@ class HighSchoolListView(ListView):
         self.loc_filter = {}
         self.is_fav_on = 0
         self.is_fav_empty = True
+        self.search_filter_params = {}
 
     def get(self, *args, **kwargs):
         if not self.request.session.get("is_login", None):
@@ -169,23 +173,14 @@ class HighSchoolListView(ListView):
     def get_queryset(self):
         if "dbn" in self.kwargs:
             self.dbn = self.kwargs["dbn"]
-        self.query = self.request.GET.get("query")
-        self.loc_filter["X"] = self.request.GET.get("loc_bx")
-        self.loc_filter["K"] = self.request.GET.get("loc_bk")
-        self.loc_filter["M"] = self.request.GET.get("loc_mn")
-        self.loc_filter["Q"] = self.request.GET.get("loc_qn")
-        self.loc_filter["R"] = self.request.GET.get("loc_si")
-        if self.request.GET.get("is_fav_on"):
-            self.is_fav_on = int(self.request.GET.get("is_fav_on"))
-        else:
-            self.is_fav_on = 0
+        self.search_filter_params = self.setup_params()
         is_valid_user, temp_user, temp_user_type, temp_context = get_user(self.request)
         if not is_valid_user:
             self.user = None
         else:
             self.user = temp_user
             self.user_type = temp_user_type
-        return self.getHighSchools()
+        return self.get_high_schools()
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(HighSchoolListView, self).get_context_data(**kwargs)
@@ -217,37 +212,34 @@ class HighSchoolListView(ListView):
                         context["empty_list"] = 1
                 else:
                     context["selected_school"] = None
+                context["search_filter_params"] = self.search_filter_params
                 context["fav_schools"] = self.get_fav_schools()
 
         return context
 
-    def getHighSchools(self):
-        high_schools = None
+    def get_high_schools(self):
         borough_filter = ""
         for boro in self.loc_filter:
             if self.loc_filter[boro]:
                 borough_filter += boro + " , "
         borough_filter = borough_filter[:-3]
 
-        if self.query:
-            if borough_filter:
-                high_schools = HighSchool.objects.filter(
-                    school_name__icontains=self.query, boro__in=borough_filter
-                ).order_by(
-                    "school_name"
-                )  # noqa: E501
-            else:
-                high_schools = HighSchool.objects.filter(
-                    school_name__icontains=self.query
-                ).order_by("school_name")
-        elif borough_filter:
-            high_schools = HighSchool.objects.filter(boro__in=borough_filter).order_by(
-                "school_name"
-            )
-        elif self.is_fav_on and self.is_fav_on == 1:
+        if self.is_fav_on and self.is_fav_on == 1:
             high_schools = self.get_fav_schools()
         else:
             high_schools = HighSchool.objects.order_by("school_name")
+
+        if self.query:
+            if borough_filter and high_schools:
+                high_schools = high_schools.filter(
+                    school_name__icontains=self.query, boro__in=borough_filter
+                )  # noqa: E501
+            elif high_schools:
+                high_schools = high_schools.filter(
+                    school_name__icontains=self.query
+                ).order_by("school_name")
+        elif borough_filter and high_schools:
+            high_schools = high_schools.filter(boro__in=borough_filter)
 
         return high_schools
 
@@ -261,23 +253,79 @@ class HighSchoolListView(ListView):
         if selected_school:
             return Program.objects.filter(high_school=selected_school.dbn)
 
+    def setup_params(self):
+        obj = self.get_param_obj(self.request.GET)
+        self.query = obj.get("query")
+        self.loc_filter["X"] = obj.get("borough").get("loc_bx")
+        self.loc_filter["K"] = obj.get("borough").get("loc_bk")
+        self.loc_filter["M"] = obj.get("borough").get("loc_mn")
+        self.loc_filter["Q"] = obj.get("borough").get("loc_qn")
+        self.loc_filter["R"] = obj.get("borough").get("loc_si")
+        if obj.get("is_fav_on"):
+            self.is_fav_on = 1
+        else:
+            self.is_fav_on = 0
 
+        return obj
+
+    def get_param_obj(self, get_obj):
+        obj = {"filter_count": 0, "borough": {}}
+        if get_obj.get("query"):
+            obj["query"] = get_obj.get("query")
+
+        if get_obj.get("is_fav_on"):
+            obj["is_fav_on"] = get_obj.get("is_fav_on")
+
+        if get_obj.get("loc_all"):
+            obj["borough"]["loc_all"] = "on"
+            obj["filter_count"] += 1
+        else:
+            if get_obj.get("loc_bx"):
+                obj["borough"]["loc_bx"] = get_obj.get("loc_bx")
+                obj["filter_count"] += 1
+            if get_obj.get("loc_bk"):
+                obj["borough"]["loc_bk"] = get_obj.get("loc_bk")
+                obj["filter_count"] += 1
+            if get_obj.get("loc_mn"):
+                obj["borough"]["loc_mn"] = get_obj.get("loc_mn")
+                obj["filter_count"] += 1
+            if get_obj.get("loc_qn"):
+                obj["borough"]["loc_qn"] = get_obj.get("loc_qn")
+                obj["filter_count"] += 1
+            if get_obj.get("loc_si"):
+                obj["borough"]["loc_si"] = get_obj.get("loc_si")
+                obj["filter_count"] += 1
+
+        if obj["filter_count"] == 0 or not obj["borough"]:
+            obj["borough"]["loc_all"] = "on"
+            obj["filter_count"] += 1
+        return obj
+
+
+@api_view(["POST"])
 def update_fav_hs(request, school_dbn, is_fav):
-    try:
-        high_school = HighSchool.objects.get(dbn=school_dbn)
-    except HighSchool.DoesNotExist:
-        pass
-    else:
+    response = {}
+    if request.method == "POST":
+        try:
+            high_school = HighSchool.objects.get(dbn=school_dbn)
+        except HighSchool.DoesNotExist:
+            high_school = None
         if high_school:
-            is_valid_user, temp_user, temp_user_type, temp_context = get_user(request)
+            is_valid_user, user, _, _ = get_user(request)
             if is_valid_user:
-                user = temp_user
-                if user.__class__ is Student:
-                    if is_fav == 1:
-                        user.fav_schools.add(high_school)
-                        user.save()
-                    else:
-                        user.fav_schools.remove(high_school)
-                        user.save()
+                if is_fav == 1:
+                    user.fav_schools.add(high_school)
+                    user.save()
+                else:
+                    user.fav_schools.remove(high_school)
+                    user.save()
+                response["status"] = 200
+                response["message"] = "Success"
+            else:
+                response["status"] = 403
+                response["message"] = "Forbidden - invalid user"
+        else:
+            response["status"] = 404
+            response["message"] = "No matching high school found"
 
-    return redirect("dashboard:high_school:index")
+    return Response(response)

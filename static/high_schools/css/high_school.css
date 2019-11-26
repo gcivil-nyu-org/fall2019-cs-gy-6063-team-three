@@ -63,18 +63,27 @@ body {
     width: 100%;
 }
 
-.high-school-search {
-    margin: 2% 2.5% 0 7.5%;
-    width: 75%;
+.util-div{
+    display: flex;
+    flex-direction: column;
+    width: 85%;
+    margin: 2.5% 7.5% 0 7.5% !important;
 }
 
-.high-school-search .search-div {
+.hs-search-filters {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.hs-search-filters .search-div {
     display: flex !important;
     flex-direction: column !important;
     position: relative !important;
+    width: 80%;
 }
 
-.high-school-search .search-div .search-input {
+.hs-search-filters .search-div .search-input {
     width: 100%;
     height: 36px;
     padding: 15px 20px;
@@ -83,48 +92,67 @@ body {
     border-radius: 12px;
 }
 
-.high-school-search .search-div .search-input:focus {
+.hs-search-filters .search-div .search-input:focus {
     outline: none !important;
     border: 2px solid slategray !important;
 }
 
-.high-school-search .search-div .search-btn {
+.hs-search-filters .search-div .search-btn {
     color: slategray;
     position: absolute;
-    left: 95%;
+    left: 92%;
     top: 15%;
     cursor: pointer;
 }
 
-.high-school-filters{
-    margin: 2% 5% 0 0;
+.filters-div{
+    margin-left: 2.5%;
     padding: 2px;
     display: flex;
     font-size: 20px;
+    align-items: center;
 }
 
-.high-school-filters .filter-btn {
+.filters-div .filter-info-div {
+    display: flex;
+    flex-direction: row;
     color: slategray;
     cursor: pointer;
     padding: 0 10px;
 }
+
+.filters-div .filter-action-div{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.filter-action-div .apply-filters,
+.filter-action-div .cancel-filters{
+    color: slategray;
+    cursor: pointer;
+    padding: 0 10px;
+}
+
 
 .high-school-filter-div {
     display: none;
-    margin: 2% 0 0 0;
+    margin-top: 2%;
+    font-size: 16px;
+    color: slategray;
 }
-.high-school-filters .fav-btn{
+.filters-div .fav-btn{
     color: slategray;
     cursor: pointer;
-    padding: 0 10px;
+    padding-left: 10px;
 }
-.hide-fav{
-    display: none;
+.hide{
+    display: none !important;
 }
 .high-school-fav-div{
-    font-size: 18px;
+    font-size: 16px;
     color: slategray;
-    margin: 2% 0;
+    margin: 2% 0 1% 0;
 }
 .program-div{
     width: fit-content;
@@ -138,6 +166,8 @@ body {
 .program-select-div .form-control:focus{
     box-shadow: none !important;
 }
+.hide { display: none; }
+
 /*overriding bootstrap*/
 .list-group-item {
     width: 85% !important;
