@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib.staticfiles.storage import staticfiles_storage
 from django.urls import path, include, re_path
 from django.conf.urls import url
 from django.views.generic.base import RedirectView
@@ -13,8 +14,8 @@ from recommendation.views import recommendation_rating
 favicon_view = RedirectView.as_view(url="/static/favicon.ico", permanent=True)
 
 urlpatterns = [
-    re_path(r"^favicon\.ico$", favicon_view),
-    path("", include("landingpage.urls", namespace="landingpage")),
+    path('favicon.ico', RedirectView.as_view(url=staticfiles_storage.url('favicon.ico'))),
+    path("", include("landingpage.urls")),
     path("login/", include("logIn.urls")),
     path("register/", include("register.urls")),
     path("admissions/", include("admissions.urls")),
