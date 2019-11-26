@@ -7,7 +7,7 @@ app_name = "recommendation"
 urlpatterns = [
     path("add_teacher/", views.new_recommendation, name="new_recommendation"),
     url(
-        r"^recommendation_rating/(?P<uid1>[0-9A-Za-z_\-]+)/(?P<uid2>[0-9A-Za-z_\-]+)/$",
+        r"^recommendation_rating/(?P<uid1>[0-9A-Za-z_\-]+)/$",
         # noqa: E501
         views.recommendation_rating,
         name="recommendation_rating",
