@@ -9,11 +9,15 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12 left-pane">
-                    {% if selected_app %}
+                    {% if not applications and not selected_app %}
+                        {% block empty_list %}
+                            {% include 'application/broken.html' %}
+                        {% endblock %}
+                    {% elif selected_app %}
                         {% block app_overview %}
                             {% include 'application/application-overview.html' %}
                         {% endblock %}
-                    {%  else %}
+                    {% else %}
                         {% block app_list %}
                             {% include 'application/application-list.html' %}
                     {% endblock %}

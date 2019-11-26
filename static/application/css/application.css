@@ -75,16 +75,28 @@ body {
 }
 
 .form-label-group input::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
-  color: #ced4da;
+  color: #7b8a8b;
   opacity: 1; /* Firefox */
 }
 
 .form-label-group input:-ms-input-placeholder { /* Internet Explorer 10-11 */
-  color: #ced4da;
+  color: #7b8a8b;
 }
 
 -ms-input-placeholder::-ms-input-placeholder { /* Microsoft Edge */
-  color: #ced4da;
+  color: #7b8a8b;
+}
+
+ .form-control {
+    color: #1a252f;
+}
+
+.form-label-group select{
+    color: #1a252f;
+}
+
+.form-label-group select option{
+    color: #1a252f;
 }
 
 ul.errorlist {
@@ -111,11 +123,11 @@ ul.errorlist {
     width: inherit;
     padding: 3px 6px 3px 6px;
     border: 1px solid #ced4da;
-    color: #7b8a8b !important;
+    color: #1a252f !important;
 }
 
 .select2-container{
-    color: #7b8a8b;
+    color: #1a252f;
     font-size: 13.333px;
     font-weight: normal;
     font-family: Arial;
@@ -123,7 +135,7 @@ ul.errorlist {
 }
 
 select2 {
-    color: #7b8a8b;
+    color: #1a252f;
 }
 
 .select2-selection__rendered .select2-selection .select2-selection--single {
@@ -140,12 +152,21 @@ select2 {
 }
 
 .select2-container--default .select2-selection--single {
-    color: #7b8a8b;
+    color: #1a252f;
     font-family: Arial;
     font-weight: normal;
     font-size: 15px;
 }
 
 #select2-school-container {
-        color: #7b8a8b;
+        color: #1a252f;
+}
+
+.no-school-placeholder {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
 }

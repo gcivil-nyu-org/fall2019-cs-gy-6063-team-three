@@ -22,7 +22,7 @@ class HighSchoolApplication(models.Model):
     email_address = models.EmailField(
         max_length=50, validators=[validators.validate_email], verbose_name="Email ID"
     )
-    phoneNumber = PhoneNumberField(verbose_name="Phone number")
+    phoneNumber = PhoneNumberField(verbose_name="Phone Number")
     address = models.CharField(max_length=100, verbose_name="Address")
     gender = models.CharField(max_length=15, verbose_name="Gender")
     date_of_birth = models.DateField(verbose_name="Date of Birth")
@@ -38,7 +38,7 @@ class HighSchoolApplication(models.Model):
         blank=True,
     )
     parent_name = models.CharField(max_length=100, verbose_name="Parent/Guardian Name")
-    parent_phoneNumber = PhoneNumberField(verbose_name="Parent/Guardian Phone number")
+    parent_phoneNumber = PhoneNumberField(verbose_name="Parent/Guardian Phone Number")
     school = models.ForeignKey(
         HighSchool,
         on_delete=models.CASCADE,

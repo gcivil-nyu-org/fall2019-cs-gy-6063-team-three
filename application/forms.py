@@ -17,9 +17,9 @@ class HighSchoolApplicationForm(ModelForm):
         super().__init__(*args, **kwargs)
         self.fields["gender"].label = "Gender"
         self.fields["date_of_birth"].label = "Date of Birth"
-        self.fields["phoneNumber"].label = "Phone number"
+        self.fields["phoneNumber"].label = "Phone Number"
         self.fields["gpa"].label = "GPA"
-        self.fields["parent_phoneNumber"].label = "Parent/Guardian Phone number"
+        self.fields["parent_phoneNumber"].label = "Parent/Guardian Phone Number"
 
         for field in self.fields.keys():
             self.fields[field].widget.attrs.update(
