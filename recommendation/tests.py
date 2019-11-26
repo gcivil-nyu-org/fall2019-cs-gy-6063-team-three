@@ -36,6 +36,7 @@ def create_recommendation(self):
         rating_goals=0,
         rating_socialization=0,
         rating_analyzing=0,
+        rating_comment="He is smart",
         submitted_date=self.submitted_date,
     )
 
@@ -70,6 +71,7 @@ class RecommendationModelTest(TestCase):
         self.assertEqual(self.recommendation.rating_goals, 0)
         self.assertEqual(self.recommendation.rating_socialization, 0)
         self.assertEqual(self.recommendation.rating_analyzing, 0)
+        self.assertEqual(self.recommendation.rating_comment, "He is smart")
         self.assertEqual(self.recommendation.submitted_date, self.submitted_date)
 
     def test_get(self):
@@ -97,7 +99,7 @@ class RecommendationFormTest(TestCase):
 
 class RecommendationRatingFormTest(TestCase):
     def test_valid_form(self):
-        data = {"known_length": 1}
+        data = {"known_length": 1, "rating_comment": "He is smart"}
         form = RecommendationRatingForm(data=data)
         self.assertTrue(form.is_valid())
 
@@ -143,35 +145,26 @@ class RecommendationViewTest(TestCase):
         )
 
     def test_valid_add_rating(self):
-        data = {"known_length": 1}
-        url = reverse(
-            "recommendation_rating", args=[self.recommendation.pk, self.student.pk]
-        )
+        data = {"known_length": 1, "rating_comment": "He is smart"}
+        url = reverse("recommendation_rating", args=[self.recommendation.pk])
         response = self.client.post(url, data=data)
         self.assertEqual(response.status_code, 200)
 
     def test_invalid_add_rating(self):
-        data = {"known_length": "HI"}
-        url = reverse(
-            "recommendation_rating", args=[self.recommendation.pk, self.student.pk]
-        )
+        data = {"known_length": "HI", "rating_comment": "He is smart"}
+        url = reverse("recommendation_rating", args=[self.recommendation.pk])
         response = self.client.post(url, data=data)
         self.assertEqual(response.status_code, 200)
 
     def test_no_recommendation_sent(self):
-        data = {"known_length": 1}
-        url = reverse(
-            "recommendation_rating",
-            args=[self.recommendation.pk + 1000, self.student.pk + 1000],
-        )
+        data = {"known_length": 1, "rating_comment": "He is smart"}
+        url = reverse("recommendation_rating", args=[self.recommendation.pk + 1000])
         response = self.client.post(url, data=data)
         self.assertEqual(response.status_code, 200)
 
     def test_already_completed_rating(self):
         self.recommendation.submitted_date = timezone.now()
-        url = reverse(
-            "recommendation_rating", args=[self.recommendation.pk, self.student.pk]
-        )
+        url = reverse("recommendation_rating", args=[self.recommendation.pk])
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 

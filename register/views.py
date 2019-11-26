@@ -36,9 +36,12 @@ def register_user(request, user_type):
                 to_email = form.cleaned_data["email_address"]
                 email = EmailMessage(mail_subject, message, to=[to_email])
                 email.send()
-                return HttpResponse(
-                    "Please confirm your email address to complete registration!"
-                )
+                context = {
+                    "user_type": UserType.STUDENT,
+                    "constant_ut_student": UserType.STUDENT,
+                    "constant_ut_adminStaff": UserType.ADMIN_STAFF,
+                }
+                return render(request, "register/after_register.html", context)
         elif user_type == UserType.ADMIN_STAFF:
             form = AdminStaffRegisterForm(request.POST)
             if form is not None and form.is_valid():
@@ -71,7 +74,12 @@ def register_user(request, user_type):
                 to_staff = form.cleaned_data["email_address"]
                 email2 = EmailMessage(staff_mail_subject, staff_message, to=[to_staff])
                 email2.send()
-                return HttpResponse("Please check your email for further instructions!")
+                context = {
+                    "user_type": UserType.ADMIN_STAFF,
+                    "constant_ut_student": UserType.STUDENT,
+                    "constant_ut_adminStaff": UserType.ADMIN_STAFF,
+                }
+                return render(request, "register/after_register.html", context)
     else:
         if user_type == UserType.STUDENT:
             form = StudentRegisterForm()
@@ -96,7 +104,12 @@ def activate_student_account(request, uidb64, token):
     if account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
-        return HttpResponse("Thank you for confirming your email. You can now login.")
+        context = {
+            "user_type": UserType.STUDENT,
+            "constant_ut_student": UserType.STUDENT,
+            "constant_ut_adminStaff": UserType.ADMIN_STAFF,
+        }
+        return render(request, "register/after_verification_complete.html", context)
     else:
         return HttpResponse("Wrong Token")
 
@@ -125,9 +138,7 @@ def verify_employee_status(request, uidb64, token):
         to_email = user.email_address
         email = EmailMessage(mail_subject, message, to=[to_email])
         email.send()
-        return HttpResponse(
-            "Thank you for verifying your employee. They will now get an email with additional steps."  # noqa: E501
-        )
+        return render(request, "register/after_verify.html")
     else:
         return HttpResponse("Wrong Token")
 
@@ -142,6 +153,11 @@ def activate_admission_account(request, uidb64, token):
     if account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
-        return HttpResponse("Thank you for confirming your email. You can now login.")
+        context = {
+            "user_type": UserType.ADMIN_STAFF,
+            "constant_ut_student": UserType.STUDENT,
+            "constant_ut_adminStaff": UserType.ADMIN_STAFF,
+        }
+        return render(request, "register/after_verification_complete.html", context)
     else:
         return HttpResponse("Wrong Token")

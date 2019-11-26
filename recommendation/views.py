@@ -2,7 +2,6 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
 from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
-from django.http import HttpResponse
 from django.contrib import messages
 from django.utils import timezone
 from .forms import RecommendationForm, RecommendationRatingForm
@@ -23,6 +22,7 @@ def new_recommendation(request):
     if request.method == "POST":
         user = Student.objects.get(username=username)
         form = RecommendationForm(request.POST)
+        form.user_id = user.pk
         if form.is_valid():
             f = form.save(commit=False)
             f.user_id = user.pk
@@ -31,12 +31,7 @@ def new_recommendation(request):
             mail_subject = "Teacher Recommendation."
             message = render_to_string(
                 "recommendation/sent_recommendation_email.html",
-                {
-                    "user": f,
-                    "domain": current_site.domain,
-                    "uid1": f.pk,
-                    "uid2": f.user.pk,
-                },
+                {"user": f, "domain": current_site.domain, "uid1": f.pk},
             )
             to_email = form.cleaned_data["email_address"]
             email = EmailMessage(mail_subject, message, to=[to_email])
@@ -68,12 +63,13 @@ def all_recommendation(request):
 """
 
 
-def recommendation_rating(request, uid1, uid2):
+def recommendation_rating(request, uid1):
     teacherRecommendation = Recommendation
     try:
         teacherRecommendation = Recommendation.objects.get(pk=uid1)
     except (TypeError, ValueError, OverflowError, teacherRecommendation.DoesNotExist):
-        return HttpResponse("Teacher Recommendation Does Not Exist")
+        context = {"empty_list": 1}
+        return render(request, "recommendation/recommendation_rating.html", context)
     if not teacherRecommendation.submitted_date:
         if request.method == "POST":
             form = RecommendationRatingForm(request.POST)
@@ -106,12 +102,17 @@ def recommendation_rating(request, uid1, uid2):
                 teacherRecommendation.rating_analyzing = request.POST.get(
                     "rating_analyzing"
                 )
+                teacherRecommendation.rating_comment = f.rating_comment
                 teacherRecommendation.submitted_date = timezone.now()
                 teacherRecommendation.save()
-                return HttpResponse("Successfully submitted!")
+                context = {"submitted": 1}
+                return render(
+                    request, "recommendation/recommendation_rating.html", context
+                )
         else:
             form = RecommendationRatingForm()
         context = {"form": form, "teacher_recommendation": teacherRecommendation}
         return render(request, "recommendation/recommendation_rating.html", context)
     else:
-        return HttpResponse("You have already completed the recommendation!")
+        context = {"completed": 1}
+        return render(request, "recommendation/recommendation_rating.html", context)

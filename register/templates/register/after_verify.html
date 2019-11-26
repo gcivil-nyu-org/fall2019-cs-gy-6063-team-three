@@ -1,0 +1,18 @@
+
+{% include 'register/base_emails.html' %}
+{% block data %}
+<div class="card"
+         style="margin-top: 3em; padding: 2em; width: 100%; background-color: #F9F7F3">
+        <div class="card-header" style="background-color: #CDE6EC; width: fit-content; margin: auto;"><b>
+            Thank you for verifying your employee. They will now get an email with additional steps.
+        </b>
+        </div>
+        <div class="card-body" style="margin: 0 auto; padding: 1em;">
+            <div style="width:100%;">
+                <a href="{% url 'landingpage:index' %}"
+                   class="btn btn-primary">Go Home</a>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

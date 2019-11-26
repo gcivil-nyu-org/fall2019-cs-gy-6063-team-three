@@ -27,6 +27,7 @@ class RecommendationForm(ModelForm):
             "rating_goals",
             "rating_socialization",
             "rating_analyzing",
+            "rating_comment",
         ]
 
 
