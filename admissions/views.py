@@ -26,6 +26,7 @@ class IndexView(ListView):
         context["constant_ut_student"] = UserType.STUDENT
         context["constant_ut_adminStaff"] = UserType.ADMIN_STAFF
         all_applications = get_applications(self.user)
+        context["unauth"] = self.unauth if self.unauth else None
         context["programs"] = get_programs(all_applications)
         context["current_program"] = self.program if self.program else ALL
         return context
@@ -37,10 +38,12 @@ class IndexView(ListView):
         # corresponding program
         self.program_id = None
         self.program = None
+        self.unauth = False
         if not username or user_type != UserType.ADMIN_STAFF:
             self.program_id = None
             self.user = None
             self.program = None
+            self.unauth = True
             return []
         self.user = None
         try:
@@ -82,6 +85,7 @@ def detail(request, application_id):
     }
     if user_type != UserType.ADMIN_STAFF:
         context["user_type"] = UserType.STUDENT
+        context["unauth"] = True
         return render(request, "admissions/detail.html", context)
     try:
         application = HighSchoolApplication.objects.get(id=application_id)

@@ -1,0 +1,36 @@
+{% block broken %}
+    {% if unauth %}
+        <div class="no-school-placeholder">
+            <div style="font-size: 18px;">
+                    <span class="mb-3" style="font-size: 64px">
+                        <i class="fa fa-user-lock fa-5x"></i>
+                    </span>
+            </div>
+            <p class="mt-5" style="font-size: 18px; text-align: center">
+                Whoa! Something seems wrong. You're trying to access this page <br>
+                <b>without proper credentials</b>.
+            </p>
+            <small>Contact oneapply_teamthree@gmail.com if you think this is an error.</small>
+        </div>
+    {% endif %}
+{% endblock %}
+{% block empty_list %}
+    {#    for empty applications list #}
+    {% if not applications %}
+        <div class="no-school-placeholder">
+            <div style="font-size: 18px;">
+                    <span class="mb-3" style="font-size: 48px">
+                        <i class="fa fa-unlink fa-5x"></i>
+                    </span>
+            </div>
+            <p class="mt-5" style="font-size: 18px;">
+                Oops! We couldn't find what you're looking for...
+            </p>
+            <small class="pt-1">Contact oneapply_teamthree@gmail.com if the problem persists.</small>  {# noqa: E501 #}
+            <a href="{% url 'dashboard:admissions:index' %}">
+                <button class="btn btn-lg btn-primary mt-4 mb-4">Go to List
+                </button>
+            </a>
+        </div>
+    {% endif %}
+{% endblock %}
