@@ -22,6 +22,7 @@ def new_recommendation(request):
     if request.method == "POST":
         user = Student.objects.get(username=username)
         form = RecommendationForm(request.POST)
+        form.user_id = user.pk
         if form.is_valid():
             f = form.save(commit=False)
             f.user_id = user.pk
