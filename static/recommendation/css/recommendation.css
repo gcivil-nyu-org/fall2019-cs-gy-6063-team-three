@@ -87,6 +87,25 @@ mark {
     flex-flow: column;
     justify-content: center;
     align-items: center;
+    text-align: center;
     height: 100%;
     width: 100%;
+}
+
+ul.errorlist {
+    margin: 0;
+    padding: 0;
+}
+
+.errorlist li {
+    border: 1px solid red;
+    color: red;
+    background: rgba(255, 0, 0, 0.1);
+    list-style-position: inside;
+    display: block;
+    font-size: 1em;
+    margin: 5px 0 3px;
+    padding: 4px 5px;
+    text-align: center;
+    border-radius: 3px;
 }

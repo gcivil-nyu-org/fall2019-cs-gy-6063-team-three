@@ -8,6 +8,7 @@
 <script src="https://kit.fontawesome.com/fc24e2383c.js" crossorigin="anonymous"></script>
 <!-- Custom styles for this template -->
 <link href="{% static 'dashboard/dashboard.css' %}" rel="stylesheet">
+<title> OneApply </title>
 
 <div class="nav-container">
     <nav class="navbar navbar-expand-md navbar-dark bg-primary">
@@ -37,6 +38,9 @@
         <div class="form-row">
             <div class="form-label-group">
                 <span>Approximately how long have you known the applicant? (In years)</span> {{form.known_length}}
+                {% if form.known_length.errors %}
+                    {{ form.known_length.errors }}
+                {% endif %}
                 <br>
             </div>
         </div>

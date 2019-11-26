@@ -1,5 +1,6 @@
 from django.db import models
 from django.core import validators
+from django.core.validators import MaxValueValidator, MinValueValidator
 from register.models import Student
 
 
@@ -14,7 +15,11 @@ class Recommendation(models.Model):
         validators=[validators.validate_email],
         verbose_name="Email Address",
     )
-    known_length = models.IntegerField(null=True, verbose_name="Years")
+    known_length = models.IntegerField(
+        null=True,
+        verbose_name="Years",
+        validators=[MaxValueValidator(15), MinValueValidator(0)],
+    )
     known_strength = models.IntegerField(null=True)
     known_location = models.IntegerField(null=True)
     rating_concepts = models.IntegerField(null=True)

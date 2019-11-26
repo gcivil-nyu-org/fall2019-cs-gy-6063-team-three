@@ -40,7 +40,6 @@ def new_recommendation(request):
                 "An email has been sent to the teacher you added with instructions on how to fill out your recommendation!",  # noqa: E501
             )
             return redirect("dashboard:recommendation:new_recommendation")
-        request.session
     else:
         form = RecommendationForm()
     context = {"form": form}
