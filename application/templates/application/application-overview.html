@@ -28,8 +28,8 @@
                           prog-data-url="{% url 'dashboard:application:ajax_load_programs' %}" method="post"
                           class="form-signup" style="padding-top: 10px;">
                         {% csrf_token %}
-                        <div class="rounded bg-secondary" style="height:35px;margin-bottom:10px;">
-                            <h5 class="p-2">PERSONAL</h5>
+                        <div class="rounded bg-secondary" style="margin-bottom:10px;">
+                            <h5 class="p-2">Personal</h5>
                         </div>
                         <div class="form-row">
                             <div class="form-label-group col-md-6">
@@ -73,6 +73,9 @@
                                 {% if form.date_of_birth.help_text %}
                                     <p class="help">{{ form.date_of_birth.help_text|safe }}</p>
                                 {% endif %}
+                                {% if form.date_of_birth.errors %}
+                                    {{ form.date_of_birth.errors }}
+                                {% endif %}
                             </div>
                             <div class="form-label-group col-md-6">
                                 <label for={{ form.gender.id_for_label }}>{{ form.gender.label }}</label>
@@ -107,8 +110,8 @@
                                 {% endif %}
                             </div>
                         </div>
-                        <div class="rounded bg-secondary" style="height:35px;margin-bottom:10px;margin-top:15px;">
-                            <h5 class="p-2">EDUCATIONAL</h5>
+                        <div class="rounded bg-secondary" style="margin-bottom:10px;margin-top:15px;">
+                            <h5 class="p-2">Educational</h5>
                         </div>
                         <div class="form-row">
                             <div class="form-label-group col-md-6">
@@ -119,8 +122,8 @@
                                 {% endif %}
                             </div>
                         </div>
-                        <div class="rounded bg-secondary" style="height:35px;margin-bottom:10px;margin-top:15px;">
-                            <h5 class="p-2">SELECTED SCHOOLS AND PROGRAMS</h5>
+                        <div class="rounded bg-secondary" style="margin-bottom:10px;margin-top:15px;">
+                            <h5 class="p-2">Selected Schools and Programs</h5>
                         </div>
                         <div class="form-row">
                             <div class="form-label-group col-md-6">

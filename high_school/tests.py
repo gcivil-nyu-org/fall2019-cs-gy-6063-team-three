@@ -129,6 +129,7 @@ class HighSchoolViewTests(TestCase):
 
     def test_invalid_student_login(self):
         hs = create_highschool()
+        # test invalid user type
         Admin_Staff.objects.create(
             first_name="Hritik",
             last_name="Roshan",
@@ -141,6 +142,13 @@ class HighSchoolViewTests(TestCase):
             is_active=True,
         )
         update_session(self.client, "adminstaff_one", user_type=UserType.ADMIN_STAFF)
+        url = reverse("dashboard:high_school:index")
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
+        self.assertTrue("unauth" in response.context)
+        self.assertContains(response, "without proper credentials")
+        # test student object does not exist
+        update_session(self.client, "student_two", user_type=UserType.STUDENT)
         url = reverse("dashboard:high_school:index")
         response = self.client.get(url)
         self.assertEquals(response.status_code, 200)
@@ -285,10 +293,20 @@ class HighSchoolViewTests(TestCase):
 
         update_session(self.client, "studentone")
         url = reverse("dashboard:high_school:index")
-        # without any filters
+        # without any filters - by default "all" filter selected
         response = self.client.get(url)
         self.assertTrue(response.status_code, 200)
         self.assertTrue(len(response.context["high_schools"]) == 5)  # paginate_by = 5
+        self.assertTrue("search_filter_params" in response.context)
+        self.assertTrue(
+            "loc_all" in response.context["search_filter_params"]["borough"]
+        )
+        self.assertTrue(response.context["search_filter_params"]["filter_count"], 1)
+        # explicit selection of "all" filter
+        response = self.client.get(url + "?loc_all=on")
+        self.assertTrue(response.status_code, 200)
+        self.assertTrue(len(response.context["high_schools"]) == 5)
+        self.assertTrue(response.context["search_filter_params"]["filter_count"], 1)
         # select bronx filter
         response = self.client.get(url + "?loc_bx=on")
         self.assertTrue(response.status_code, 200)
@@ -386,11 +404,14 @@ class FavHighSchoolTests(TestCase):
         relations = self.student1.fav_schools.all()
         self.assertTrue(relations.count(), 2)
 
-    def test_toggle_fav_views(self):
+    def test_toggle_fav_api_view(self):
         # test toggle fav add url
         url = reverse("dashboard:high_school:toggle_fav", args=[self.hs_1.dbn, 1])
-        response = self.client.get(url)
-        self.assertTrue(response.status_code, 302)
+        response = self.client.post(url).data
+        # print(response.content)
+        # print(response.data)
+        self.assertTrue(response["status"], 200)
+        self.assertTrue(response["message"], "Success")
         # test single fav entry
         relations = self.student1.fav_schools.all()
         self.assertTrue(relations.count(), 1)
@@ -401,15 +422,26 @@ class FavHighSchoolTests(TestCase):
         self.assertContains(response, "School 1")
         # test toggle fav remove url
         url = reverse("dashboard:high_school:toggle_fav", args=[self.hs_1.dbn, 0])
-        response = self.client.get(url)
-        self.assertTrue(response.status_code, 302)
-        # removing from model and empty list in view tested above
+        response = self.client.post(url).data
+        self.assertTrue(response["status"], 200)
+        self.assertTrue(response["message"], "Success")
+        # removing from model and empty list in view already tested above
         # test invalid high school dbn has no effect on model and view
         url = reverse("dashboard:high_school:toggle_fav", args=["0X181C", 1])
-        response = self.client.get(url)
-        self.assertTrue(response.status_code, 302)
+        response = self.client.post(url).data
+        self.assertTrue(response["status"], 404)
+        self.assertTrue(response["message"], "No matching high school found")
         relations = self.student1.fav_schools.all()
         self.assertFalse(relations.count())
+        # test invalid user access
+        update_session(self.client, "student2")
+        url = reverse("dashboard:high_school:toggle_fav", args=[self.hs_1.dbn, 1])
+        response = self.client.post(url).data
+        self.assertTrue(response["status"], 403)
+        self.assertTrue(response["message"], "Forbidden - invalid user")
+        # test invalid method access for api
+        response = self.client.get(url)
+        self.assertTrue(response.status_code, 405)
 
 
 class SaveHighSchoolTests(TestCase):

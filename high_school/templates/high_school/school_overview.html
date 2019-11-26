@@ -3,8 +3,7 @@
         <div class="top-header" style="background: gray">
             <div class="right-pane-container">
                 <h5 class="mb-3" style="font-size: 28px;">{{ selected_school.school_name }}</h5>
-                <h5 class="mb-2">{{ selected_school.neighborhood }}
-                    ({{ selected_school.boro }})</h5>
+                <h5 class="mb-2">{{ selected_school.neighborhood }}</h5>
                 <h6 class="mb-3">{{ selected_school.location|slice:":-23" }}</h6>
                 <h6 class="mb-2">{{ selected_school.total_students }} students</h6>
                 <h6 class="mb-3">
@@ -70,7 +69,10 @@
                                         <span class="mb-3">
                                              {% if program.number_of_seats %}
                                                  {{ program.number_of_seats }} seats
-                                             {% endif %}</span>
+                                             {% else %}
+                                                 Seat info unavailable
+                                             {% endif %}
+                                        </span>
 
                                     </div>
                                     <p class="mb-0">{{ program.description }}</p>
@@ -80,7 +82,7 @@
                     </div>
                 </div>
                 <button class="btn btn-lg btn-outline-primary btn-block"
-                        style="margin: 15% 12.5% 5% 12.5%; width: 75%">More Info
+                        style="margin: 15% 12.5% 5% 12.5%; width: 75%; display: none;">More Info
                 </button>
             </div>
         </div>
