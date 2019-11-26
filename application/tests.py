@@ -2,8 +2,8 @@ from django.test import TestCase
 from django.utils import timezone
 from django.urls import reverse
 
-from .forms import HighSchoolApplicationForm, GENDER
-from .models import HighSchoolApplication
+from .forms import HighSchoolApplicationForm
+from .models import HighSchoolApplication, GENDER
 from register.models import Student
 from high_school.models import HighSchool, Program
 from .views import generate_application_number
@@ -68,7 +68,7 @@ def create_application(self):
         phoneNumber="+19567801234",
         address="Brooklyn, NY",
         gender=GENDER[0],
-        date_of_birth="1995-10-31",
+        date_of_birth="2005-10-31",
         gpa=3.88,
         parent_name="Rakesh Roshan",
         parent_phoneNumber="+15879879870",
@@ -110,7 +110,7 @@ class HighSchoolApplicationModelTest(TestCase):
         self.assertEqual(self.application.phoneNumber, "+19567801234")
         self.assertEqual(self.application.address, "Brooklyn, NY")
         self.assertEqual(self.application.gender, GENDER[0])
-        self.assertEqual(self.application.date_of_birth, "1995-10-31")
+        self.assertEqual(self.application.date_of_birth, "2005-10-31")
         self.assertEqual(self.application.gpa, 3.88)
         self.assertEqual(self.application.parent_name, "Rakesh Roshan")
         self.assertEqual(self.application.parent_phoneNumber, "+15879879870")
@@ -148,7 +148,7 @@ class HighSchoolApplicationFormTest(TestCase):
             "phoneNumber": "+19567801234",
             "address": "Brooklyn, NY",
             "gender": GENDER[0],
-            "date_of_birth": "1995-10-31",
+            "date_of_birth": "2005-10-31",
             "gpa": 3.88,
             "parent_name": "Rakesh Roshan",
             "parent_phoneNumber": "+15879879870",
@@ -166,7 +166,7 @@ class HighSchoolApplicationFormTest(TestCase):
             "phoneNumber": "9567801234",  # missing country code
             "address": "Brooklyn, NY",
             "gender": GENDER[0],
-            "date_of_birth": "1995-10-31",
+            "date_of_birth": "2005-10-31",
             "gpa": 3.88,
             "parent_name": "Rakesh Roshan",
             "parent_phoneNumber": "+15879879870",
@@ -200,7 +200,7 @@ class HighSchoolApplicationViewTest(TestCase):
             "phoneNumber": "+19567801234",
             "address": "Brooklyn, NY",
             "gender": GENDER[0],
-            "date_of_birth": "1995-10-31",
+            "date_of_birth": "2005-10-31",
             "gpa": 3.88,
             "parent_name": "Rakesh Roshan",
             "parent_phoneNumber": "+15879879870",
@@ -226,7 +226,7 @@ class HighSchoolApplicationViewTest(TestCase):
             "phoneNumber": "+19567801234",
             "address": "Brooklyn, NY",
             "gender": GENDER[0],
-            "date_of_birth": "1995-10-31",
+            "date_of_birth": "2005-10-31",
             "gpa": 4.00,  # changed GPA
             "parent_name": "Rakesh Roshan",
             "parent_phoneNumber": "+15879879870",
@@ -257,7 +257,7 @@ class HighSchoolApplicationViewTest(TestCase):
         url = reverse("dashboard:application:overview", args=[self.application.pk])
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, self.application.application_number)
+        self.assertContains(response, self.application.pk)
 
     def tearDown(self):
         self.application.delete()

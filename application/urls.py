@@ -10,7 +10,7 @@ urlpatterns = [
     ),
     path("apply/", views.new_application, name="new_application"),
     path(
-        "detail/<int:application_id>/apply/",
+        "all_applications/detail/<int:application_id>/apply/",
         views.save_existing_application,
         name="draftExistingApplication",
     ),
