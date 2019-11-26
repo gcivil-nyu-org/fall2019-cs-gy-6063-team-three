@@ -84,7 +84,6 @@ def detail(request, application_id):
         "application": None,
     }
     if user_type != UserType.ADMIN_STAFF:
-        context["user_type"] = UserType.STUDENT
         context["unauth"] = True
         context["application"] = None
         return render(request, "admissions/detail.html", context)

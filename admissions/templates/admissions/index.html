@@ -1,10 +1,10 @@
 {% extends "dashboard/index.html" %}
 {% load static %}
 {% block content %}
-
-    {% if exception %}
-        <p>{{ exception }}</p>
-    {% else %}
+<link rel="stylesheet" type="text/css"
+              href="{% static 'high_schools/css/high_school.css' %}">
+    <div style="width: 100%;">
+        <div class="container-fluid">
         {% if applications %}
             <div class="dropdown" style="text-align: right; line-height: 2.5;"><b>Filter
                 by
@@ -120,5 +120,6 @@
                 {% endblock %}
             {% endif %}
         {% endif %}
-    {% endif %}
+        </div>
+    </div>
 {% endblock %}
