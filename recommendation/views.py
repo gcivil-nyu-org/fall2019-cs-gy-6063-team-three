@@ -46,6 +46,7 @@ def new_recommendation(request):
                 "An email has been sent to the teacher you added with instructions on how to fill out your recommendation!",  # noqa: E501
             )
             return redirect("dashboard:recommendation:new_recommendation")
+        request.session
     else:
         form = RecommendationForm()
     context = {"form": form}
@@ -73,7 +74,8 @@ def recommendation_rating(request, uid1, uid2):
     try:
         teacherRecommendation = Recommendation.objects.get(pk=uid1)
     except (TypeError, ValueError, OverflowError, teacherRecommendation.DoesNotExist):
-        return HttpResponse("Teacher Recommendation Does Not Exist")
+        context = {"empty_list": 1}
+        return render(request, "recommendation/recommendation_rating.html", context)
     if not teacherRecommendation.submitted_date:
         if request.method == "POST":
             form = RecommendationRatingForm(request.POST)
@@ -106,6 +108,7 @@ def recommendation_rating(request, uid1, uid2):
                 teacherRecommendation.rating_analyzing = request.POST.get(
                     "rating_analyzing"
                 )
+                teacherRecommendation.rating_comment = f.rating_comment
                 teacherRecommendation.submitted_date = timezone.now()
                 teacherRecommendation.save()
                 return HttpResponse("Successfully submitted!")
@@ -114,4 +117,5 @@ def recommendation_rating(request, uid1, uid2):
         context = {"form": form, "teacher_recommendation": teacherRecommendation}
         return render(request, "recommendation/recommendation_rating.html", context)
     else:
-        return HttpResponse("You have already completed the recommendation!")
+        context = {"completed": 1}
+        return render(request, "recommendation/recommendation_rating.html", context)

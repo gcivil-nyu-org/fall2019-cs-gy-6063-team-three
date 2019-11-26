@@ -22,7 +22,11 @@
 </div>
 
 <div style="margin-left:20%;height: 90%; margin-bottom: 5%; width:50%; margin-top: 2%">
-    {% if teacher_recommendation %}
+    {% if empty_list %}
+                    {% block empty_list %}
+                        {% include 'recommendation/broken.html' %}
+                    {% endblock %}
+    {% elif teacher_recommendation %}
     <h3>Teacher Recommendation for <u>{{teacher_recommendation.user.first_name}} {{teacher_recommendation.user.last_name}}</u></h3>
     <h4>Name of Reviewer: {{teacher_recommendation.first_name}} {{teacher_recommendation.last_name}}</h4>
     <form action="{% url 'recommendation_rating' teacher_recommendation.pk teacher_recommendation.user.pk %}" method="post" class="form-signup" style="padding-top: 10px;">
@@ -166,24 +170,35 @@
                 </tr>
             </table>
         </div>
+         <div class="rounded bg-secondary" style="height:35px;margin-bottom:10px;margin-top:15px;">
+            <h5 class="p-2">III. Written Evaluation</h5>
+        </div>
+        <div class="form-row">
+            <p>Please include in your comments examples of the applicant's character and potential for success in high school.  </p>
+            {{form.rating_comment}}
+        </div>
         <div class="form-row" style="margin-top:50px;">
                             <div class="form-label-group col-md-6">
                             </div>
                             <div class="form-label-group col-md-6">
-                                <input class="btn btn-lg btn-primary btn-block" type="submit" value="Submit" name="submit"/>
+                                <input class="btn btn-primary" type="submit" value="Submit" name="submit"/>
                             </div>
                         </div>
     </form>
-    {% else %}
+    {% elif completed %}
         <div class="no-app-placeholder">
             <div style="font-size: 18px;">
                 <span class="mb-3" style="font-size: 42px">
-                    <i class="fa-5x far fa-file-alt"></i>
+                    <i class="far fa-check-square fa-5x"></i>
                 </span>
             </div>
                 <p class="mt-5" style="font-size: 18px;">
-                    Teacher Recommendation not yet assigned
+                    The recommendation has been completed already!
                 </p>
+             <a href="{% url 'landingpage:index' %}">
+                <button class="btn btn-lg btn-primary mt-4 mb-4">Home
+                </button>
+            </a>
         </div>
     {% endif %}
 </div>
