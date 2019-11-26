@@ -162,7 +162,6 @@
                 url: url,
                 type: "POST",
                 success: function (data) {
-                    console.log("success " + data);
                     let i_tag = school_fav_btn.find("i");
                     i_tag.removeClass("fa-heart-o");
                     i_tag.removeClass("fa-heart");
@@ -175,7 +174,6 @@
                     }
                 },
                 error: function (data) {
-                    console.log("error")
                 }
             });
         });
