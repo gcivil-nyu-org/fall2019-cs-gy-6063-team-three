@@ -133,7 +133,10 @@ class AdmissionsIndexViewTest(TestCase):
         response = self.client.get(url)
         self.assertEquals(response.status_code, 200)
         # Check if application number created is available in the rendered page
-        self.assertContains(response, "No applications are available.")
+        self.assertContains(
+            response,
+            "Whoa! Something seems wrong. You're trying to access " "this page ",
+        )
 
 
 class AdmissionsDetailViewTest(TestCase):
@@ -153,7 +156,7 @@ class AdmissionsDetailViewTest(TestCase):
         response = self.client.post(url)
         self.assertEqual(response.status_code, 200)
         self.assertContains(
-            response, "The application you are looking for doesn't exist."
+            response, "Oops! We couldn't find what you're looking for..."
         )
 
     def test_valid_application_no_admin_login(self):

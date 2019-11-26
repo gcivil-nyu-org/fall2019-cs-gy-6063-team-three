@@ -86,11 +86,19 @@ def detail(request, application_id):
     if user_type != UserType.ADMIN_STAFF:
         context["user_type"] = UserType.STUDENT
         context["unauth"] = True
+        context["application"] = None
         return render(request, "admissions/detail.html", context)
     try:
         application = HighSchoolApplication.objects.get(id=application_id)
     except HighSchoolApplication.DoesNotExist:
         application = None
+    if application:
+        username = request.session.get("username", None)
+        admin_user = Admin_Staff.objects.get(username=username)
+        if application.school != admin_user.school:
+            context["unauth"] = True
+            context["application"] = None
+            return render(request, "admissions/detail.html", context)
     context["application"] = application
     return render(request, "admissions/detail.html", context)
 

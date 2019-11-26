@@ -16,7 +16,7 @@
 {% endblock %}
 {% block empty_list %}
     {#    for empty applications list #}
-    {% if not applications %}
+    {% if not unauth and not applications %}
         <div class="no-school-placeholder">
             <div style="font-size: 18px;">
                     <span class="mb-3" style="font-size: 48px">
