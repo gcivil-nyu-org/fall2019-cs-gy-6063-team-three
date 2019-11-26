@@ -1,0 +1,30 @@
+{% include 'register/base_emails.html' %}
+{% block data %}
+    <div class="card"
+         style="margin-top: 3em; padding: 2em; width: 100%; background-color: #F9F7F3">
+        <div class="card-header"
+             style="background-color: #CDE6EC; width: fit-content; margin: auto;"><b>
+            {% if user_type == constant_ut_student %}
+                Thank you for registering with OneApply! Please confirm your email
+                address
+                to complete registration.
+            {% else %}
+                An email has been sent to the supervisor contact you have provided. Once
+                they are able to verify your employment then you will receive a separate
+                email with instructions on activating your account
+            {% endif %}
+        </b>
+        </div>
+        <div class="card-body" style="margin: 0 auto; padding: 1em;">
+            <div style="width:100%;">
+                {% if user_type == constant_ut_student %}
+                    <a href="{% url 'logIn:login_user' user_type %}"
+                       class="btn btn-primary">Back to Login</a>
+                {% else %}
+                    <a href="{% url 'landingpage:index' %}"
+                       class="btn btn-primary">Back to Home</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
