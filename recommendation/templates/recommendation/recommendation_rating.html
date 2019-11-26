@@ -29,7 +29,7 @@
     {% elif teacher_recommendation %}
     <h3>Teacher Recommendation for <u>{{teacher_recommendation.user.first_name}} {{teacher_recommendation.user.last_name}}</u></h3>
     <h4>Name of Reviewer: {{teacher_recommendation.first_name}} {{teacher_recommendation.last_name}}</h4>
-    <form action="{% url 'recommendation_rating' teacher_recommendation.pk teacher_recommendation.user.pk %}" method="post" class="form-signup" style="padding-top: 10px;">
+    <form action="{% url 'recommendation_rating' teacher_recommendation.pk %}" method="post" class="form-signup" style="padding-top: 10px;">
         {% csrf_token %}
         <div class="rounded bg-secondary" style="height:35px;margin-bottom:10px;">
             <h5 class="p-2">I. Knowledge of Applicant</h5>
@@ -185,6 +185,21 @@
                             </div>
                         </div>
     </form>
+    {% elif submitted %}
+        <div class="no-app-placeholder">
+            <div style="font-size: 18px;">
+                <span class="mb-3" style="font-size: 42px">
+                    <i class="fas fa-check fa-5x"></i>
+                </span>
+            </div>
+                <p class="mt-5" style="font-size: 18px;">
+                    Thank you for submitting the recommendation!
+                </p>
+             <a href="{% url 'landingpage:index' %}">
+                <button class="btn btn-lg btn-primary mt-4 mb-4">Home
+                </button>
+            </a>
+        </div>
     {% elif completed %}
         <div class="no-app-placeholder">
             <div style="font-size: 18px;">

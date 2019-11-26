@@ -147,7 +147,7 @@ class RecommendationViewTest(TestCase):
     def test_valid_add_rating(self):
         data = {"known_length": 1, "rating_comment": "He is smart"}
         url = reverse(
-            "recommendation_rating", args=[self.recommendation.pk, self.student.pk]
+            "recommendation_rating", args=[self.recommendation.pk]
         )
         response = self.client.post(url, data=data)
         self.assertEqual(response.status_code, 200)
@@ -155,7 +155,7 @@ class RecommendationViewTest(TestCase):
     def test_invalid_add_rating(self):
         data = {"known_length": "HI", "rating_comment": "He is smart"}
         url = reverse(
-            "recommendation_rating", args=[self.recommendation.pk, self.student.pk]
+            "recommendation_rating", args=[self.recommendation.pk]
         )
         response = self.client.post(url, data=data)
         self.assertEqual(response.status_code, 200)
@@ -164,7 +164,7 @@ class RecommendationViewTest(TestCase):
         data = {"known_length": 1, "rating_comment": "He is smart"}
         url = reverse(
             "recommendation_rating",
-            args=[self.recommendation.pk + 1000, self.student.pk + 1000],
+            args=[self.recommendation.pk + 1000],
         )
         response = self.client.post(url, data=data)
         self.assertEqual(response.status_code, 200)
@@ -172,7 +172,7 @@ class RecommendationViewTest(TestCase):
     def test_already_completed_rating(self):
         self.recommendation.submitted_date = timezone.now()
         url = reverse(
-            "recommendation_rating", args=[self.recommendation.pk, self.student.pk]
+            "recommendation_rating", args=[self.recommendation.pk]
         )
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
