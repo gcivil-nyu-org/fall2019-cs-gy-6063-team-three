@@ -1,7 +1,11 @@
 {% block app_list %}
 <div style="height: 90%; margin-bottom: 5%; ">
     <div class="list-group" style="margin-top:10px;">
-        {% if applications %}
+        {% if invalid_url_app %}
+            <div class="d-flex w-100 justify-content-between mb-2">
+                <h4 class="mb-1" style="width: 75%">{{ invalid_url_app }}</h4>
+            </div>
+        {% elif applications %}
             {% for app in applications %}
                 {% if selected_app and selected_app.pk == app.pk %}
                     <a href="{% url 'dashboard:application:overview' app.pk %}"
@@ -21,7 +25,7 @@
                                 {% if app.is_draft %}
                                     Draft
                                 {% elif app.application_status == 2 %}
-                                    Pending
+                                    Submitted
                                 {% elif app.application_status == 1 %}
                                     Accepted
                                 {% elif app.application_status == 0 %}

@@ -42,22 +42,20 @@
                 </div>
             </div>
         </div>
+        <div class="toast" style="position: absolute; top: 15%; right: 43%;">
+            <div class="toast-header">
+                <strong class="mr-auto text-primary">Info</strong>
+                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;
+                </button>
+            </div>
+            <div class="toast-body">
+                <span></span>
+            </div>
+        </div>
     </div>
     </body>
     <script>
-        {#         for school list filter#}
-        $(".filter-btn").click(function (e) {
-            let high_school_div = $(".high-school-filter-div");
-            let is_div_visible = high_school_div.hasClass("active");
-            if (!is_div_visible) {
-                high_school_div.addClass("active");
-                high_school_div.show()
-            } else {
-                high_school_div.removeClass("active");
-                high_school_div.hide()
-            }
-        });
-
+        let should_reset_filters = true;
         {# for restricting page numbers in pagination #}
 
         function getPageList(totalPages, page, maxLength) {
@@ -151,14 +149,33 @@
         {#to toggle fav high school for user#}
         $(".school-fav-btn").click(function (e) {
             e.preventDefault();
+            let school_fav_btn = $(this);
             let school_dbn = $(this).attr("dbn_value");
             let is_fav = parseInt($(this).attr("is_fav"));
             is_fav = is_fav === 1 ? 0 : 1;
-            $(this).attr("is_fav", is_fav);
+            school_fav_btn.attr("is_fav", is_fav);
             let url = "{% url 'dashboard:high_school:toggle_fav' 'school_dbn' '0000' %}";
             url = url.replace('school_dbn', school_dbn);
             url = url.replace('0000', "" + is_fav);
-            window.location.href = url;
+            let is_fav_on = "{{ request.GET.is_fav_on }}";
+            $.ajax({
+                url: url,
+                type: "POST",
+                success: function (data) {
+                    let i_tag = school_fav_btn.find("i");
+                    i_tag.removeClass("fa-heart-o");
+                    i_tag.removeClass("fa-heart");
+                    i_tag.addClass(is_fav ? "fa-heart" : "fa-heart-o");
+                    if (is_fav_on) {
+                        show_toast("The page will reload in 5 seconds", true);
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 5000);
+                    }
+                },
+                error: function (data) {
+                }
+            });
         });
         {# school overview program card functions #}
         let toggle_program_icon = function (show_plus) {
@@ -184,13 +201,93 @@
         $('.collapse').on('show.bs.collapse', function () {
             toggle_program_icon(false)
         });
-        let toggle_selected_program = function(selected_option){
-           $(".program-desc-div").hide();
-           $("#"+selected_option+"_div").show()
-        };
         $('#program-select').on('change', function () {
-            toggle_selected_program($(this).val())
-        })
+            let selected_option = $(this).val();
+            $(".program-desc-div").hide();
+            $("#" + selected_option + "_div").show();
+        });
+        let show_toast = function (message) {
+            $(".toast-body span").text(message);
+            $('.toast').css({'opacity': 1});
+            setTimeout(function () {
+                $('.toast').css({'opacity': 0});
+            }, 3000)
+        };
+        {#         for school list filter#}
+        let toggle_filter_div = function (show) {
+            let high_school_div = $(".high-school-filter-div");
+            if (show) {
+                high_school_div.addClass("active");
+                high_school_div.show();
+                $(".filter-info-div").hide();
+                $(".filter-action-div").show();
+            } else {
+                high_school_div.removeClass("active");
+                high_school_div.hide();
+                $(".filter-action-div").hide();
+                $(".filter-info-div").show();
+            }
+        };
+        $(".filter-info-div").click(function (e) {
+            toggle_filter_div(true);
+        });
+        let reset_filters = function () {
+            if (should_reset_filters) {
+                $(".high-school-filter-div .form-group input[type=checkbox]:checked").each(function () {
+                    $(this).prop("checked", false);
+                });
+                {% for boro_filter in search_filter_params.borough %}
+                    $(".form-group #{{ boro_filter }}").prop("checked", true);
+                {% endfor %}
+            }
+        };
+        $(".filter-action").click(function () {
+            let elem_class = $(this).attr("class");
+            if (elem_class.indexOf("apply-filters") !== -1) {
+                should_reset_filters = false;
+                $("#search_filter_form").submit();
+            } else {
+                reset_filters();
+            }
+            toggle_filter_div(false);
+        });
+        $(function () {
+            let search_form_submit = document.search_filter_form.submit;
+            document.search_filter_form.submit = function () {
+                reset_filters();
+                search_form_submit.apply(document.search_filter_form);
+                return false;
+            };
+        });
+        $('#search_filter_form').keydown(function (e) {
+            let key = e.which;
+            if (key === 13) {
+                e.preventDefault();
+                $('#search_filter_form').submit();
+                return false;
+            }
+            return true;
+        });
+        $(".high-school-filter-div .form-group input[type=checkbox]").click(function () {
+            let _id = $(this).attr("id");
+            let checked_state = $(this).prop("checked");
+            if (_id === "loc_all") {
+                $(".high-school-filter-div .form-group input[type=checkbox]:checked").each(function () {
+                    $(this).prop("checked", false);
+                });
+                $(this).prop("checked", true);
+            } else {
+                if (checked_state) {
+                    $(".all_boroughs input[type=checkbox]").prop("checked", false);
+                    $(this).prop("checked", true)
+                } else {
+                    let checked_count = $(".individual_boroughs input[type=checkbox]:checked").length;
+                    if (checked_count === 0) {
+                        $(".all_boroughs input[type=checkbox]").prop("checked", true);
+                    }
+                }
+            }
+        });
     </script>
     </html>
 

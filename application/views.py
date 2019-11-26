@@ -10,18 +10,25 @@ from high_school.models import Program
 from OneApply.constants import UserType
 
 
+APPLICATION_COUNT = 10
+
+
 def new_application(request):
-    user_type = request.session.get("user_type", None)
-    username = request.session.get("username", None)
-    if (
-        not request.session.get("is_login", None)
-        or not username
-        or user_type != UserType.STUDENT
-    ):
+    username = check_current_session(request)
+    if not username:
         return redirect("landingpage:index")
     try:
+        error_count_app = None
         user = Student.objects.get(username=username)
-        if request.method == "POST":
+        if (
+            HighSchoolApplication.objects.filter(user=user.pk, is_draft=False).count()
+            == APPLICATION_COUNT
+        ):
+            error_count_app = (
+                "You can only submit " + str(APPLICATION_COUNT) + " applications"
+            )
+            form = None
+        elif request.method == "POST":
             form = HighSchoolApplicationForm(request.POST)
             if form.is_valid():
                 f = form.save(commit=False)
@@ -50,27 +57,26 @@ def new_application(request):
                     "email_address": user.email_address,
                 }
             )
-        context = {"form": form}
+        context = {"form": form, "error_count_app": error_count_app}
     except ValueError as e:
         context = {"form": form, "program_error": e}
     return render(request, "application/application-form.html", context)
 
 
 def save_existing_application(request, application_id):
-    user_type = request.session.get("user_type", None)
-    username = request.session.get("username", None)
-    if (
-        not request.session.get("is_login", None)
-        or not username
-        or user_type != UserType.STUDENT
-    ):
+    username = check_current_session(request)
+    if not username:
         return redirect("landingpage:index")
     if request.method == "POST":
-        f = HighSchoolApplication.objects.get(pk=application_id)
+        try:
+            f = HighSchoolApplication.objects.get(pk=application_id)
+        except Exception:
+            context = {"invalid_url_app": "Application not found."}
+            return render(request, "application/index.html", context)
         new_req = request.POST.copy()
         new_req["school"] = f.school.pk
         new_req["program"] = f.program.pk
-        form = HighSchoolApplicationForm(new_req)
+        form = HighSchoolApplicationForm(new_req, disable=True)
         if form.is_valid():
             user = Student.objects.get(username=username)
             form = form.save(commit=False)
@@ -100,34 +106,33 @@ def save_existing_application(request, application_id):
             )
     else:
         form = HighSchoolApplicationForm()
-    context = {"form": form, "application_id": application_id}
+        f = None
+    context = {"form": form, "application_id": application_id, "selected_app": f}
     return render(request, "application/index.html", context)
 
 
 def all_applications(request):
-    user_type = request.session.get("user_type", None)
-    username = request.session.get("username", None)
-    if (
-        not request.session.get("is_login", None)
-        or not username
-        or user_type != UserType.STUDENT
-    ):
+    username = check_current_session(request)
+    if not username:
         return redirect("landingpage:index")
     user = Student.objects.get(username=username)
-    context = {"applications": HighSchoolApplication.objects.filter(user_id=user.pk)}
+    context = {
+        "applications": HighSchoolApplication.objects.filter(user_id=user.pk).order_by(
+            "-is_draft", "-submitted_date"
+        )
+    }
     return render(request, "application/index.html", context)
 
 
 def detail(request, application_id):
-    user_type = request.session.get("user_type", None)
-    username = request.session.get("username", None)
-    if (
-        not request.session.get("is_login", None)
-        or not username
-        or user_type != UserType.STUDENT
-    ):
+    username = check_current_session(request)
+    if not username:
         return redirect("landingpage:index")
-    application = HighSchoolApplication.objects.get(pk=application_id)
+    try:
+        application = HighSchoolApplication.objects.get(pk=application_id)
+    except Exception:
+        context = {"invalid_url_app": "Application not found."}
+        return render(request, "application/index.html", context)
     user = Student.objects.get(username=username)
     data = {
         "pk": application.pk,
@@ -155,7 +160,6 @@ def detail(request, application_id):
         "selected_app": application,
         "form": form,
     }
-    # TODO redirect to index
     return render(request, "application/index.html", context)
 
 
@@ -170,3 +174,11 @@ def load_programs(request):
     else:
         programs = None
     return render(request, "application/loadPrograms.html", {"programs": programs})
+
+
+def check_current_session(request):
+    user_type = request.session.get("user_type", None)
+    username = request.session.get("username", None)
+    if not request.session.get("is_login", None) or user_type != UserType.STUDENT:
+        username = None
+    return username
