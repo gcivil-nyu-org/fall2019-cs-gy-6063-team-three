@@ -1,19 +1,30 @@
 {% block school_overview %}
+    {% load hs_filters %}
     {% if selected_school %}
         <div class="top-header" style="background: gray">
             <div class="right-pane-container">
                 <h5 class="mb-3" style="font-size: 28px;">{{ selected_school.school_name }}</h5>
                 <h5 class="mb-2">{{ selected_school.neighborhood }}</h5>
-                <h6 class="mb-3">{{ selected_school.location|slice:":-23" }}</h6>
+                <h6 class="mb-3">{{ selected_school.location|split_string_single:"($index0" }}</h6>
                 <h6 class="mb-2">{{ selected_school.total_students }} students</h6>
-                <h6 class="mb-3">
-                    <span style="font-size: 14px; padding: 4px;">
-                        <i class="fa fa-graduation-cap mr-2"></i>
-                    </span>
-                    {% widthratio selected_school.graduation_rate 1 100 %} %</h6>
+                {% if selected_school.graduation_rate != 'N/A' %}
+                    <h6 class="mb-3">
+                        <span style="font-size: 14px; padding: 4px;">
+                            <i class="fa fa-graduation-cap mr-2"></i>
+                        </span>
+                        {% widthratio selected_school.graduation_rate 1 100 %} %</h6>
+                {% else %}
+                    <h6 class="mb-3">Graduation rate unavailable</h6>
+                {% endif %}
                 <div class="d-flex w-100 justify-content-between" style="font-size: 16px;">
-                    <a href="https://www.{{ selected_school.website }}" target="_blank"
-                       style="font-size: 16px;">Website</a>
+                    <div>
+                        <a class="pr-2" href="https://www.{{ selected_school.website }}"
+                           target="_blank"
+                           style="font-size: 16px; border-right: 2px solid black">Website</a>
+                        <a class="pl-2"
+                           href="https://www.google.com/maps/search/?api=1&query={{ selected_school.school_name|urlencode }}%20{{ selected_school.neighborhood|urlencode }}"
+                           target="_blank">Map</a>
+                    </div>
                     <span style="width: 30%; text-align: right;
                     vertical-align: middle; font-size: 16px;">
                                     <i class="fa fa-clock-o"></i>

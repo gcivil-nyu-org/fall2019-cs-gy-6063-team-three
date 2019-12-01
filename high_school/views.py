@@ -3,6 +3,7 @@ from django.views.generic import ListView
 from sodapy import Socrata
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from django.db.models import Q
 
 from django.conf import settings
 from OneApply.constants import ApiInfo, UserType
@@ -232,12 +233,15 @@ class HighSchoolListView(ListView):
         if self.query:
             if borough_filter and high_schools:
                 high_schools = high_schools.filter(
-                    school_name__icontains=self.query, boro__in=borough_filter
-                )  # noqa: E501
+                    (Q(school_name__icontains=self.query) | Q(location__icontains=self.query) |
+                    Q(program__name__icontains=self.query))
+                    & Q(boro__in=borough_filter)
+                ).distinct()
             elif high_schools:
                 high_schools = high_schools.filter(
-                    school_name__icontains=self.query
-                ).order_by("school_name")
+                    (Q(school_name__icontains=self.query) | Q(location__icontains=self.query) |
+                     Q(program__name__icontains=self.query))
+                ).distinct().order_by("school_name")
         elif borough_filter and high_schools:
             high_schools = high_schools.filter(boro__in=borough_filter)
 
