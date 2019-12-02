@@ -14,7 +14,7 @@ def get_user(request):
     context = {}
     is_login = request.session.get("is_login", None)
     if not is_login:
-        return redirect("landingpage:index")
+        return False, None, None, None
     user_name = request.session.get("username", None)
     user_type = request.session.get("user_type", None)
     is_valid_user = False
@@ -58,29 +58,27 @@ class HighSchoolListView(ListView):
     def get(self, *args, **kwargs):
         if not self.request.session.get("is_login", None):
             return redirect("landingpage:index")
+        is_valid_user, temp_user, temp_user_type, temp_context = get_user(self.request)
+        if not is_valid_user:
+            self.user = None
+            return redirect("landingpage:index")
+        else:
+            self.user = temp_user
+            self.user_type = temp_user_type
         return super(HighSchoolListView, self).get(*args, **kwargs)
 
     def get_queryset(self):
         if "dbn" in self.kwargs:
             self.dbn = self.kwargs["dbn"]
         self.search_filter_params = self.setup_params()
-        is_valid_user, temp_user, temp_user_type, temp_context = get_user(self.request)
-        if not is_valid_user:
-            self.user = None
-        else:
-            self.user = temp_user
-            self.user_type = temp_user_type
         return self.get_high_schools()
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(HighSchoolListView, self).get_context_data(**kwargs)
 
-        if not self.user:
-            context["unauth"] = True
-            context["high_schools"] = None
-            context["selected_school"] = None
-            context["empty_list"] = None
-        else:
+        # a valid user should always exist at this point in the view lifecycle
+        # validation check for valid user happens in 'get'
+        if self.user:
             context["unauth"] = False
             context["empty_list"] = 0
             if not context["high_schools"]:
@@ -122,15 +120,25 @@ class HighSchoolListView(ListView):
         if self.query:
             if borough_filter and high_schools:
                 high_schools = high_schools.filter(
-                    (Q(school_name__icontains=self.query) | Q(location__icontains=self.query) |
-                    Q(program__name__icontains=self.query))
+                    (
+                        Q(school_name__icontains=self.query)
+                        | Q(location__icontains=self.query)
+                        | Q(program__name__icontains=self.query)
+                    )
                     & Q(boro__in=borough_filter)
                 ).distinct()
             elif high_schools:
-                high_schools = high_schools.filter(
-                    (Q(school_name__icontains=self.query) | Q(location__icontains=self.query) |
-                     Q(program__name__icontains=self.query))
-                ).distinct().order_by("school_name")
+                high_schools = (
+                    high_schools.filter(
+                        (
+                            Q(school_name__icontains=self.query)
+                            | Q(location__icontains=self.query)
+                            | Q(program__name__icontains=self.query)
+                        )
+                    )
+                    .distinct()
+                    .order_by("school_name")
+                )
         elif borough_filter and high_schools:
             high_schools = high_schools.filter(boro__in=borough_filter)
 

@@ -161,19 +161,25 @@
             $.ajax({
                 url: url,
                 type: "POST",
+                headers:{"X-CSRFToken": $('[name="csrfmiddlewaretoken"]').attr('value')},
                 success: function (data) {
-                    let i_tag = school_fav_btn.find("i");
-                    i_tag.removeClass("fa-heart-o");
-                    i_tag.removeClass("fa-heart");
-                    i_tag.addClass(is_fav ? "fa-heart" : "fa-heart-o");
-                    if (is_fav_on) {
-                        show_toast("The page will reload in 5 seconds", true);
-                        setTimeout(function () {
-                            window.location.reload();
-                        }, 5000);
+                    if(data.status === 403){
+                        window.location.href = "{% url 'dashboard:logout' %}";
+                    }else if(data.status === 200) {
+                        let i_tag = school_fav_btn.find("i");
+                        i_tag.removeClass("fa-heart-o");
+                        i_tag.removeClass("fa-heart");
+                        i_tag.addClass(is_fav ? "fa-heart" : "fa-heart-o");
+                        if (is_fav_on) {
+                            show_toast("The page will reload in 5 seconds", true);
+                            setTimeout(function () {
+                                window.location.reload();
+                            }, 5000);
+                        }
                     }
                 },
                 error: function (data) {
+                    console.log(data)
                 }
             });
         });

@@ -25,9 +25,7 @@ class HighSchoolAdmin(admin.ModelAdmin):
         urls = super().get_urls()
         # define custom urls
         my_urls = [
-            url(r'^save_hs/$',
-                wrap(self.save_hs_view),
-                name="save_high_schools"),
+            url(r"^save_hs/$", wrap(self.save_hs_view), name="save_high_schools")
         ]
         return my_urls + urls
 
@@ -52,7 +50,7 @@ class HighSchoolAdmin(admin.ModelAdmin):
                     context["response"] += "\n" + save_programs(limit)
         else:
             form = SaveHighSchoolsForm()
-        context['form'] = form
+        context["form"] = form
         return TemplateResponse(request, "high_school/save_high_schools.html", context)
 
 
@@ -73,8 +71,8 @@ def save_high_schools(limit):
             if serializer.initial_data[x]["start_time"]:
                 am_loc = serializer.initial_data[x]["start_time"].find("am")
                 serializer.initial_data[x]["start_time"] = serializer.initial_data[x][
-                                                               "start_time"
-                                                           ][: am_loc + 2]
+                    "start_time"
+                ][: am_loc + 2]
         except KeyError:
             # if there is no start time provided in the info set it to N/A
             serializer.initial_data[x]["start_time"] = "N/A"
@@ -85,8 +83,8 @@ def save_high_schools(limit):
             if serializer.initial_data[x]["end_time"]:
                 pm_loc = serializer.initial_data[x]["end_time"].find("pm")
                 serializer.initial_data[x]["end_time"] = serializer.initial_data[x][
-                                                             "end_time"
-                                                         ][: pm_loc + 2]
+                    "end_time"
+                ][: pm_loc + 2]
         except KeyError:
             # if there is no end time provided in the info set it to N/A
             serializer.initial_data[x]["end_time"] = "N/A"
@@ -114,8 +112,8 @@ def parse_result(result):
         description = "prgdesc" + str(i)
         offer_rate = "offer_rate" + str(i)
         if (
-                result.get(code)
-                and Program.objects.filter(code=result.get(code)).count() == 0
+            result.get(code)
+            and Program.objects.filter(code=result.get(code)).count() == 0
         ):
             # This result is a valid program, and not already in DB save it.
             program = Program()
