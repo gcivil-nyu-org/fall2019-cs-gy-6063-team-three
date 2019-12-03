@@ -1,5 +1,5 @@
-from django.forms import ModelForm
-from .models import Recommendation
+from django.forms import ModelForm, ValidationError
+from .models import Recommendation, Student
 
 
 class RecommendationForm(ModelForm):
@@ -10,6 +10,12 @@ class RecommendationForm(ModelForm):
             field.widget.attrs.update(
                 {"class": "form-control", "placeholder": field.label}
             )
+
+    def clean_email_address(self):
+        email = self.cleaned_data["email_address"]
+        if Student.objects.filter(email_address=email).exists():
+            raise ValidationError("Recommendation email cannot belong to a student")
+        return email
 
     class Meta:
         model = Recommendation
