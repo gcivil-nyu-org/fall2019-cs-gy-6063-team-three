@@ -9,7 +9,7 @@
                         <span>
                             <input class="search-input" type='text' name='query'
                                    {% if search_filter_params.query %}value="{{ request.GET.query }}"
-                                   {% endif %} placeholder="Search for your school">
+                                   {% endif %} placeholder="Search for a school by its name, programs or address ">
                             <span onclick="search_filter_form.submit();" class="search-btn">
                                 <i class="fa fa-search mr-2"></i>
                             </span>
