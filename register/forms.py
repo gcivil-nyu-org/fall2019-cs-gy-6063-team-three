@@ -112,14 +112,6 @@ class AdminStaffRegisterForm(ModelForm):
             raise ValidationError("Username already in use")
         return username
 
-    def clean_supervisor_email(self):
-        supervisor_email = self.cleaned_data["supervisor_email"]
-        email = self.cleaned_data["email_address"]
-        if supervisor_email and email:
-            if supervisor_email == email:
-                raise ValidationError("Supervisor email can not be the same as yours")
-        return supervisor_email
-
     def clean_input_password(self):
         input_password = self.cleaned_data["input_password"]
         pattern = re.compile(REG_EX)
@@ -149,13 +141,11 @@ class AdminStaffRegisterForm(ModelForm):
             "last_name",
             "email_address",
             "school",
-            "supervisor_email",
             "input_password",
             "confirm_password",
         )
         exclude = ["password"]
         labels = {
-            "supervisor_email": _("Supervisor's Email"),
             "input_password": _("Password"),
             "confirm_password": _("Password (once more please)"),
         }

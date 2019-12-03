@@ -92,18 +92,11 @@
                 {% elif user_type == constant_ut_adminStaff %}
                     {#                 school and supervisor's email block - Admission staff user #}
                     <div class="form-row">
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             {{ form.school }}
                             <label class="mr-sm-2 sr-only form-label-group" for={{ form.school.id_for_label }}>{{ form.school.label }}</label>
                             {% if form.school.help_text %}
                                 <p class="help">{{ form.school.help_text|safe }}</p>
-                            {% endif %}
-                        </div>
-                        <div class="form-label-group col-md-6">
-                            {{ form.supervisor_email }}
-                            <label for={{ form.supervisor_email.id_for_label }}>{{ form.supervisor_email.label }}</label>
-                            {% if form.supervisor_email.errors %}
-                                {{ form.supervisor_email.errors }}
                             {% endif %}
                         </div>
                     </div>

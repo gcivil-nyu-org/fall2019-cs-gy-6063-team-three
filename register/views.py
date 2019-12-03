@@ -60,7 +60,7 @@ def register_user(request, user_type):
                         "token": account_activation_token.make_token(f),
                     },
                 )
-                to_supervisor = form.cleaned_data["supervisor_email"]
+                to_supervisor = f.school.school_email
                 email = EmailMessage(
                     supervisor_mail_subject, supervisor_message, to=[to_supervisor]
                 )
