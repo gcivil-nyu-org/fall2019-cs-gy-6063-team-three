@@ -109,3 +109,9 @@ ul.errorlist {
     text-align: center;
     border-radius: 3px;
 }
+
+.radio{
+    list-style-type: none;
+    white-space:nowrap;
+    display: inline-block;
+}

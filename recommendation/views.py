@@ -76,32 +76,16 @@ def recommendation_rating(request, uid1):
             if form.is_valid():
                 f = form.save(commit=False)
                 teacherRecommendation.known_length = f.known_length
-                teacherRecommendation.known_strength = request.POST.get(
-                    "known_strength"
-                )
-                teacherRecommendation.known_location = request.POST.get(
-                    "known_location"
-                )
-                teacherRecommendation.rating_concepts = request.POST.get(
-                    "rating_concepts"
-                )
-                teacherRecommendation.rating_creativity = request.POST.get(
-                    "rating_creativity"
-                )
-                teacherRecommendation.rating_mathematical = request.POST.get(
-                    "rating_mathematical"
-                )
-                teacherRecommendation.rating_written = request.POST.get(
-                    "rating_written"
-                )
-                teacherRecommendation.rating_oral = request.POST.get("rating_oral")
-                teacherRecommendation.rating_goals = request.POST.get("rating_goals")
-                teacherRecommendation.rating_socialization = request.POST.get(
-                    "rating_socialization"
-                )
-                teacherRecommendation.rating_analyzing = request.POST.get(
-                    "rating_analyzing"
-                )
+                teacherRecommendation.known_strength = f.known_strength
+                teacherRecommendation.known_location = f.known_location
+                teacherRecommendation.rating_concepts = f.rating_concepts
+                teacherRecommendation.rating_creativity = f.rating_creativity
+                teacherRecommendation.rating_mathematical = f.rating_mathematical
+                teacherRecommendation.rating_written = f.rating_written
+                teacherRecommendation.rating_oral = f.rating_oral
+                teacherRecommendation.rating_goals = f.rating_goals
+                teacherRecommendation.rating_socialization = f.rating_socialization
+                teacherRecommendation.rating_analyzing = f.rating_analyzing
                 teacherRecommendation.rating_comment = f.rating_comment
                 teacherRecommendation.submitted_date = timezone.now()
                 teacherRecommendation.save()
