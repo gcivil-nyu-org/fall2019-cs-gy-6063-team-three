@@ -15,7 +15,9 @@ class RecommendationForm(ModelForm):
     def clean_email_address(self):
         email = self.cleaned_data["email_address"]
         if Student.objects.filter(email_address=email).exists():
-            raise ValidationError("Recommendation email cannot belong to a student")
+            raise ValidationError(
+                "Your recommender should not be a student, please provide a valid teacher/mentor's email to proceed."  # noqa: E501
+            )
         return email
 
     class Meta:
