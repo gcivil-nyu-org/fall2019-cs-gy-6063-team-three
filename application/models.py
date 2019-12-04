@@ -3,13 +3,26 @@ from django.core import validators
 from django.core.validators import MinValueValidator, MaxValueValidator
 from decimal import Decimal
 from phonenumber_field.modelfields import PhoneNumberField
+from django.core.exceptions import ValidationError
+from datetime import date
+
 
 from register.models import Student
 from high_school.models import HighSchool, Program
 
 
 GENDER = [("", "Gender"), ("M", "Male"), ("F", "Female")]
-APPLICATION_STATUS = ["Rejected", "Accepted", "Submitted"]
+APPLICATION_STATUS = ["Rejected", "Accepted", "Submitted", "Withdrawn"]
+
+
+def validate_age(dob):
+    if dob is not None:
+        today = date.today()
+        age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
+        if age < 11 or age > 15:
+            raise ValidationError(
+                "Age should be between 11 to 15 years", params={"dob": dob}
+            )
 
 
 class HighSchoolApplication(models.Model):
@@ -25,7 +38,9 @@ class HighSchoolApplication(models.Model):
     phoneNumber = PhoneNumberField(verbose_name="Phone Number")
     address = models.CharField(max_length=100, verbose_name="Address")
     gender = models.CharField(max_length=15, verbose_name="Gender")
-    date_of_birth = models.DateField(verbose_name="Date of Birth")
+    date_of_birth = models.DateField(
+        verbose_name="Date of Birth", validators=[validate_age]
+    )
     gpa = models.DecimalField(
         max_digits=3,
         decimal_places=2,
@@ -44,9 +59,11 @@ class HighSchoolApplication(models.Model):
         on_delete=models.CASCADE,
         related_name="app_school",
         verbose_name="School",
+        blank=True,
+        null=True,
     )
     program = models.ForeignKey(
-        Program, on_delete=models.CASCADE, verbose_name="Program"
+        Program, on_delete=models.CASCADE, verbose_name="Program", blank=True, null=True
     )
     is_draft = models.BooleanField(default=True)
     submitted_date = models.DateTimeField(verbose_name="Submitted")
@@ -63,9 +80,9 @@ class HighSchoolApplication(models.Model):
                         value = [i[1] for i in GENDER if i[0] == self.gender][0]
                     except Exception:
                         value = field.value_from_object(self)
-                elif field.name == "school":
+                elif field.name.startswith("school"):
                     value = str(self.school)
-                elif field.name == "program":
+                elif field.name.startswith("program"):
                     value = str(self.program)
                 elif field.name == "application_status":
                     value = APPLICATION_STATUS[self.application_status]

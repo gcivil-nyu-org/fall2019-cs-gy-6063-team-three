@@ -209,7 +209,7 @@ class HighSchoolApplicationViewTest(TestCase):
         }
         url = reverse("dashboard:application:new_application")
         response = self.client.post(url, data=data)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
         self.assertIsNotNone(
             HighSchoolApplication.objects.get(
                 application_number=generate_application_number(
