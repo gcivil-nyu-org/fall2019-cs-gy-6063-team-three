@@ -116,4 +116,12 @@ class HighSchoolApplicationForm(ModelForm):
             "gpa": forms.NumberInput(
                 attrs={"type": "number", "max": 4.00, "min": 0.00, "step": 0.01}
             ),
+            "email_address": forms.EmailInput(
+                attrs={
+                    "type": "email",
+                    "pattern": "[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,}$",
+                    "title": "Invalid email",
+                    "placeholder": "student@university.edu",
+                }
+            ),
         }
