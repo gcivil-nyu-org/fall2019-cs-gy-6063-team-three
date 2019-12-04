@@ -24,6 +24,8 @@
                                 {{ app.application_number }} <br/>
                                 {% if app.is_draft %}
                                     Draft
+                                {% elif app.application_status == 3 %}
+                                    Withdrawn
                                 {% elif app.application_status == 2 %}
                                     Submitted
                                 {% elif app.application_status == 1 %}

@@ -8,6 +8,8 @@
 <div style="margin-left:20%; height: 90%; margin-bottom: 5%; width:50%; margin-top: 2%;">
     {% if error_count_app %}
         <h4 class="text-danger" style="font-weight: bold">{{ error_count_app }}</h4>
+    {% elif error_apply %}
+        <h4 class="text-danger" style="font-weight: bold">{{ error_apply }}</h4>
     {% else %}
     <h2>High School Application Form</h2>
     <form action="{% url 'dashboard:application:new_application' %}" prog-data-url="{% url 'dashboard:application:ajax_load_programs' %}" method="post" class="form-signup" style="padding-top: 10px;">
@@ -113,16 +115,30 @@
                 <ul class="errorlist"><li> {{ program_error }}</li></ul>
         {% endif %}
         <div class="form-row">
-            <div class="form-label-group col-md-6">
-                <label for={{ form.school.id_for_label }} style="width:320px;">{{ form.school.label }}</label>
-                {{ form.school }}
+            {% for school, program in form.get_school_prog_fields %}
+                {% if forloop.counter0 < curr_schools %}
+            <div class="form-label-group col-md-6" id="{{ school.id_for_label|add:"div" }}">
+                <label for={{ school.id_for_label }} style="width:320px;">{{ school.label }}</label>
+                {{ school }}
             </div>
-            <div class="form-label-group col-md-6">
-                <label for={{ form.program.id_for_label }}>{{ form.program.label }}</label>
-                {{ form.program }}
+            <div class="form-label-group col-md-6" id="{{ program.id_for_label|add:"div" }}">
+                <label for={{ program.id_for_label }}>{{ program.label }}</label>
+                {{ program }}
             </div>
-<!--        TODO: add a 'ADD' button to add more programs-->
+                {% else %}
+             <div class="form-label-group col-md-6" id="{{ school.id_for_label|add:"div" }}" style="display:none;">
+                <label for={{ school.id_for_label }} style="width:320px;">{{ school.label }}</label>
+                {{ school }}
+            </div>
+            <div class="form-label-group col-md-6" id="{{ program.id_for_label|add:"div" }}" style="display:none;">
+                <label for={{ program.id_for_label }}>{{ program.label }}</label>
+                {{ program }}
+            </div>
+                {% endif %}
+            {% endfor %}
         </div>
+        <button id="addBtn" type="button" class="btn btn-secondary" style="width:80px;">Add</button>
+        <button id="rmBtn" type="button" class="btn btn-secondary" style="margin-left:5px; width:80px;">Remove</button>
         <div class="form-row" style="margin-top:50px;">
             <div class="form-label-group col-md-6">
                 <input class="btn btn-lg btn-primary btn-block" type="submit" value="Save as Draft"
