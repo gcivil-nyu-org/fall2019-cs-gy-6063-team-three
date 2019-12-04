@@ -67,7 +67,7 @@ def register_user(request, user_type):
                 email.send()
                 staff_mail_subject = "Account and Employer Verification"
                 staff_message = (
-                    "An email has been sent to the supervisor contact you have provided. "  # noqa: E501
+                    "An email has been sent to the supervisor contact we have on file. "  # noqa: E501
                     "Once they are able to verify your employment then you will receive a separate email "  # noqa: E501
                     "with instructions on activating your account."
                 )
