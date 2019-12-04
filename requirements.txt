@@ -15,4 +15,4 @@ djangorestframework
 django-phonenumber-field
 phonenumbers
 django-select2==7.1.1
-dateutil
+python-dateutil==2.8.0
