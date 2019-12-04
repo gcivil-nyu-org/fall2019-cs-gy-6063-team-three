@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
 
@@ -13,6 +14,7 @@ def create_highschool(
     school_name="Testing High School for Bugs!",
     phone_number="912-121-0911",
     boro="K",
+    location="0 MTep Street, Brooklyn NY 00192(01.010101, -02.020202)",
 ):
     return HighSchool.objects.create(
         dbn=dbn,
@@ -23,7 +25,7 @@ def create_highschool(
         "motivate every bug to become non-existent in this "
         "vastly changing project.",  # noqa: E501
         neighborhood="Downtown-Brooklyn",
-        location="0 MTep Street, Brooklyn NY 00192(01.010101, -02.020202)",
+        location=location,
         phone_number=phone_number,
         school_email="temp@schools.cyn.vog",
         website="testhighschool.com",
@@ -46,10 +48,12 @@ def create_student(user_name="studentone", last_name="Doe"):
     )
 
 
-def create_program(code="Q83C"):
+def create_program(code="Q83C", high_school=None, name="Academy of Engineering"):
+    if not high_school:
+        high_school = create_highschool("06A231", phone_number="912-121-0911")
     return Program.objects.create(
-        high_school=create_highschool("06A231", phone_number="912-121-0911"),
-        name="Academy of Engineering",
+        high_school=high_school,
+        name=name,
         code=code,
         description="New York State approved CTE Program that leads to national "
         "certification aligned with industry standards and a "
@@ -144,16 +148,14 @@ class HighSchoolViewTests(TestCase):
         update_session(self.client, "adminstaff_one", user_type=UserType.ADMIN_STAFF)
         url = reverse("dashboard:high_school:index")
         response = self.client.get(url)
-        self.assertEquals(response.status_code, 200)
-        self.assertTrue("unauth" in response.context)
-        self.assertContains(response, "without proper credentials")
+        # updated for redirection to login if user invalid
+        self.assertEquals(response.status_code, 302)
         # test student object does not exist
         update_session(self.client, "student_two", user_type=UserType.STUDENT)
         url = reverse("dashboard:high_school:index")
         response = self.client.get(url)
-        self.assertEquals(response.status_code, 200)
-        self.assertTrue("unauth" in response.context)
-        self.assertContains(response, "without proper credentials")
+        # updated for redirection to login if user invalid
+        self.assertEquals(response.status_code, 302)
 
     def test_one_entry(self):
         create_highschool()
@@ -261,34 +263,64 @@ class HighSchoolViewTests(TestCase):
         number_of_hs = 10
         for hs_dbn in range(number_of_hs):
             if hs_dbn < 2:
-                create_highschool(
+                high_school = create_highschool(
                     dbn="12A0" + str(hs_dbn),
                     school_name="The Bronx" + str(hs_dbn),
                     boro="X",
+                    location="Bronx 10451",
+                )
+                create_program(
+                    code="12A0" + str(hs_dbn) + "_P" + str(hs_dbn),
+                    high_school=high_school,
+                    name="Arts " + str(hs_dbn),
                 )
             elif hs_dbn < 4:
-                create_highschool(
+                high_school = create_highschool(
                     dbn="12A0" + str(hs_dbn),
                     school_name="Brooklyn" + str(hs_dbn),
                     boro="K",
+                    location="Brooklyn 11238",
+                )
+                create_program(
+                    code="12A0" + str(hs_dbn) + "_P" + str(hs_dbn),
+                    high_school=high_school,
+                    name="Computer Science " + str(hs_dbn),
                 )
             elif hs_dbn < 6:
-                create_highschool(
+                high_school = create_highschool(
                     dbn="12A0" + str(hs_dbn),
                     school_name="Manhattan" + str(hs_dbn),
                     boro="M",
+                    location="Manhattan 10010",
+                )
+                create_program(
+                    code="12A0" + str(hs_dbn) + "_P" + str(hs_dbn),
+                    high_school=high_school,
+                    name="Humanities " + str(hs_dbn),
                 )
             elif hs_dbn < 8:
-                create_highschool(
+                high_school = create_highschool(
                     dbn="12A0" + str(hs_dbn),
                     school_name="Queens" + str(hs_dbn),
                     boro="Q",
+                    location="Queens 11427",
+                )
+                create_program(
+                    code="12A0" + str(hs_dbn) + "_P" + str(hs_dbn),
+                    high_school=high_school,
+                    name="Social Sciences" + str(hs_dbn),
                 )
             elif hs_dbn < 10:
-                create_highschool(
+                high_school = create_highschool(
                     dbn="12A0" + str(hs_dbn),
                     school_name="Staten Island" + str(hs_dbn),
                     boro="R",
+                    location="Staten Island 10314",
+                )
+                create_program(
+                    code="12A0" + str(hs_dbn) + "_P" + str(hs_dbn),
+                    high_school=high_school,
+                    name="Physical Education " + str(hs_dbn),
                 )
 
         update_session(self.client, "studentone")
@@ -362,6 +394,17 @@ class HighSchoolViewTests(TestCase):
         for school in response.context["high_schools"]:
             self.assertTrue("Brooklyn" in school.school_name)
             self.assertFalse("The Bronx" in school.school_name)
+        # search using location
+        response = self.client.get(url + "?query=10010")
+        self.assertTrue(response.status_code, 200)
+        self.assertTrue(len(response.context["high_schools"]) == 2)
+        for school in response.context["high_schools"]:
+            self.assertTrue("10010" in school.location)
+            self.assertFalse("11238" in school.location)
+        # search using program
+        response = self.client.get(url + "?query=Computer")
+        self.assertTrue(response.status_code, 200)
+        self.assertTrue(len(response.context["high_schools"]) == 2)
 
 
 class FavHighSchoolTests(TestCase):
@@ -550,10 +593,17 @@ class HSFiltersTest(TestCase):
 
 
 class ApiCallTests(TestCase):
+    def setUp(self):
+        # self.hs_admin = HighSchoolAdmin(model=HighSchool, admin_site=AdminSite())
+        self.super_user = User.objects.create_superuser(
+            username="super", email="super@email.org", password="pass"
+        )
+
+        self.client.login(username="super", password="pass")
+
     def test_valid_api_call(self):
-        update_session(self.client, "studentone")
         # assert empty objects
-        url = reverse("dashboard:high_school:save")
+        url = reverse("admin:save_high_schools")
         response = self.client.get(url)
         self.assertTrue(response.status_code, 200)
         self.assertFalse(HighSchool.objects.count())

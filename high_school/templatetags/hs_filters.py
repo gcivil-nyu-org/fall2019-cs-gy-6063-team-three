@@ -88,8 +88,13 @@ def get_querystring(val, arg):
 
 @register.filter(name="split_string_single")
 def split_string_single(val, arg):
+    index = 1
+    if "$index" in str(arg):
+        arg_list = split_string(arg, "$index")
+        arg = arg_list[0]
+        index = int(arg_list[1])
     if str(arg) in str(val):
         splits = str(val).split(arg, 1)
-        return splits[1]
+        return splits[index]
     else:
         return None

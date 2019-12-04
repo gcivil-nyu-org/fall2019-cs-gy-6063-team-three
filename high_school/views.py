@@ -1,130 +1,20 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from django.views.generic import ListView
-from sodapy import Socrata
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from django.db.models import Q
 
-from django.conf import settings
-from OneApply.constants import ApiInfo, UserType
+from OneApply.constants import UserType
 from high_school.models import Program
-from .forms import SaveHighSchoolsForm
-from .serializer import HighSchoolSerializer
 from .models import HighSchool
 from register.models import Student
-
-client = Socrata(ApiInfo.API_DOMAIN, ApiInfo.APP_TOKEN)
-
-
-def save_highschool_data(request):
-    if request.method == "POST":
-        form = SaveHighSchoolsForm(request.POST)
-        if form.is_valid():
-            limit = form.cleaned_data["limit"]
-            response, errors = save_high_schools(limit)
-            context = {}
-            if errors:
-                context["response"] = "Errors"
-                context["errors"] = errors
-            elif response:
-                context["response"] = response
-                context["errors"] = None
-                save_programs(limit)
-            return render(request, "high_school/index.html", context)
-
-    else:
-        form = SaveHighSchoolsForm()
-    return render(request, "high_school/save_high_schools.html", {"form": form})
-
-
-def save_high_schools(limit):
-    results = client.get(
-        ApiInfo.API_RESOURCE, select=ApiInfo.LOCAL_FIELD_LIST, limit=limit
-    )
-    serializer = HighSchoolSerializer(data=results, many=True)
-    for x in range(limit):
-        # for testing purposes, we should not be using actual high school emails
-        # all school emails are replaced with Patryk's email for future implementation of # noqa : E501
-        # supervisor email being taken directly from the school.
-        serializer.initial_data[x]["school_email"] = "pp2224@nyu.edu"
-        try:
-            # check if there is a start time in the school info
-            # if it is there then get the substring that ends it after "am"
-            # some fields have text after the time that is not necessary
-            if serializer.initial_data[x]["start_time"]:
-                am_loc = serializer.initial_data[x]["start_time"].find("am")
-                serializer.initial_data[x]["start_time"] = serializer.initial_data[x][
-                    "start_time"
-                ][: am_loc + 2]
-        except KeyError:
-            # if there is no start time provided in the info set it to N/A
-            serializer.initial_data[x]["start_time"] = "N/A"
-        try:
-            # check if there is a end time in the school info
-            # if it is there then get the substring that ends it after "pm"
-            # some fields have text after the time that is not necessary
-            if serializer.initial_data[x]["end_time"]:
-                pm_loc = serializer.initial_data[x]["end_time"].find("pm")
-                serializer.initial_data[x]["end_time"] = serializer.initial_data[x][
-                    "end_time"
-                ][: pm_loc + 2]
-        except KeyError:
-            # if there is no end time provided in the info set it to N/A
-            serializer.initial_data[x]["end_time"] = "N/A"
-    if serializer.is_valid():
-        return serializer.save(), None
-    else:
-        if settings.DEBUG:
-            print(serializer.errors)
-        return None, serializer.errors
-
-
-def extract_offer_rate(offer_rate_data):
-    if not offer_rate_data or offer_rate_data[0] != "-":
-        return 0
-    # Offer rate in the dataset is like:
-    # -96% of offers went to this group
-    return offer_rate_data.split("%")[0][1:]
-
-
-def parse_result(result):
-    for i in range(1, 11):
-        code = "code" + str(i)
-        seats = "seats9ge" + str(i)
-        program_name = "program" + str(i)
-        description = "prgdesc" + str(i)
-        offer_rate = "offer_rate" + str(i)
-        if (
-            result.get(code)
-            and Program.objects.filter(code=result.get(code)).count() == 0
-        ):
-            # This result is a valid program, and not already in DB save it.
-            program = Program()
-            program.high_school = HighSchool.objects.get(dbn=result.get("dbn"))
-            program.code = result.get(code)
-            program.name = result.get(program_name)
-            program.description = result.get(description)
-            try:
-                seats = int(result.get(seats, 0))
-            except ValueError:
-                seats = 0
-            program.number_of_seats = seats
-            program.offer_rate = extract_offer_rate(result.get(offer_rate))
-            program.save()
-
-
-def save_programs(limit):
-    results = client.get(
-        ApiInfo.API_RESOURCE, select=ApiInfo.LOCAL_PROGRAM_FIELD_LIST, limit=limit
-    )
-    for result in results:
-        parse_result(result)
 
 
 def get_user(request):
     context = {}
     is_login = request.session.get("is_login", None)
     if not is_login:
-        return redirect("landingpage:index")
+        return False, None, None, None
     user_name = request.session.get("username", None)
     user_type = request.session.get("user_type", None)
     is_valid_user = False
@@ -168,29 +58,27 @@ class HighSchoolListView(ListView):
     def get(self, *args, **kwargs):
         if not self.request.session.get("is_login", None):
             return redirect("landingpage:index")
+        is_valid_user, temp_user, temp_user_type, temp_context = get_user(self.request)
+        if not is_valid_user:
+            self.user = None
+            return redirect("landingpage:index")
+        else:
+            self.user = temp_user
+            self.user_type = temp_user_type
         return super(HighSchoolListView, self).get(*args, **kwargs)
 
     def get_queryset(self):
         if "dbn" in self.kwargs:
             self.dbn = self.kwargs["dbn"]
         self.search_filter_params = self.setup_params()
-        is_valid_user, temp_user, temp_user_type, temp_context = get_user(self.request)
-        if not is_valid_user:
-            self.user = None
-        else:
-            self.user = temp_user
-            self.user_type = temp_user_type
         return self.get_high_schools()
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(HighSchoolListView, self).get_context_data(**kwargs)
 
-        if not self.user:
-            context["unauth"] = True
-            context["high_schools"] = None
-            context["selected_school"] = None
-            context["empty_list"] = None
-        else:
+        # a valid user should always exist at this point in the view lifecycle
+        # validation check for valid user happens in 'get'
+        if self.user:
             context["unauth"] = False
             context["empty_list"] = 0
             if not context["high_schools"]:
@@ -232,12 +120,25 @@ class HighSchoolListView(ListView):
         if self.query:
             if borough_filter and high_schools:
                 high_schools = high_schools.filter(
-                    school_name__icontains=self.query, boro__in=borough_filter
-                )  # noqa: E501
+                    (
+                        Q(school_name__icontains=self.query)
+                        | Q(location__icontains=self.query)
+                        | Q(program__name__icontains=self.query)
+                    )
+                    & Q(boro__in=borough_filter)
+                ).distinct()
             elif high_schools:
-                high_schools = high_schools.filter(
-                    school_name__icontains=self.query
-                ).order_by("school_name")
+                high_schools = (
+                    high_schools.filter(
+                        (
+                            Q(school_name__icontains=self.query)
+                            | Q(location__icontains=self.query)
+                            | Q(program__name__icontains=self.query)
+                        )
+                    )
+                    .distinct()
+                    .order_by("school_name")
+                )
         elif borough_filter and high_schools:
             high_schools = high_schools.filter(boro__in=borough_filter)
 

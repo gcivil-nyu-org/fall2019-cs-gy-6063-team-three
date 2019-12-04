@@ -99,7 +99,20 @@ class RecommendationFormTest(TestCase):
 
 class RecommendationRatingFormTest(TestCase):
     def test_valid_form(self):
-        data = {"known_length": 1, "rating_comment": "He is smart"}
+        data = {
+            "known_length": 1,
+            "known_strength": 0,
+            "known_location": 0,
+            "rating_concepts": 0,
+            "rating_creativity": 0,
+            "rating_mathematical": 0,
+            "rating_written": 0,
+            "rating_oral": 0,
+            "rating_goals": 0,
+            "rating_socialization": 0,
+            "rating_analyzing": 0,
+            "rating_comment": "He is smart",
+        }
         form = RecommendationRatingForm(data=data)
         self.assertTrue(form.is_valid())
 
@@ -145,19 +158,58 @@ class RecommendationViewTest(TestCase):
         )
 
     def test_valid_add_rating(self):
-        data = {"known_length": 1, "rating_comment": "He is smart"}
+        data = {
+            "known_length": 1,
+            "known_strength": 0,
+            "known_location": 0,
+            "rating_concepts": 0,
+            "rating_creativity": 0,
+            "rating_mathematical": 0,
+            "rating_written": 0,
+            "rating_oral": 0,
+            "rating_goals": 0,
+            "rating_socialization": 0,
+            "rating_analyzing": 0,
+            "rating_comment": "He is smart",
+        }
         url = reverse("recommendation_rating", args=[self.recommendation.pk])
         response = self.client.post(url, data=data)
         self.assertEqual(response.status_code, 200)
 
     def test_invalid_add_rating(self):
-        data = {"known_length": "HI", "rating_comment": "He is smart"}
+        data = {
+            "known_length": "HI",
+            "known_strength": 0,
+            "known_location": 0,
+            "rating_concepts": 0,
+            "rating_creativity": 0,
+            "rating_mathematical": 0,
+            "rating_written": 0,
+            "rating_oral": 0,
+            "rating_goals": 0,
+            "rating_socialization": 0,
+            "rating_analyzing": 0,
+            "rating_comment": "He is smart",
+        }
         url = reverse("recommendation_rating", args=[self.recommendation.pk])
         response = self.client.post(url, data=data)
         self.assertEqual(response.status_code, 200)
 
     def test_no_recommendation_sent(self):
-        data = {"known_length": 1, "rating_comment": "He is smart"}
+        data = {
+            "known_length": 1,
+            "known_strength": 0,
+            "known_location": 0,
+            "rating_concepts": 0,
+            "rating_creativity": 0,
+            "rating_mathematical": 0,
+            "rating_written": 0,
+            "rating_oral": 0,
+            "rating_goals": 0,
+            "rating_socialization": 0,
+            "rating_analyzing": 0,
+            "rating_comment": "He is smart",
+        }
         url = reverse("recommendation_rating", args=[self.recommendation.pk + 1000])
         response = self.client.post(url, data=data)
         self.assertEqual(response.status_code, 200)

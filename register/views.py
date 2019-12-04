@@ -60,14 +60,14 @@ def register_user(request, user_type):
                         "token": account_activation_token.make_token(f),
                     },
                 )
-                to_supervisor = form.cleaned_data["supervisor_email"]
+                to_supervisor = f.school.school_email
                 email = EmailMessage(
                     supervisor_mail_subject, supervisor_message, to=[to_supervisor]
                 )
                 email.send()
                 staff_mail_subject = "Account and Employer Verification"
                 staff_message = (
-                    "An email has been sent to the supervisor contact you have provided. "  # noqa: E501
+                    "An email has been sent to the supervisor contact we have on file. "  # noqa: E501
                     "Once they are able to verify your employment then you will receive a separate email "  # noqa: E501
                     "with instructions on activating your account."
                 )

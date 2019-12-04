@@ -6,7 +6,7 @@
 <div style="width:60%; margin-top: 5%; margin-bottom: 5%;">
         <div class="top-header">
             <div class="right-pane-container" style="top:0%; margin-top: 3%;">
-            <a href="{% url 'dashboard:application:all_applications' %}" class="btn btn-primary ">Go to List</a>
+            <a href="{% url 'dashboard:application:all_applications' %}" class="btn btn-primary">Go to List</a>
                 {% if not selected_app.is_draft %}
                     <h5 style="margin: 1em; text-align: center;">
                         <b>Submitted Application</b>
@@ -22,6 +22,10 @@
                             {% endfor %}
                         </tbody>
                     </table>
+                    {% if selected_app.application_status != 3 %}
+                        <a href="{% url 'dashboard:application:withdraw' selected_app.pk %}" type="button"
+                                style="margin-top: 25px;" class="btn btn-secondary">Withdraw Application</a>
+                    {% endif %}
                 {% else %}
                     <h2 style="margin-top: 20px;">High School Application Form</h2>
                     <form action="{% url 'dashboard:application:draftExistingApplication' selected_app.pk %}"

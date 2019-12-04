@@ -9,7 +9,7 @@ from high_school.models import HighSchool, Program
 
 
 GENDER = [("", "Gender"), ("M", "Male"), ("F", "Female")]
-APPLICATION_STATUS = ["Rejected", "Accepted", "Submitted"]
+APPLICATION_STATUS = ["Rejected", "Accepted", "Submitted", "Withdrawn"]
 
 
 class HighSchoolApplication(models.Model):
@@ -44,9 +44,11 @@ class HighSchoolApplication(models.Model):
         on_delete=models.CASCADE,
         related_name="app_school",
         verbose_name="School",
+        blank=True,
+        null=True,
     )
     program = models.ForeignKey(
-        Program, on_delete=models.CASCADE, verbose_name="Program"
+        Program, on_delete=models.CASCADE, verbose_name="Program", blank=True, null=True
     )
     is_draft = models.BooleanField(default=True)
     submitted_date = models.DateTimeField(verbose_name="Submitted")
@@ -63,9 +65,9 @@ class HighSchoolApplication(models.Model):
                         value = [i[1] for i in GENDER if i[0] == self.gender][0]
                     except Exception:
                         value = field.value_from_object(self)
-                elif field.name == "school":
+                elif field.name.startswith("school"):
                     value = str(self.school)
-                elif field.name == "program":
+                elif field.name.startswith("program"):
                     value = str(self.program)
                 elif field.name == "application_status":
                     value = APPLICATION_STATUS[self.application_status]
