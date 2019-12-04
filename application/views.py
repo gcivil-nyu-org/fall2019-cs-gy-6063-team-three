@@ -28,7 +28,7 @@ def new_application(request):
         else:
             error_apply = None
         count = objects.count()
-        if count >= APPLICATION_COUNT:
+        if count > APPLICATION_COUNT:
             error_count_app = (
                 "You can only create " + str(APPLICATION_COUNT) + " applications"
             )

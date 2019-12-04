@@ -3,9 +3,6 @@ from django.core import validators
 from django.core.validators import MinValueValidator, MaxValueValidator
 from decimal import Decimal
 from phonenumber_field.modelfields import PhoneNumberField
-from django.core.exceptions import ValidationError
-from datetime import date
-
 
 from register.models import Student
 from high_school.models import HighSchool, Program
@@ -13,16 +10,6 @@ from high_school.models import HighSchool, Program
 
 GENDER = [("", "Gender"), ("M", "Male"), ("F", "Female")]
 APPLICATION_STATUS = ["Rejected", "Accepted", "Submitted", "Withdrawn"]
-
-
-def validate_age(dob):
-    if dob is not None:
-        today = date.today()
-        age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
-        if age < 11 or age > 15:
-            raise ValidationError(
-                "Age should be between 11 to 15 years", params={"dob": dob}
-            )
 
 
 class HighSchoolApplication(models.Model):
@@ -38,9 +25,7 @@ class HighSchoolApplication(models.Model):
     phoneNumber = PhoneNumberField(verbose_name="Phone Number")
     address = models.CharField(max_length=100, verbose_name="Address")
     gender = models.CharField(max_length=15, verbose_name="Gender")
-    date_of_birth = models.DateField(
-        verbose_name="Date of Birth", validators=[validate_age]
-    )
+    date_of_birth = models.DateField(verbose_name="Date of Birth")
     gpa = models.DecimalField(
         max_digits=3,
         decimal_places=2,
