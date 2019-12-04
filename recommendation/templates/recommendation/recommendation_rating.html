@@ -47,9 +47,14 @@
         <div class="form-row">
             <div class="form-label-group">
                 <span>How well do you feel like you know the applicant?</span><br>
-                <input type="radio" name="known_strength" value=0 required> Casually<br>
-                <input type="radio" name="known_strength" value=1> Well<br>
-                <input type="radio" name="known_strength" value=2> Very Well<br>
+                {% for radio in form.known_strength %}
+                    <span class="radio">{{ radio.tag }}
+                    <label for="{{ radio.id_for_label }}">
+                        {{ radio.choice_label }}
+                     </label>
+                    </span>
+                <br>
+                {% endfor %}
                 <br>
             </div>
 
@@ -57,11 +62,14 @@
         <div class="form-row">
             <div class="form-label-group">
                 <span>What was the nature of your contact with the applicant?</span><br>
-                <input type="radio" name="known_location" value=0 required> Teacher in One Class<br>
-                <input type="radio" name="known_location" value=1> Teacher in Multiple Classes<br>
-                <input type="radio" name="known_location" value=2> Advisor<br>
-                <input type="radio" name="known_location" value=3> Mentor<br>
-                <input type="radio" name="known_location" value=4> Other<br>
+                {% for radio in form.known_location %}
+                    <span class="radio">{{ radio.tag }}
+                    <label for="{{ radio.id_for_label }}">
+                        {{ radio.choice_label }}
+                     </label>
+                    </span>
+                <br>
+                {% endfor %}
                 <br>
             </div>
         </div>
@@ -86,91 +94,51 @@
                 </tr>
                 <tr>
                     <th> Ability to grasp new concepts </th>
-                    <th><input type="radio" name="rating_concepts" value=1 required></th>
-                    <th><input type="radio" name="rating_concepts" value=2></th>
-                    <th><input type="radio" name="rating_concepts" value=3></th>
-                    <th><input type="radio" name="rating_concepts" value=4></th>
-                    <th><input type="radio" name="rating_concepts" value=5></th>
-                    <th><input type="radio" name="rating_concepts" value=6></th>
-                    <th><input type="radio" name="rating_concepts" value=7></th>
-                    <th><input type="radio" name="rating_concepts" value=0></th>
+                    {% for radio in form.rating_concepts %}
+                        <th>{{ radio.tag }}</th>
+                    {% endfor %}
                 </tr>
                 <tr>
                     <th> Originality, intellectual creativity </th>
-                    <th><input type="radio" name="rating_creativity" value=1 required></th>
-                    <th><input type="radio" name="rating_creativity" value=2></th>
-                    <th><input type="radio" name="rating_creativity" value=3></th>
-                    <th><input type="radio" name="rating_creativity" value=4></th>
-                    <th><input type="radio" name="rating_creativity" value=5></th>
-                    <th><input type="radio" name="rating_creativity" value=6></th>
-                    <th><input type="radio" name="rating_creativity" value=7></th>
-                    <th><input type="radio" name="rating_creativity" value=0></th>
+                    {% for radio in form.rating_creativity %}
+                        <th>{{ radio.tag }}</th>
+                    {% endfor %}
                 </tr>
                 <tr>
                     <th> Mathematical and logical thought </th>
-                    <th><input type="radio" name="rating_mathematical" value=1 required></th>
-                    <th><input type="radio" name="rating_mathematical" value=2></th>
-                    <th><input type="radio" name="rating_mathematical" value=3></th>
-                    <th><input type="radio" name="rating_mathematical" value=4></th>
-                    <th><input type="radio" name="rating_mathematical" value=5></th>
-                    <th><input type="radio" name="rating_mathematical" value=6></th>
-                    <th><input type="radio" name="rating_mathematical" value=7></th>
-                    <th><input type="radio" name="rating_mathematical" value=0></th>
+                    {% for radio in form.rating_mathematical%}
+                        <th>{{ radio.tag }}</th>
+                    {% endfor %}
                 </tr>
                 <tr>
                     <th> Written expression </th>
-                    <th><input type="radio" name="rating_written" value=1 required></th>
-                    <th><input type="radio" name="rating_written" value=2></th>
-                    <th><input type="radio" name="rating_written" value=3></th>
-                    <th><input type="radio" name="rating_written" value=4></th>
-                    <th><input type="radio" name="rating_written" value=5></th>
-                    <th><input type="radio" name="rating_written" value=6></th>
-                    <th><input type="radio" name="rating_written" value=7></th>
-                    <th><input type="radio" name="rating_written" value=0></th>
+                    {% for radio in form.rating_written %}
+                        <th>{{ radio.tag }}</th>
+                    {% endfor %}
                 </tr>
                 <tr>
                     <th> Oral expression </th>
-                    <th><input type="radio" name="rating_oral" value=1 required></th>
-                    <th><input type="radio" name="rating_oral" value=2></th>
-                    <th><input type="radio" name="rating_oral" value=3></th>
-                    <th><input type="radio" name="rating_oral" value=4></th>
-                    <th><input type="radio" name="rating_oral" value=5></th>
-                    <th><input type="radio" name="rating_oral" value=6></th>
-                    <th><input type="radio" name="rating_oral" value=7></th>
-                    <th><input type="radio" name="rating_oral" value=0></th>
+                    {% for radio in form.rating_oral %}
+                        <th>{{ radio.tag }}</th>
+                    {% endfor %}
                 </tr>
                 <tr>
                     <th> Perserverance toward goals </th>
-                    <th><input type="radio" name="rating_goals" value=1 required></th>
-                    <th><input type="radio" name="rating_goals" value=2></th>
-                    <th><input type="radio" name="rating_goals" value=3></th>
-                    <th><input type="radio" name="rating_goals" value=4></th>
-                    <th><input type="radio" name="rating_goals" value=5></th>
-                    <th><input type="radio" name="rating_goals" value=6></th>
-                    <th><input type="radio" name="rating_goals" value=7></th>
-                    <th><input type="radio" name="rating_goals" value=0></th>
+                    {% for radio in form.rating_goals %}
+                        <th>{{ radio.tag }}</th>
+                    {% endfor %}
                 </tr>
                 <tr>
                     <th> Ability to get along with others </th>
-                    <th><input type="radio" name="rating_socialization" value=1 required></th>
-                    <th><input type="radio" name="rating_socialization" value=2></th>
-                    <th><input type="radio" name="rating_socialization" value=3></th>
-                    <th><input type="radio" name="rating_socialization" value=4></th>
-                    <th><input type="radio" name="rating_socialization" value=5></th>
-                    <th><input type="radio" name="rating_socialization" value=6></th>
-                    <th><input type="radio" name="rating_socialization" value=7></th>
-                    <th><input type="radio" name="rating_socialization" value=0></th>
+                    {% for radio in form.rating_socialization %}
+                        <th>{{ radio.tag }}</th>
+                    {% endfor %}
                 </tr>
                 <tr>
                     <th> Ability to analyze problems and formulate solutions </th>
-                    <th><input type="radio" name="rating_analyzing" value=1 required></th>
-                    <th><input type="radio" name="rating_analyzing" value=2></th>
-                    <th><input type="radio" name="rating_analyzing" value=3></th>
-                    <th><input type="radio" name="rating_analyzing" value=4></th>
-                    <th><input type="radio" name="rating_analyzing" value=5></th>
-                    <th><input type="radio" name="rating_analyzing" value=6></th>
-                    <th><input type="radio" name="rating_analyzing" value=7></th>
-                    <th><input type="radio" name="rating_analyzing" value=0></th>
+                    {% for radio in form.rating_analyzing %}
+                        <th>{{ radio.tag }}</th>
+                    {% endfor %}
                 </tr>
             </table>
         </div>
