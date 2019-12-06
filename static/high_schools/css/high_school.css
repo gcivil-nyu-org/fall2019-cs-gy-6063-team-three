@@ -54,6 +54,19 @@ body {
     min-height: 50%;
 }
 
+.empty-list-div{
+    margin: 2.5% 7.5%;
+}
+
+.empty_search_filter_div {
+    display: flex;
+    flex-flow: column;
+    justify-content: start;
+    align-items: start;
+    height: 100%;
+    width: 100%;
+}
+
 .no-school-placeholder {
     display: flex;
     flex-flow: column;
@@ -61,6 +74,7 @@ body {
     align-items: center;
     height: 100%;
     width: 100%;
+    padding-top: 5%;
 }
 
 .util-div{
