@@ -37,8 +37,8 @@
                                        {% if search_filter_params.is_fav_on %}checked=""{% endif %}
                                        onchange="search_filter_form.submit();"/>
                                 <i {% if search_filter_params.is_fav_on %}
-                                    class="fa fa-heart" {% else %}
-                                    class="fa fa-heart-o"{% endif %}>
+                                    class="fa fa-heart text-danger" {% else %}
+                                    class="fa fa-heart-o text-danger"{% endif %}>
                                 </i>
                             </label>
                         </div>
@@ -125,7 +125,7 @@
                 <div class="d-flex w-100 justify-content-between mb-2">
                     <h4 class="mb-1" style="width: 75%">{{ school.school_name }}</h4>
                     <div>
-                    <span class="school-fav-btn" dbn_value="{{ school.dbn }}"
+                    <span class="school-fav-btn text-danger" dbn_value="{{ school.dbn }}"
                             {% if school in fav_schools %}
                           is_fav="1" {% else %} is_fav="0" {% endif %}
                           style="font-size: 18px; padding: 4px;">
