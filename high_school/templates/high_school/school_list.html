@@ -6,7 +6,7 @@
                 <form id="search_filter_form" name="search_filter_form" method='GET'>
                     <div class="hs-search-filters">
                         <div class="search-div">
-                        <span>
+                        <span style="font-size: 15px;">
                             <input class="search-input" type='text' name='query'
                                    {% if search_filter_params.query %}value="{{ search_filter_params.query }}"
                                    {% endif %}
@@ -125,7 +125,7 @@
                 <div class="d-flex w-100 justify-content-between mb-2">
                     <h4 class="mb-1" style="width: 75%">{{ school.school_name }}</h4>
                     <div>
-                    <span class="school-fav-btn text-danger" dbn_value="{{ school.dbn }}"
+                    <span class="school-fav-btn {% if selected_school and selected_school.dbn == school.dbn %}{% else %} text-danger{% endif %}" dbn_value="{{ school.dbn }}"
                             {% if school in fav_schools %}
                           is_fav="1" {% else %} is_fav="0" {% endif %}
                           style="font-size: 18px; padding: 4px;">
@@ -143,12 +143,16 @@
                         {{ school.start_time }} - {{ school.end_time }}
                     </small>
                 </div>
-                <div class="d-flex w-100 justify-content-between">
-                        <span style="font-size: 14px; padding: 4px;">
+                <div class="d-flex w-100 justify-content-between align-items-center">
+                    {% if school.graduation_rate != 'N/A' %}
+                        <span style="font-size: 16px;">
                             <i class="fa fa-graduation-cap mr-2"></i>
                             {% widthratio school.graduation_rate 1 100 %} %
                         </span>
-                    <h5 class="mb-0">{{ school.phone_number }}</h5>
+                    {% else %}
+                        <h6 class="mb-0">Graduation rate unavailable</h6>
+                    {% endif %}
+                    <h6 class="mb-0">{{ school.phone_number }}</h6>
                 </div>
                 </a>
                 {% endfor %}

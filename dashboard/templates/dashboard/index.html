@@ -6,9 +6,10 @@
     <!-- common across all applications inheriting from dashboard -->
     {% if user_type and user_type == constant_ut_adminStaff %}
         <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+        <link href="{% static 'css/admin_theme.min.css' %}" rel="stylesheet">
     {% else %}
         <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
-        <link href="{% static 'css/theme.css' %}" rel="stylesheet">
+        <link href="{% static 'css/student_theme.min.css' %}" rel="stylesheet">
     {% endif %}
     <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
     <script src="{% static 'js/popper.js' %}"></script>
@@ -34,11 +35,12 @@
 
                 </ul>
 
-                <div class="dropdown">
-                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu2"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {{ request.session.username }}
-                    </button>
+                <div class="dropdown text-light mr-2">
+                    Welcome, {{ request.session.user_fname }}!
+                    <span id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true"
+                          aria-expanded="false" style="cursor: pointer;">
+                       <i class="fa fa-gear ml-2"></i>
+                    </span>
                     <div class="dropdown-menu dropdown-menu-sm-right" aria-labelledby="dropdown03">
                         <button class="dropdown-item">Change Password</button>
                         <a class="dropdown-item" href="{% url 'dashboard:logout' %}">Logout</a>
@@ -47,7 +49,7 @@
             </div>
         </nav>
     </div>
-    <div class="nav-scroller mb-2">
+    <div class="nav-scroller sticky-top mb-2 bg-light" style="box-shadow: 0 2px 0 lightgray">
         {% if user_type == constant_ut_student %}
             <nav class="nav d-flex justify-content-between">
                 <div class="nav nav-tabs d-flex justify-content-between" id="dashboard-tab"
@@ -57,20 +59,20 @@
                     <span class="nav-item nav-link p-2 active" id="nav-allSchools-tab"
                           data-toggle="tab"
                           data-url="{% url 'dashboard:high_school:index' %}"
-                          role="tab" aria-controls="nav-allSchools">All Schools</span>
-                    <span class="nav-item nav-link p-2" id="nav-applications-tab"
-                          data-toggle="tab"
-                          data-url="{% url 'dashboard:application:all_applications' %}"
-                          role="tab" aria-controls="nav-applications">Applications</span>
+                          role="tab" aria-controls="nav-allSchools">Schools</span>
                     <span class="nav-item nav-link p-2" id="nav-apply-tab"
                           data-toggle="tab"
                           data-url="{% url 'dashboard:application:new_application' %}"
                           role="tab" aria-controls="nav-apply">Apply</span>
+                    <span class="nav-item nav-link p-2" id="nav-applications-tab"
+                          data-toggle="tab"
+                          data-url="{% url 'dashboard:application:all_applications' %}"
+                          role="tab" aria-controls="nav-applications">Applications</span>
                     <span class="nav-item nav-link p-2" id="nav-recommendations-tab"
                           data-toggle="tab"
                           data-url="{% url 'dashboard:recommendation:new_recommendation' %}"
                           role="tab"
-                          aria-controls="nav-recommendations">Teacher Recommendations</span>
+                          aria-controls="nav-recommendations">Recommendations</span>
                 </div>
             </nav>
         {% elif user_type == constant_ut_adminStaff %}
@@ -100,14 +102,14 @@
                 {% block all_high_schools %}
                 {% endblock %}
             </div>
-            <div class="tab-pane fade" id="nav-applications" role="tabpanel"
-                 aria-labelledby="nav-applications-tab">
-                {% block all_applications %}
-                {% endblock %}
-            </div>
             <div class="tab-pane fade" id="nav-apply" role="tabpanel"
                  aria-labelledby="nav-apply-tab">
                 {% block app_apply %}
+                {% endblock %}
+            </div>
+            <div class="tab-pane fade" id="nav-applications" role="tabpanel"
+                 aria-labelledby="nav-applications-tab">
+                {% block all_applications %}
                 {% endblock %}
             </div>
             <div class="tab-pane fade" id="nav-recommendations" role="tabpanel"
