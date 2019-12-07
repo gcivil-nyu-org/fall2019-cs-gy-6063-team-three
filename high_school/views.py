@@ -100,9 +100,8 @@ class HighSchoolListView(ListView):
                         context["empty_list"] = 1
                 else:
                     context["selected_school"] = None
-                context["search_filter_params"] = self.search_filter_params
                 context["fav_schools"] = self.get_fav_schools()
-
+            context["search_filter_params"] = self.search_filter_params
         return context
 
     def get_high_schools(self):

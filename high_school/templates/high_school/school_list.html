@@ -6,39 +6,45 @@
                 <form id="search_filter_form" name="search_filter_form" method='GET'>
                     <div class="hs-search-filters">
                         <div class="search-div">
-                        <span>
+                        <span style="font-size: 14px;">
                             <input class="search-input" type='text' name='query'
-                                   {% if search_filter_params.query %}value="{{ request.GET.query }}"
-                                   {% endif %} placeholder="Search for a school by its name, programs or address ">
+                                   {% if search_filter_params.query %}value="{{ search_filter_params.query }}"
+                                   {% endif %}
+                                   placeholder="Search for a school by its name, programs or address ">
                             <span onclick="search_filter_form.submit();" class="search-btn">
                                 <i class="fa fa-search mr-2"></i>
                             </span>
                         </span>
                         </div>
                         <div class="filters-div">
-                            <div class="filter-btn" title="Show applied filters" style="border-right: 2px solid slategray;">
+                            <div class="filter-btn" title="Show applied filters"
+                                 style="border-right: 2px solid slategray;">
                                 <div class="filter-info-div">
                                     <span><i class="fa fa-filter"></i></span>
                                     <sub>{{ search_filter_params.filter_count }}</sub>
                                 </div>
                                 <div class="filter-action-div" style="display: none;">
-                                    <span class="filter-action apply-filters mr-2" title="Apply changes"><i class="fa fa-check-circle"></i></span>
-                                    <span class="filter-action cancel-filters mr-2" title="Discard changes"><i class="fa fa-times-circle"></i></span>
+                                    <span class="filter-action apply-filters mr-2"
+                                          title="Apply changes"><i
+                                            class="fa fa-check-circle"></i></span>
+                                    <span class="filter-action cancel-filters mr-2"
+                                          title="Discard changes"><i class="fa fa-times-circle"></i></span>
                                 </div>
                             </div>
-                            <label class="fav-btn ml-2 mb-0" title="{% if search_filter_params.is_fav_on %}Hide{% else %}Show{% endif %} favorites">
+                            <label class="fav-btn ml-2 mb-0"
+                                   title="{% if search_filter_params.is_fav_on %}Hide{% else %}Show{% endif %} favorites">
                                 <input name="is_fav_on" type="checkbox" class="with-font hide"
                                        {% if search_filter_params.is_fav_on %}checked=""{% endif %}
                                        onchange="search_filter_form.submit();"/>
                                 <i {% if search_filter_params.is_fav_on %}
-                                    class="fa fa-heart" {% else %}
-                                    class="fa fa-heart-o"{% endif %}>
+                                    class="fa fa-heart text-danger" {% else %}
+                                    class="fa fa-heart-o text-danger"{% endif %}>
                                 </i>
                             </label>
                         </div>
                     </div>
                     <div>
-                        <div class="high-school-fav-div {% if not request.GET.is_fav_on or request.GET.is_fav_on == "0" %} hide {% endif %}">
+                        <div class="high-school-fav-div {% if not request.GET.is_fav_on or request.GET.is_fav_on == "0" or empty_list %} hide {% endif %}">
                             <span>These are your favorite schools...</span>
                         </div>
                         <div class="high-school-filter-div">
@@ -99,46 +105,58 @@
                     </div>
                 </form>
             </div>
-            {% for school in high_schools %}
-                {% with request.get_full_path as querystring %}
-                    {% if querystring|split_string_single:"?" %}
-                        <a href="{% url 'dashboard:high_school:overview'  school.dbn %}?{{ querystring|split_string_single:"?" }}"
-                           class="list-group-item list-group-item-action {% if selected_school and selected_school.dbn == school.dbn %}active{% endif %}">
-                    {% else %}
-                        <a href="{% url 'dashboard:high_school:overview'  school.dbn %}"
-                           class="list-group-item list-group-item-action {% if selected_school and selected_school.dbn == school.dbn %}active{% endif %}">
-                    {% endif %}
-                {% endwith %}
-            <div class="d-flex w-100 justify-content-between mb-2">
-                <h4 class="mb-1" style="width: 75%">{{ school.school_name }}</h4>
-                <div>
-                    <span class="school-fav-btn" dbn_value="{{ school.dbn }}"
+            {% if empty_list %}
+                <div class="empty-list-div">
+                    {% block empty_list %}
+                        {% include 'high_school/broken.html' %}
+                    {% endblock %}
+                </div>
+            {% else %}
+                {% for school in high_schools %}
+                    {% with request.get_full_path as querystring %}
+                        {% if querystring|split_string_single:"?" %}
+                            <a href="{% url 'dashboard:high_school:overview'  school.dbn %}?{{ querystring|split_string_single:"?" }}"
+                               class="list-group-item list-group-item-action {% if selected_school and selected_school.dbn == school.dbn %}active{% endif %}">
+                        {% else %}
+                            <a href="{% url 'dashboard:high_school:overview'  school.dbn %}"
+                               class="list-group-item list-group-item-action {% if selected_school and selected_school.dbn == school.dbn %}active{% endif %}">
+                        {% endif %}
+                    {% endwith %}
+                <div class="d-flex w-100 justify-content-between mb-2">
+                    <h4 class="mb-1" style="width: 75%">{{ school.school_name }}</h4>
+                    <div>
+                    <span class="school-fav-btn {% if selected_school and selected_school.dbn == school.dbn %}{% else %} text-danger{% endif %}" dbn_value="{{ school.dbn }}"
                             {% if school in fav_schools %}
                           is_fav="1" {% else %} is_fav="0" {% endif %}
                           style="font-size: 18px; padding: 4px;">
                         <i{% if school in fav_schools %} class="fa fa-heart"{% else %}
                                                          class="fa fa-heart-o" {% endif %}></i>
                     </span>
+                    </div>
                 </div>
-            </div>
-            <div class="d-flex w-100 justify-content-between mb-2">
-                <h5 class="mb-2">{{ school.neighborhood }}</h5>
-                <small class="pt-1"
-                       style="width: 25%; text-align: right; vertical-align: middle;display: none;">
+                <div class="d-flex w-100 justify-content-between mb-2">
+                    <h5 class="mb-2">{{ school.neighborhood }}</h5>
+                    <small class="pt-1"
+                           style="width: 25%; text-align: right; vertical-align: middle;display: none;">
                     <span style="font-size: 14px; padding: 4px;"><i
                             class="fa fa-clock-o"></i></span>
-                    {{ school.start_time }} - {{ school.end_time }}
-                </small>
-            </div>
-            <div class="d-flex w-100 justify-content-between">
-                        <span style="font-size: 14px; padding: 4px;">
+                        {{ school.start_time }} - {{ school.end_time }}
+                    </small>
+                </div>
+                <div class="d-flex w-100 justify-content-between align-items-center">
+                    {% if school.graduation_rate != 'N/A' %}
+                        <span style="font-size: 16px;">
                             <i class="fa fa-graduation-cap mr-2"></i>
                             {% widthratio school.graduation_rate 1 100 %} %
                         </span>
-                <h5 class="mb-0">{{ school.phone_number }}</h5>
-            </div>
-            </a>
-            {% endfor %}
+                    {% else %}
+                        <h6 class="mb-0">Graduation rate unavailable</h6>
+                    {% endif %}
+                    <h6 class="mb-0">{{ school.phone_number }} <i class="fa fa-phone ml-2 hide"></i></h6>
+                </div>
+                </a>
+                {% endfor %}
+            {% endif %}
         </div>
     </div>
     <div class="pagination-div">

@@ -1,7 +1,7 @@
 {% block school_overview %}
     {% load hs_filters %}
     {% if selected_school %}
-        <div class="top-header" style="background: gray">
+        <div class="top-header bg-secondary">
             <div class="right-pane-container">
                 <h5 class="mb-3" style="font-size: 28px;">{{ selected_school.school_name }}</h5>
                 <h5 class="mb-2">{{ selected_school.neighborhood }}</h5>
@@ -9,7 +9,7 @@
                 <h6 class="mb-2">{{ selected_school.total_students }} students</h6>
                 {% if selected_school.graduation_rate != 'N/A' %}
                     <h6 class="mb-3">
-                        <span style="font-size: 14px; padding: 4px;">
+                        <span style="font-size: 14px;">
                             <i class="fa fa-graduation-cap mr-2"></i>
                         </span>
                         {% widthratio selected_school.graduation_rate 1 100 %} %</h6>
@@ -25,9 +25,9 @@
                            href="https://www.google.com/maps/search/?api=1&query={{ selected_school.school_name|urlencode }}%20{{ selected_school.neighborhood|urlencode }}"
                            target="_blank">Map</a>
                     </div>
-                    <span style="width: 30%; text-align: right;
-                    vertical-align: middle; font-size: 16px;">
-                                    <i class="fa fa-clock-o"></i>
+                    <span style="width: 40%; text-align: right;
+                    vertical-align: middle; font-size: 15px;">
+                                    <i class="fa fa-clock-o mr-2"></i>
                          {{ selected_school.start_time }} - {{ selected_school.end_time }}</span>
                 </div>
             </div>
@@ -60,7 +60,7 @@
                                href="#program_collapse" role="button"
                                aria-expanded="false"
                                aria-controls="program_collapse">
-                            <span class="ml-5" style="font-size: 18px;">
+                            <span class="ml-5 text-light" style="font-size: 18px;">
                                 <i id="program_toggle_icon" class="fa fa-plus-circle">
                                 </i>
                             </span>

@@ -54,6 +54,19 @@ body {
     min-height: 50%;
 }
 
+.empty-list-div{
+    margin: 2.5% 7.5%;
+}
+
+.empty_search_filter_div {
+    display: flex;
+    flex-flow: column;
+    justify-content: start;
+    align-items: start;
+    height: 100%;
+    width: 100%;
+}
+
 .no-school-placeholder {
     display: flex;
     flex-flow: column;
@@ -61,6 +74,7 @@ body {
     align-items: center;
     height: 100%;
     width: 100%;
+    padding-top: 5%;
 }
 
 .util-div{
@@ -87,7 +101,7 @@ body {
     width: 100%;
     height: 36px;
     padding: 15px 20px;
-    color: slategray;
+    /*color: slategray;*/
     border: 2px solid #e4e4e4 !important;
     border-radius: 12px;
 }
@@ -98,7 +112,6 @@ body {
 }
 
 .hs-search-filters .search-div .search-btn {
-    color: slategray;
     position: absolute;
     left: 92%;
     top: 15%;
@@ -116,7 +129,6 @@ body {
 .filters-div .filter-info-div {
     display: flex;
     flex-direction: row;
-    color: slategray;
     cursor: pointer;
     padding: 0 10px;
 }
@@ -129,7 +141,6 @@ body {
 
 .filter-action-div .apply-filters,
 .filter-action-div .cancel-filters{
-    color: slategray;
     cursor: pointer;
     padding: 0 10px;
 }
@@ -139,10 +150,8 @@ body {
     display: none;
     margin-top: 2%;
     font-size: 16px;
-    color: slategray;
 }
 .filters-div .fav-btn{
-    color: slategray;
     cursor: pointer;
     padding-left: 10px;
 }
@@ -151,7 +160,6 @@ body {
 }
 .high-school-fav-div{
     font-size: 16px;
-    color: slategray;
     margin: 2% 0 1% 0;
 }
 .program-div{
@@ -177,13 +185,4 @@ body {
 
 .list-group-item:last-child {
     margin-bottom: 5% !important;
-}
-.page-link {
-    background-color: #008067;
-}
-.page-item.disabled .page-link{
-    background-color: #4f9c8c;
-}
-.page-item.active .page-link{
-    background-color: #004f40;
 }

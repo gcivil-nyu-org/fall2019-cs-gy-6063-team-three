@@ -32,6 +32,7 @@ def login_user(request, user_type):
                         request.session["username"] = username
                         request.session["is_login"] = True
                         request.session["user_type"] = UserType.STUDENT
+                        request.session["user_fname"] = user.first_name
                         return redirect("dashboard:dashboard")
             elif user_type == UserType.ADMIN_STAFF:
                 try:
@@ -49,6 +50,7 @@ def login_user(request, user_type):
                         request.session["username"] = username
                         request.session["is_login"] = True
                         request.session["user_type"] = UserType.ADMIN_STAFF
+                        request.session["user_fname"] = user.first_name
                         return redirect("dashboard:dashboard")
     else:
         form = LoginForm()
