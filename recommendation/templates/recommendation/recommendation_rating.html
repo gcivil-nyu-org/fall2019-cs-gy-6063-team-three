@@ -30,7 +30,7 @@
     {% elif teacher_recommendation %}
     <h3>Teacher Recommendation for <u>{{teacher_recommendation.user.first_name}} {{teacher_recommendation.user.last_name}}</u></h3>
     <h4>Name of Reviewer: {{teacher_recommendation.first_name}} {{teacher_recommendation.last_name}}</h4>
-    <form action="{% url 'recommendation_rating' teacher_recommendation.pk %}" method="post" class="form-signup" style="padding-top: 10px;">
+    <form action="{% url 'recommendation_rating' teacher_pk %}" method="post" class="form-signup" style="padding-top: 10px;">
         {% csrf_token %}
         <div class="rounded bg-secondary" style="height:35px;margin-bottom:10px;">
             <h5 class="p-2">I. Knowledge of Applicant</h5>
