@@ -75,22 +75,17 @@
                           aria-controls="nav-recommendations">Recommendations</span>
                 </div>
             </nav>
-        {% elif user_type == constant_ut_adminStaff %}
+        {% elif user_type == constant_ut_adminStaff and school_name %}
             <nav class="nav d-flex justify-content-between">
-                <div class="nav nav-tabs d-flex justify-content-between" id="dashboard-tab"
+                <div class="nav nav-tabs d-flex justify-content-between"
+                     id="dashboard-tab"
                      role="tablist" style="width: 100%;">
-                    {# TODO: update this    #}
-                    {# this has to be a user object and not a user_type string  #}
-                    <span class="nav-item nav-link p-2 active" id="nav-student-apps-tab"
-                          data-toggle="tab"
-                          data-url="{% url 'dashboard:admissions:index' %}"
-                          role="tab"
-                          aria-controls="nav-student-apps-tab">Student Applications</span>
+                    <nav class="navbar navbar-light bg-light" style="margin: auto">
+                        <i><b>
+                            {{ school_name }}
+                        </b></i>
+                    </nav>
 
-                    {#                    todo Make this active when School Information tab is implemented#}
-                    {#                    <span class="nav-item nav-link p-2" id="nav-school-info-tab"#}
-                    {#                          data-toggle="tab"#}
-                    {#                          role="tab" aria-controls="nav-school-info-tab">School Information</span>#}
                 </div>
             </nav>
         {% endif %}

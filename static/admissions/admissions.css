@@ -9,3 +9,17 @@ body {
     align-items: center;
     background-color: #f5f5f5;
 }
+
+.mb-4, .my-4 {
+    margin-bottom: 4px !important;
+}
+
+.my-table-admission{
+    width: 100%;
+    border: 10px #0f0f0f;
+    border-spacing: 10px;
+}
+
+.my-table-admission td{
+  padding-bottom: 3px;
+}
