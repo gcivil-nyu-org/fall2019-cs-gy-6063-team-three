@@ -1,0 +1,33 @@
+.header-area {
+    height: 32rem;
+    margin-bottom: 5rem;
+    background: linear-gradient(to bottom, #07689F 0%, #083358 100%);
+}
+
+.content{
+    display: flex;
+    flex-direction: column;
+    color: whitesmoke;
+    padding-top: 5rem;
+}
+
+.custom-icon-wrap .custom-icon-inner {
+    display: inline-block;
+    position: relative;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: #A2D5F2
+}
+
+.custom-icon-wrap .custom-icon-inner .icon {
+    display: inline-block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    color: #083358;
+    font-size: .8rem
+}
