@@ -7,71 +7,71 @@
     <link rel="stylesheet" type="text/css"
           href="{% static 'admissions/admissions.css' %}">
     <script type="application/javascript">
-    function validate(){
-        console.log("In validate");
-        let gpa_min = document.forms["filter_form"]["gpa_min"].value.trim();
-        let gpa_max = document.forms["filter_form"]["gpa_max"].value.trim();
+        function validate() {
+            console.log("In validate");
+            let gpa_min = document.forms["filter_form"]["gpa_min"].value.trim();
+            let gpa_max = document.forms["filter_form"]["gpa_max"].value.trim();
 
-        let err_field = document.getElementById("gpa_error");
-        let err_msg = "GPA value must be a number between 0 and 4";
-        {# If both are empty, ignore validation #}
-        if(gpa_min === "" && gpa_max === ""){
+            let err_field = document.getElementById("gpa_error");
+            let err_msg = "GPA value must be a number between 0 and 4";
+            {# If both are empty, ignore validation #}
+            if (gpa_min === "" && gpa_max === "") {
+                return true;
+            }
+            {# If either one is non-empty and has a non-number, throw error #}
+            if ((gpa_min !== "" && isNaN(gpa_min)) || (gpa_max !== "" && isNaN(gpa_max))) {
+                show_err(err_field, err_msg);
+                return false;
+            }
+            let gpa_min_number = NaN;
+            let gpa_max_number = NaN;
+
+            {# Check GPA min conditions #}
+            if (gpa_min !== "" && !isNaN(gpa_min)) {
+                gpa_min_number = Number(gpa_min);
+                if (gpa_min_number < 0 || gpa_min_number > 4) {
+                    show_err(err_field, err_msg);
+                    return false;
+                }
+            }
+            {# Check GPA max conditions #}
+            if (gpa_max !== "" && !isNaN(gpa_max)) {
+                gpa_max_number = Number(gpa_max);
+                if (gpa_max_number < 0 || gpa_max_number > 4) {
+                    show_err(err_field, err_msg);
+                    return false;
+                }
+            }
+            {# If min value is specified and max is not, set max to 4. #}
+            if (!isNaN(gpa_min_number) && isNaN(gpa_max_number)) {
+                document.forms["filter_form"]["gpa_max"].value = 4
+            }
+            {# If max value is specified and min is not, set min to 0. #}
+            if (isNaN(gpa_min_number) && !isNaN(gpa_max_number)) {
+                document.forms["filter_form"]["gpa_min"].value = 0
+            }
+            {# If both min and max are set, validate them #}
+            if (!isNaN(gpa_min_number) && !isNaN(gpa_max_number)) {
+                if (gpa_max_number < gpa_min_number) {
+                    show_err(err_field, "Max GPA value should be greater than or equal to min GPA value");
+                    return false;
+                }
+            }
+            {# if all checks have passed, it is valid. #}
+            hide_err(err_field);
             return true;
         }
-        {# If either one is non-empty and has a non-number, throw error #}
-        if((gpa_min !== "" && isNaN(gpa_min)) || (gpa_max !== "" && isNaN(gpa_max))){
-            show_err(err_field, err_msg);
-            return false;
-        }
-        let gpa_min_number = NaN;
-        let gpa_max_number = NaN;
 
-        {# Check GPA min conditions #}
-        if(gpa_min !== "" && !isNaN(gpa_min)){
-            gpa_min_number = Number(gpa_min);
-            if(gpa_min_number < 0 || gpa_min_number > 4) {
-                show_err(err_field, err_msg);
-                return false;
-            }
+        function show_err(err_field, message) {
+            err_field.innerHTML = message;
+            err_field.style.color = "red";
+            err_field.style.visibility = "visible";
         }
-        {# Check GPA max conditions #}
-        if(gpa_max !== "" && !isNaN(gpa_max)){
-            gpa_max_number = Number(gpa_max);
-            if(gpa_max_number < 0 || gpa_max_number > 4){
-                show_err(err_field, err_msg);
-                return false;
-            }
-        }
-        {# If min value is specified and max is not, set max to 4. #}
-        if(!isNaN(gpa_min_number) && isNaN(gpa_max_number)){
-            document.forms["filter_form"]["gpa_max"].value = 4
-        }
-        {# If max value is specified and min is not, set min to 0. #}
-        if(isNaN(gpa_min_number) && !isNaN(gpa_max_number)){
-            document.forms["filter_form"]["gpa_min"].value = 0
-        }
-        {# If both min and max are set, validate them #}
-        if(!isNaN(gpa_min_number) && !isNaN(gpa_max_number)) {
-            if (gpa_max_number < gpa_min_number) {
-                show_err(err_field, "Max GPA value should be greater than or equal to min GPA value");
-                return false;
-            }
-        }
-        {# if all checks have passed, it is valid. #}
-        hide_err(err_field);
-        return true;
-    }
 
-    function show_err(err_field, message) {
-        err_field.innerHTML = message;
-        err_field.style.color = "red";
-        err_field.style.visibility = "visible";
-    }
-
-    function hide_err(err_field){
-        err_field.innerHTML = "";
-        err_field.style.visibility = "none";
-    }
+        function hide_err(err_field) {
+            err_field.innerHTML = "";
+            err_field.style.visibility = "none";
+        }
     </script>
     <div class="container card py-4"
          style="background-color: #BFCDD8; width: 60%; align-items: center">
@@ -79,7 +79,8 @@
             Advanced Search</h3>
 
         <form name="filter_form" method="GET"
-              action="{% url 'dashboard:admissions:index' %}" onsubmit="if(!validate()){event.preventDefault();}">
+              action="{% url 'dashboard:admissions:index' %}"
+              onsubmit="if(!validate()){event.preventDefault();}">
             <table style="border: #0f0f0f 10px" class="my-table-admission">
                 <tr>
                     <td>{{ form.first_name.label_tag }}</td>
@@ -130,7 +131,7 @@
                 </td>
             </table>
 
-                <div style="padding-top: 5px" id="gpa_error"></div>
+            <div style="padding-top: 5px" id="gpa_error"></div>
         </form>
     </div>
     <link rel="stylesheet" type="text/css"
@@ -195,15 +196,34 @@
                         </div>
                     {% elif app.application_status == 0 %}
                         <div class="card"
-                             style="margin-top: 3em; width: 60%;margin-left: auto; margin-right: auto; background-color: #F9F7F3">
-                        <div class="card-header" style="background-color: #F16F6F">
-                        <b>
-                        {{ app.first_name }} {{ app.last_name }}
-                        <span style="float: right">{{ app.application_number }}/Rejected
+                             style="margin-top: 3em; width: 60%;margin-left: auto; margin-right: auto;background-color: #F9F7F3">
+                            <div class="card-header" style="background-color: #F16F6F">
+                                <b>
+                                    {{ app.first_name }} {{ app.last_name }}
+                                    <span style="float: right">{{ app.application_number }}/Rejected
                     </span>
+                                </b>
+                            </div>
+                            <div class="card-body">
+                                <div class="card-text" style="align-items: center;">
+                            <span>
+                                Program: {{ app.program }}
+                            </span>
+                                    <span style="float: right">
+                                <a href="{% url 'dashboard:admissions:detail' app.id %}"
+                                   class="btn btn-primary"
+                                >View Application</a>
+                            </span>
+                                    <footer class="blockquote-footer"
+                                            style="margin-top:1em;">Date of Submission:
+                                        {{ app.submitted_date }}
+                                    </footer>
+                                </div>
+                            </div>
+                        </div>
                     {% elif app.application_status == 3 %}
                         <div class="card"
-                             style="margin-top: 3em; width: 60%;margin-left: auto; margin-right: auto; background-color: #F9F7F3">
+                             style="margin-top: 3em; width: 60%;margin-left: auto; margin-right: auto;background-color: #F9F7F3">
                             <div class="card-header" style="background-color: #BDBABA">
                                 <b>
                                     {{ app.first_name }} {{ app.last_name }}
@@ -245,38 +265,38 @@
                     </div>
                 {% endif %}
             {% endif %}
-            </div>
-            </div>
-            <div class="mt-3 py-4" id="wrapper" style="text-align:center">
-                <div id="container" style="display:inline-block;text-align:left">
-                    {% if is_paginated %}
-                        {% if page_obj.has_previous %}
-                            <a class="btn btn-primary"
-                               href="?{% query_transform request page=1 %}"> First </a>
-                            <a class="btn btn-primary"
-                               href="?{% query_transform request page=page_obj.previous_page_number %}">
-                                Previous </a>
-                        {% endif %}
+        </div>
+    </div>
+    <div class="mt-3 py-4" id="wrapper" style="text-align:center">
+        <div id="container" style="display:inline-block;text-align:left">
+            {% if is_paginated %}
+                {% if page_obj.has_previous %}
+                    <a class="btn btn-primary"
+                       href="?{% query_transform request page=1 %}"> First </a>
+                    <a class="btn btn-primary"
+                       href="?{% query_transform request page=page_obj.previous_page_number %}">
+                        Previous </a>
+                {% endif %}
 
-                        {% for num in page_obj.paginator.page_range %}
-                            {% if page_obj.number == num %}
-                                <a class="btn btn-light"
-                                   href="?{% query_transform request page=num %}"> {{ num }} </a>
-                            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-                                <a class="btn btn-primary"
-                                   href="?{% query_transform request page=num %}"> {{ num }} </a>
-                            {% endif %}
-                        {% endfor %}
-
-                        {% if page_obj.has_next %}
-                            <a class="btn btn-primary"
-                               href="?{% query_transform request page=page_obj.next_page_number %}">
-                                Next </a>
-                            <a class="btn btn-primary"
-                               href="?{% query_transform request page=page_obj.paginator.num_pages %}">
-                                Last </a>
-                        {% endif %}
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <a class="btn btn-light"
+                           href="?{% query_transform request page=num %}"> {{ num }} </a>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <a class="btn btn-primary"
+                           href="?{% query_transform request page=num %}"> {{ num }} </a>
                     {% endif %}
-                </div>
-            </div>
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <a class="btn btn-primary"
+                       href="?{% query_transform request page=page_obj.next_page_number %}">
+                        Next </a>
+                    <a class="btn btn-primary"
+                       href="?{% query_transform request page=page_obj.paginator.num_pages %}">
+                        Last </a>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
 {% endblock %}
