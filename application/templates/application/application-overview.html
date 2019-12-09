@@ -23,8 +23,8 @@
                         </tbody>
                     </table>
                     {% if selected_app.application_status != 3 %}
-                        <a href="{% url 'dashboard:application:withdraw' selected_app.pk %}" type="button"
-                                style="margin-top: 25px;" class="btn btn-secondary">Withdraw Application</a>
+                        <a href="{% url 'dashboard:application:withdraw' selected_app.pk %}"
+                                style="margin-top: 25px;" class="btn btn-warning">Withdraw Application</a>
                     {% endif %}
                 {% else %}
                     <h2 style="margin-top: 20px;">High School Application Form</h2>
