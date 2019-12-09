@@ -14,21 +14,27 @@
 </head>
 <body>
 <div class="header-area">
-    <div class="container content justify-content-center text-left">
-        <h1 class="mb-4">OneApply</h1>
-        <h3 class="mb-3">One stop solution for your high school applications</h3>
-        <p class="mb-5">OneApply eliminates the hassle associated with High School applications
-        in New York by providing a <br>secure, convenient, and customized portal for your application
-        needs.<br>You can be a student and get access to all the High Schools across New York or
-        you can and be member<br>of the admission committee for your High School and get access to
-        all the applications submitted for your school.</p>
-        <div class="mb-4 mt-2" style="display: flex; flex-direction: row;">
-            <a href="{% url 'logIn:login_user' constant_ut_student %}">
-                <button class="btn btn-lg btn-outline-light mr-4">You're a student</button>
-            </a>
-            <a href="{% url 'logIn:login_user' constant_ut_adminStaff %}">
-                <button class="btn btn-lg btn-outline-light ml-4">You're an admission staff</button>
-            </a>
+    <div class="container content justify-content-center text-left text-black-50">
+        <div style="margin-right: 25%">
+            <h1 class="mb-4"><b>OneApply</b></h1>
+            <h3 class="mb-3">One stop solution for your high school applications</h3>
+            <p class="mb-5" style="font-size: 18px;">OneApply eliminates the hassle associated with
+                High School applications
+                in <br>New York by providing a secure, convenient, and customized portal for your
+                application
+                needs.<br><br>You can be a student and get access to all the High Schools across New
+                York<br>or
+                you can and be member of the admission committee for your High School<br>and get
+                access to
+                all the applications submitted for your school.</p>
+            <div class="mb-4 mt-2" style="display: flex; flex-direction: row;">
+                <a href="{% url 'logIn:login_user' constant_ut_student %}">
+                    <button class="btn btn-lg btn-primary mr-4">I'm a student</button>
+                </a>
+                <a href="{% url 'logIn:login_user' constant_ut_adminStaff %}">
+                    <button class="btn btn-lg btn-primary ml-4">I'm an admission staff</button>
+                </a>
+            </div>
         </div>
     </div>
 </div>
@@ -38,8 +44,8 @@
             <div class="col-lg-7 text-center aos-init aos-animate" data-aos="fade-up"
                  data-aos-delay="">
                 <h2 class="section-title">Features</h2>
-                <p>It doesn't matter if you're a student, an admission staff member, or a student's
-                    mentor, OneApply has something for you in stores.<br><br></p>
+                <p>Whether you're a student, an admission staff member, or a student's mentor,
+                    OneApply has something in store for you.<br><br></p>
             </div>
         </div>
         <div class="row mb-5 align-items-center">
@@ -101,7 +107,7 @@
                 <div class="d-flex align-items-center custom-icon-wrap mb-3">
                     <span class="custom-icon-inner mr-3"><i
                             class="icon fa fa-file-text"></i></span>
-                    <span>Detailed information for any student application</span>
+                    <span>Detailed information for any student's application</span>
                 </div>
                 <div class="d-flex align-items-center custom-icon-wrap mb-3">
                     <span class="custom-icon-inner mr-3"><i

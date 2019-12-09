@@ -1,7 +1,8 @@
 .header-area {
-    height: 32rem;
+    height: 35rem;
     margin-bottom: 5rem;
-    background: linear-gradient(to bottom, #07689F 0%, #083358 100%);
+    background-size: cover;
+    background: url("../images/home_banner_pencils3.jpeg") no-repeat 45% 25%;
 }
 
 .content{
