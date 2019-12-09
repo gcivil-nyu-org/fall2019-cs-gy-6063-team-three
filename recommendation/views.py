@@ -4,6 +4,8 @@ from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.contrib import messages
 from django.utils import timezone
+from django.utils.encoding import force_bytes, force_text
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from .forms import RecommendationForm, RecommendationRatingForm
 from register.models import Student
 from OneApply.constants import UserType
@@ -31,7 +33,11 @@ def new_recommendation(request):
             mail_subject = "Teacher Recommendation."
             message = render_to_string(
                 "recommendation/sent_recommendation_email.html",
-                {"user": f, "domain": current_site.domain, "uid1": f.pk},
+                {
+                    "user": f,
+                    "domain": current_site.domain,
+                    "uid1": urlsafe_base64_encode(force_bytes(f.pk)),
+                },
             )
             to_email = form.cleaned_data["email_address"]
             email = EmailMessage(mail_subject, message, to=[to_email])
@@ -63,9 +69,10 @@ def all_recommendation(request):
 """
 
 
-def recommendation_rating(request, uid1):
+def recommendation_rating(request, uidb64):
     teacherRecommendation = Recommendation
     try:
+        uid1 = force_text(urlsafe_base64_decode(uidb64))
         teacherRecommendation = Recommendation.objects.get(pk=uid1)
     except (TypeError, ValueError, OverflowError, teacherRecommendation.DoesNotExist):
         context = {"empty_list": 1}
@@ -95,7 +102,11 @@ def recommendation_rating(request, uid1):
                 )
         else:
             form = RecommendationRatingForm()
-        context = {"form": form, "teacher_recommendation": teacherRecommendation}
+        context = {
+            "form": form,
+            "teacher_recommendation": teacherRecommendation,
+            "teacher_pk": urlsafe_base64_encode(force_bytes(teacherRecommendation.pk)),
+        }
         return render(request, "recommendation/recommendation_rating.html", context)
     else:
         context = {"completed": 1}
