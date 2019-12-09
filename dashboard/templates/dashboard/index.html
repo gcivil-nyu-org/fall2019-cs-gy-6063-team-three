@@ -22,26 +22,17 @@
 <body>
 <div style="display: flex; flex-direction: column; width: 100%; height: 100%;">
     <div class="nav-container">
-        <nav class="navbar navbar-expand-md navbar-dark bg-primary">
+        <nav class="navbar navbar-expand-md navbar-dark bg-primary justify-content-between">
             <a class="navbar-brand" href="{% url 'dashboard:dashboard' %}">OneApply</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse"
-                    data-target="#navbarCollapse" aria-controls="navbarCollapse"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarCollapse">
-                <ul class="navbar-nav mr-auto">
-
-                </ul>
-
-                <div class="dropdown text-light mr-2">
-                    Welcome, {{ request.session.user_fname }}!
+            <div style="display: flex; flex-direction: row;">
+                <span class="text-light">Welcome {% if request.session.user_fname %}, {{ request.session.user_fname }}{% endif %}!</span>
+                <div class="dropdown text-light" >
                     <span id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true"
                           aria-expanded="false" style="cursor: pointer;">
                        <i class="fa fa-gear ml-2"></i>
                     </span>
-                    <div class="dropdown-menu dropdown-menu-sm-right" aria-labelledby="dropdown03" style="z-index: 2000; min-width: 11rem;">
+                    <div class="dropdown-menu dropdown-menu-right"
+                         style="z-index: 2000;">
                         <button class="dropdown-item">Change Password</button>
                         <a class="dropdown-item" href="{% url 'dashboard:logout' %}">Logout</a>
                     </div>
