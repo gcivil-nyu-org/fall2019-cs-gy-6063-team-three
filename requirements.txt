@@ -1,4 +1,4 @@
-Django==2.2.6
+Django==2.2.8
 freeze==1.0.10
 pytz==2019.3
 six==1.12.0
