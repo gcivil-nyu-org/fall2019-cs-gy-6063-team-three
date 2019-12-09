@@ -2,7 +2,12 @@ import django_filters
 
 from application.models import HighSchoolApplication
 
-FILTER_CHOICES = (("0", "Rejected"), ("1", "Accepted"), ("2", "Pending"))
+FILTER_CHOICES = (
+    ("0", "Rejected"),
+    ("1", "Accepted"),
+    ("2", "Pending"),
+    ("3", "Withdrawn"),
+)
 
 
 class ApplicationFilter(django_filters.FilterSet):
