@@ -1,3 +1,4 @@
+django-filter==2.2.0
 Django==2.2.8
 freeze==1.0.10
 pytz==2019.3
@@ -16,3 +17,4 @@ django-phonenumber-field
 phonenumbers
 django-select2==7.1.1
 python-dateutil==2.8.0
+django-widget-tweaks==1.4.5

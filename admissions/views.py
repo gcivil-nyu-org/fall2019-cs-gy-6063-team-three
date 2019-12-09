@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
 from django.views.generic import ListView
+from django_filters.views import FilterView
 
 from OneApply.constants import UserType
+from admissions.advfilters import ApplicationFilter
 from application.models import HighSchoolApplication
 from high_school.models import Program
 from register.models import Admin_Staff
@@ -9,7 +11,8 @@ from register.models import Admin_Staff
 ALL = "All"
 
 
-class IndexView(ListView):
+class IndexView(ListView, FilterView):
+    filterset_class = ApplicationFilter
     model = HighSchoolApplication
     paginate_by = 10
     context_object_name = "applications"
@@ -29,6 +32,8 @@ class IndexView(ListView):
         context["unauth"] = self.unauth if self.unauth else None
         context["programs"] = get_programs(all_applications)
         context["current_program"] = self.program if self.program else ALL
+        context["school_name"] = self.school_name if self.school_name else None
+        context["form"] = self.filterset.form if self.filterset else None
         return context
 
     def get_queryset(self):
@@ -44,6 +49,8 @@ class IndexView(ListView):
             self.user = None
             self.program = None
             self.unauth = True
+            self.school_name = None
+            self.filterset = None
             return []
         self.user = None
         try:
@@ -53,14 +60,15 @@ class IndexView(ListView):
         applications = get_applications(admin_staff=self.user).order_by(
             "-submitted_date"
         )
-
         try:
             # Get program id from request params
-            self.program_id = self.request.GET.get("p")
+            self.program_id = self.request.GET.get("program")
             self.program = None
         except KeyError:
             self.program_id = None
             self.program = None
+
+        self.school_name = self.user.school.school_name
 
         if self.program_id:
             applications = applications.filter(program__id=self.program_id).order_by(
@@ -70,7 +78,8 @@ class IndexView(ListView):
         # a program will exist, hence,
         if self.program_id and applications:
             self.program = Program.objects.get(id=self.program_id)
-        return applications
+        self.filterset = ApplicationFilter(self.request.GET, queryset=applications)
+        return self.filterset.qs.distinct()
 
 
 def detail(request, application_id):
