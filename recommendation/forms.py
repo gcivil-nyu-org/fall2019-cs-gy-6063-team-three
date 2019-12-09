@@ -22,14 +22,14 @@ class RecommendationForm(ModelForm):
         student = Student.objects.get(pk=studentid)
         if Recommendation.objects.filter(email_address=email, user=student).exists():
             raise ValidationError(
-                "A recommendation request has already been sent to someone with that email address."
-                # noqa: E501
+                "A recommendation request has already been sent to someone with that email address."  # noqa: E501
             )
         return email
 
     class Meta:
         model = Recommendation
         exclude = [
+            "user",
             "submitted_date",
             "known_length",
             "known_strength",

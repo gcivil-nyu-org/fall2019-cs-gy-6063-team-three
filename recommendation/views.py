@@ -11,6 +11,8 @@ from register.models import Student
 from OneApply.constants import UserType
 from .models import Recommendation
 
+RECOMMENDATION_COUNT = 2
+
 
 def new_recommendation(request):
     user_type = request.session.get("user_type", None)
@@ -21,52 +23,53 @@ def new_recommendation(request):
         or user_type != UserType.STUDENT
     ):
         return redirect("landingpage:index")
-    if request.method == "POST":
+
+    try:
+        error_count_rec = None
         user = Student.objects.get(username=username)
-        form = RecommendationForm(request.POST)
-        form.user_id = user.pk
-        if form.is_valid():
-            f = form.save(commit=False)
-            f.user_id = user.pk
-            f.save()
-            current_site = get_current_site(request)
-            mail_subject = "Teacher Recommendation."
-            message = render_to_string(
-                "recommendation/sent_recommendation_email.html",
-                {
-                    "user": f,
-                    "domain": current_site.domain,
-                    "uid1": urlsafe_base64_encode(force_bytes(f.pk)),
-                },
+        recommendations = Recommendation.objects.filter(user_id=user.pk)
+        count = recommendations.count()
+
+        if count == RECOMMENDATION_COUNT:
+            error_count_rec = (
+                "The maximum number of recommendations have been requested!"
             )
-            to_email = form.cleaned_data["email_address"]
-            email = EmailMessage(mail_subject, message, to=[to_email])
-            email.send()
-            messages.info(
-                request,
-                "An email has been sent to the teacher you added with instructions on how to fill out your recommendation!",  # noqa: E501
-            )
-            return redirect("dashboard:recommendation:new_recommendation")
-    else:
-        form = RecommendationForm()
-    context = {"form": form}
+            form = None
+        elif request.method == "POST":
+            form = RecommendationForm(request.POST)
+            form.user_id = user.pk
+            if form.is_valid():
+                f = form.save(commit=False)
+                f.user_id = user.pk
+                f.save()
+                current_site = get_current_site(request)
+                mail_subject = "Teacher Recommendation."
+                message = render_to_string(
+                    "recommendation/sent_recommendation_email.html",
+                    {
+                        "user": f,
+                        "domain": current_site.domain,
+                        "uid1": urlsafe_base64_encode(force_bytes(f.pk)),
+                    },
+                )
+                to_email = form.cleaned_data["email_address"]
+                email = EmailMessage(mail_subject, message, to=[to_email])
+                email.send()
+                messages.info(
+                    request,
+                    "An email has been sent to the teacher you added with instructions on how to fill out your recommendation!",  # noqa: E501
+                )
+                return redirect("dashboard:recommendation:new_recommendation")
+        else:
+            form = RecommendationForm()
+        context = {
+            "form": form,
+            "error_count_rec": error_count_rec,
+            "recommendations": recommendations,
+        }
+    except ValueError:
+        context = {"form": form}
     return render(request, "recommendation/recommendation_form.html", context)
-
-
-"""
-def all_recommendation(request):
-    user_type = request.session.get("user_type", None)
-    username = request.session.get("username", None)
-    if (
-        not request.session.get("is_login", None)
-        or not username
-        or user_type != UserType.STUDENT
-    ):
-        return redirect("landingpage:index")
-    user = Student.objects.get(username=username)
-    context = {"recommendations": Recommendation.objects.filter(user_id=user.pk)}
-    return render(request, "recommendation/index.html", context)
-"""
 
 
 def recommendation_rating(request, uidb64):
