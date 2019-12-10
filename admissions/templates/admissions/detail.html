@@ -80,6 +80,8 @@ inherit; width: 75%; margin: 0 auto 2em;">
                 <td>Accepted</td>
                 {% elif application.application_status == 0 %}
                 <td>Rejected</td>
+                {% elif application.application_status == 3 %}
+                <td>Withdrawn</td>
                 {% endif %}
             </tr>
 
@@ -345,7 +347,8 @@ inherit; width: 75%; margin: 0 auto 2em;">
             inherit; width: 75%; margin: 0 auto 2em;">
             <tbody>
             <tr>
-                <th scope="row" colspan="2" style="text-align:center; background-color: #083358; color:white">Being Prepared
+                <th scope="row" colspan="2" style="text-align:center; background-color: #083358; color:white">Being
+                    Prepared
                     By
                 </th>
             </tr>
