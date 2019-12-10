@@ -1,6 +1,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import redirect
 from django.shortcuts import render
+from django.contrib.auth.hashers import check_password
 
 from OneApply.constants import UserType
 from register.models import Student, Admin_Staff
@@ -26,7 +27,7 @@ def login_user(request, user_type):
                 else:
                     if not user.is_active:
                         valid_error = True
-                    elif user.password != password:
+                    elif not check_password(password, user.password):
                         login_error = True
                     else:
                         request.session["username"] = username
@@ -44,7 +45,7 @@ def login_user(request, user_type):
                         verif_error = True
                     elif not user.is_active:
                         valid_error = True
-                    elif user.password != password:
+                    elif not check_password(password, user.password):
                         login_error = True
                     else:
                         request.session["username"] = username

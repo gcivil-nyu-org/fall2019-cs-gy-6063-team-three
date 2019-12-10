@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "django_select2",
+    "widget_tweaks",
+    "django_filters",
 ]
 
 

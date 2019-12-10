@@ -5,6 +5,7 @@ from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.contrib.auth.hashers import make_password
 
 from OneApply.constants import UserType
 from register.models import Student, Admin_Staff
@@ -19,8 +20,9 @@ def register_user(request, user_type):
             form = StudentRegisterForm(request.POST)
             if form is not None and form.is_valid():
                 password = form.cleaned_data["input_password"]
+                encrypt_pwd = make_password(password)
                 f = form.save(commit=False)
-                f.password = password
+                f.password = encrypt_pwd
                 f.save()
                 current_site = get_current_site(request)
                 mail_subject = "Activate your account."
@@ -46,8 +48,9 @@ def register_user(request, user_type):
             form = AdminStaffRegisterForm(request.POST)
             if form is not None and form.is_valid():
                 password = form.cleaned_data["input_password"]
+                encrypt_pwd = make_password(password)
                 f = form.save(commit=False)
-                f.password = password
+                f.password = encrypt_pwd
                 f.save()
                 current_site = get_current_site(request)
                 supervisor_mail_subject = "Verify your employee."
