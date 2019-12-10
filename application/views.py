@@ -3,6 +3,8 @@ from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Q
+from datetime import timedelta
 import json
 
 from .forms import HighSchoolApplicationForm
@@ -22,79 +24,77 @@ def new_application(request):
     try:
         error_count_app = None
         user = Student.objects.get(username=username)
-        objects = HighSchoolApplication.objects.filter(user=user.pk)
-        if HighSchoolApplication.objects.filter(user=user.pk, is_draft=False):
-            error_apply = "You can only submit all applications at once."
-        else:
-            error_apply = None
+        sub_date = timezone.now() - timedelta(days=180)
+        objects = HighSchoolApplication.objects.filter(
+            Q(user=user.pk, is_draft=False, submitted_date__gt=sub_date)
+        )
         count = objects.count()
-        if count > APPLICATION_COUNT:
+        error_apply = None
+        form = None
+        program_error = None
+        confirmation_errors = None
+        if count > 0:
+            error_apply = "You can only submit all applications at once."
+        elif count > APPLICATION_COUNT:
             error_count_app = (
                 "You can only create " + str(APPLICATION_COUNT) + " applications"
             )
-            form = None
         elif request.method == "POST":
-            form = HighSchoolApplicationForm(request.POST)
-            HighSchoolApplication.objects.filter(user=user.pk, is_draft=True).delete()
+            count = 0
+            form = HighSchoolApplicationForm(request.POST, user=user)
+            school_list = []
+            program_list = []
             for i in range(0, APPLICATION_COUNT):
-                new_req = request.POST.copy()
-                new_req["school"] = request.POST.get("school" + str(i))
-                new_req["program"] = request.POST.get("program" + str(i))
-                if not new_req["school"] or not new_req["program"]:
-                    continue
-                form = HighSchoolApplicationForm(new_req)
-                if form.is_valid():
-                    f = form.save(commit=False)
+                school = request.POST.get("school" + str(i))
+                program = request.POST.get("program" + str(i))
+                if school and program:
+                    if school in school_list and program in program_list:
+                        program_error = "Duplicate school and program selected"
+                    school_list.append(school)
+                    program_list.append(program)
+                    count = count + 1
+            if (
+                request.POST.get("submit") is not None
+                and request.POST.get("confirmation") is None
+            ):
+                confirmation_errors = "Confirm before submitting application"
+            if not program_error and not confirmation_errors and form.is_valid():
+                HighSchoolApplication.objects.filter(
+                    Q(user=user.pk, is_draft=True, submitted_date__gt=sub_date)
+                ).delete()
+                f = form.save(commit=False)
+                f.user = user
+                f.submitted_date = timezone.now()
+                if request.POST.get("submit") is not None:
+                    f.is_draft = False
+                else:
+                    f.is_draft = True
+                for i in range(0, count):
+                    school = form.cleaned_data["school" + str(i)]
+                    program = form.cleaned_data["program" + str(i)]
+                    f.school = school
+                    f.program = program
                     app_num = generate_application_number(
-                        user.pk, f.school.dbn, f.program.pk
+                        user.pk, school.dbn, program.pk
                     )
                     f.application_number = app_num
-                    f.user = user
-                    f.submitted_date = timezone.now()
-                    if request.POST.get("submit") is not None:
-                        f.is_draft = False
-                    else:
-                        f.is_draft = True
-                    f.save()
-            return HttpResponseRedirect(
-                reverse("dashboard:application:all_applications")
-            )
+                    save_application(user, f)
+                return HttpResponseRedirect(
+                    reverse("dashboard:application:all_applications")
+                )
         else:
-            if count != 0:
-                initial = {
-                    "first_name": user.first_name,
-                    "last_name": user.last_name,
-                    "email_address": user.email_address,
-                    "phoneNumber": objects[0].phoneNumber,
-                    "address": objects[0].address,
-                    "gender": objects[0].gender,
-                    "date_of_birth": objects[0].date_of_birth.strftime("%Y-%m-%d"),
-                    "gpa": objects[0].gpa,
-                    "parent_name": objects[0].parent_name,
-                    "parent_phoneNumber": objects[0].parent_phoneNumber,
-                }
-                i = 0
-                for obj in objects:
-                    if obj.is_draft:
-                        initial["school" + str(i)] = obj.school.pk
-                        initial["program" + str(i)] = obj.program.pk
-                        i = i + 1
-                    else:
-                        count = count - 1
-            else:
-                initial = {
-                    "first_name": user.first_name,
-                    "last_name": user.last_name,
-                    "email_address": user.email_address,
-                }
-            form = HighSchoolApplicationForm(
-                initial=initial, max_count=APPLICATION_COUNT
+            objects = HighSchoolApplication.objects.filter(
+                Q(user=user.pk, is_draft=True, submitted_date__gt=sub_date)
             )
+            count = objects.count()
+            form = build_draft_form(user, objects)
         context = {
             "form": form,
             "error_count_app": error_count_app,
             "curr_schools": max(1, count),
             "error_apply": error_apply,
+            "program_error": program_error,
+            "confirmation_errors": confirmation_errors,
         }
     except ValueError as e:
         context = {"form": form, "program_error": e, "curr_schools": 0}
@@ -105,6 +105,7 @@ def save_existing_application(request, application_id):
     username = check_current_session(request)
     if not username:
         return redirect("landingpage:index")
+    user = Student.objects.get(username=username)
     if request.method == "POST":
         try:
             f = HighSchoolApplication.objects.get(pk=application_id)
@@ -114,9 +115,8 @@ def save_existing_application(request, application_id):
         new_req = request.POST.copy()
         new_req["school"] = f.school.pk
         new_req["program"] = f.program.pk
-        form = HighSchoolApplicationForm(new_req)
+        form = HighSchoolApplicationForm(new_req, user=user)
         if form.is_valid():
-            user = Student.objects.get(username=username)
             form = form.save(commit=False)
             f.first_name = form.first_name
             f.last_name = form.last_name
@@ -143,7 +143,7 @@ def save_existing_application(request, application_id):
                 reverse("dashboard:application:all_applications")
             )
     else:
-        form = HighSchoolApplicationForm()
+        form = HighSchoolApplicationForm(user=user)
         f = None
     context = {"form": form, "application_id": application_id, "selected_app": f}
     return render(request, "application/index.html", context)
@@ -191,6 +191,7 @@ def detail(request, application_id):
     form = HighSchoolApplicationForm(
         initial={"program": application.program, "school": application.school},
         data=data,
+        user=user,
     )
     context = {
         "applications": HighSchoolApplication.objects.filter(user_id=user.pk),
@@ -248,3 +249,56 @@ def check_current_session(request):
     if not request.session.get("is_login", None) or user_type != UserType.STUDENT:
         username = None
     return username
+
+
+def build_draft_form(user, objects):
+    if objects.count() != 0:
+        initial = {
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "email_address": user.email_address,
+            "phoneNumber": objects[0].phoneNumber,
+            "address": objects[0].address,
+            "gender": objects[0].gender,
+            "date_of_birth": objects[0].date_of_birth.strftime("%Y-%m-%d"),
+            "gpa": objects[0].gpa,
+            "parent_name": objects[0].parent_name,
+            "parent_phoneNumber": objects[0].parent_phoneNumber,
+        }
+        i = 0
+        for obj in objects:
+            if obj.is_draft:
+                initial["school" + str(i)] = obj.school.pk
+                initial["program" + str(i)] = obj.program.pk
+                i = i + 1
+    else:
+        initial = {
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "email_address": user.email_address,
+        }
+    form = HighSchoolApplicationForm(
+        initial=initial, max_count=APPLICATION_COUNT, user=user
+    )
+    return form
+
+
+def save_application(user, form_object):
+    return HighSchoolApplication.objects.create(
+        first_name=form_object.first_name,
+        last_name=form_object.last_name,
+        user=user,
+        school=form_object.school,
+        program=form_object.program,
+        application_number=form_object.application_number,
+        email_address=form_object.email_address,
+        phoneNumber=form_object.phoneNumber,
+        address=form_object.address,
+        gender=form_object.gender,
+        date_of_birth=form_object.date_of_birth,
+        gpa=form_object.gpa,
+        parent_name=form_object.parent_name,
+        parent_phoneNumber=form_object.parent_phoneNumber,
+        submitted_date=timezone.now(),
+        is_draft=form_object.is_draft,
+    )

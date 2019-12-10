@@ -137,6 +137,7 @@ class HighSchoolApplicationModelTest(TestCase):
 
 class HighSchoolApplicationFormTest(TestCase):
     def setUp(self):
+        self.student = create_student(self)
         self.school = create_highschool(self)
         self.program = create_program(self)
 
@@ -145,17 +146,17 @@ class HighSchoolApplicationFormTest(TestCase):
             "first_name": "Hritik",
             "last_name": "Roshan",
             "email_address": "hrx@gmail.com",
-            "phoneNumber": "+19567801234",
+            "phoneNumber": "(956) 780-1234",
             "address": "Brooklyn, NY",
             "gender": GENDER[0],
             "date_of_birth": "2005-10-31",
             "gpa": 3.88,
             "parent_name": "Rakesh Roshan",
-            "parent_phoneNumber": "+15879879870",
-            "school": self.school.pk,
-            "program": self.program.pk,
+            "parent_phoneNumber": "(587) 987-9870",
+            "school0": self.school.pk,
+            "program0": self.program.pk,
         }
-        form = HighSchoolApplicationForm(data=data)
+        form = HighSchoolApplicationForm(data=data, user=self.student)
         self.assertTrue(form.is_valid())
 
     def test_invalid_phoneNumber(self):
@@ -163,17 +164,17 @@ class HighSchoolApplicationFormTest(TestCase):
             "first_name": "Hritik",
             "last_name": "Roshan",
             "email_address": "hrx@gmail.com",
-            "phoneNumber": "9567801234",  # missing country code
+            "phoneNumber": "(956) 780-34",
             "address": "Brooklyn, NY",
             "gender": GENDER[0],
             "date_of_birth": "2005-10-31",
             "gpa": 3.88,
             "parent_name": "Rakesh Roshan",
-            "parent_phoneNumber": "+15879879870",
-            "school": self.school.pk,
-            "program": self.program.pk,
+            "parent_phoneNumber": "(158) 798-9870",
+            "school0": self.school.pk,
+            "program0": self.program.pk,
         }
-        form = HighSchoolApplicationForm(data=data)
+        form = HighSchoolApplicationForm(data=data, user=self.student)
         self.assertFalse(form.is_valid())
         self.assertFalse("phoneNumber" in form.cleaned_data)
 
@@ -189,10 +190,10 @@ class HighSchoolApplicationFormTest(TestCase):
             "gpa": 3.88,
             "parent_name": "Rakesh Roshan",
             "parent_phoneNumber": "+15879879870",
-            "school": self.school.pk,
-            "program": self.program.pk,
+            "school0": self.school.pk,
+            "program0": self.program.pk,
         }
-        form = HighSchoolApplicationForm(data=data)
+        form = HighSchoolApplicationForm(data=data, user=self.student)
         self.assertFalse(form.is_valid())
         self.assertFalse("date_of_birth" in form.cleaned_data)
 
@@ -207,10 +208,10 @@ class HighSchoolApplicationFormTest(TestCase):
             "date_of_birth": "1995-10-31",
             "parent_name": "Rakesh Roshan",
             "parent_phoneNumber": "+15879879870",
-            "school": self.school.pk,
-            "program": self.program.pk,
+            "school0": self.school.pk,
+            "program0": self.program.pk,
         }
-        form = HighSchoolApplicationForm(data=data)
+        form = HighSchoolApplicationForm(data=data, user=self.student)
         self.assertFalse(form.is_valid())
 
     def test_get_school_prog_fields(self):
@@ -218,17 +219,17 @@ class HighSchoolApplicationFormTest(TestCase):
             "first_name": "Hritik",
             "last_name": "Roshan",
             "email_address": "hrx@gmail.com",
-            "phoneNumber": "+19567801234",
+            "phoneNumber": "(956) 780-1234",
             "address": "Brooklyn, NY",
             "gender": GENDER[0],
             "date_of_birth": "2005-10-31",
             "gpa": 3.88,
             "parent_name": "Rakesh Roshan",
-            "parent_phoneNumber": "+15879879870",
-            "school": self.school.pk,
-            "program": self.program.pk,
+            "parent_phoneNumber": "(587) 987-9870",
+            "school0": self.school.pk,
+            "program0": self.program.pk,
         }
-        form = HighSchoolApplicationForm(data=data)
+        form = HighSchoolApplicationForm(data=data, user=self.student)
         self.assertTrue(form.is_valid())
         self.max_count = 10
         result = form.get_school_prog_fields()
@@ -237,6 +238,7 @@ class HighSchoolApplicationFormTest(TestCase):
     def tearDown(self):
         self.school.delete()
         self.program.delete()
+        self.student.delete()
 
 
 class HighSchoolApplicationViewTest(TestCase):
@@ -266,7 +268,7 @@ class HighSchoolApplicationViewTest(TestCase):
         }
         url = reverse("dashboard:application:new_application")
         response = self.client.post(url, data=data)
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 200)
         self.assertIsNotNone(
             HighSchoolApplication.objects.get(
                 application_number=generate_application_number(
@@ -293,8 +295,8 @@ class HighSchoolApplicationViewTest(TestCase):
         url = reverse(
             "dashboard:application:draftExistingApplication", args=[self.application.pk]
         )
-        response = self.client.post(url, data=data)
-        self.assertEqual(response.status_code, 302)
+        response = self.client.post(url, data=data, user=self.student)
+        self.assertEqual(response.status_code, 200)
         self.assertIsNotNone(
             HighSchoolApplication.objects.get(
                 application_number=generate_application_number(
