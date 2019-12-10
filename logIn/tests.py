@@ -1,5 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
+from django.contrib.auth.hashers import make_password
+
 from high_school.models import HighSchool
 from .forms import LoginForm
 from OneApply.constants import UserType
@@ -25,7 +27,7 @@ class LoginStudentViewTest(TestCase):
             last_name="Roshan",
             email_address="hrx@gmail.com",
             username="hritik",
-            password="hritikRoshan@10",
+            password=make_password("hritikRoshan@10"),
             current_school="NYU",
             borough="MN",
             is_active=True,
@@ -84,7 +86,7 @@ class LoginAdminStaffViewTest(TestCase):
             last_name="Roshan",
             email_address="hrx@gmail.com",
             username="hritik",
-            password="hritikRoshan@10",
+            password=make_password("hritikRoshan@10"),
             school=hs,
             supervisor_email="hrx@gmail.com",
             is_verified_employee=True,
