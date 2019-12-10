@@ -7,6 +7,7 @@ from admissions.advfilters import ApplicationFilter
 from application.models import HighSchoolApplication
 from high_school.models import Program
 from register.models import Admin_Staff
+from recommendation.models import Recommendation
 
 ALL = "All"
 
@@ -95,6 +96,7 @@ def detail(request, application_id):
     if user_type != UserType.ADMIN_STAFF:
         context["unauth"] = True
         context["application"] = None
+        context["recommendation"] = None
         return render(request, "admissions/detail.html", context)
     try:
         application = HighSchoolApplication.objects.get(id=application_id)
@@ -107,6 +109,11 @@ def detail(request, application_id):
             context["unauth"] = True
             context["application"] = None
             return render(request, "admissions/detail.html", context)
+        try:
+            recommendation = Recommendation.objects.filter(user=application.user)
+        except Recommendation.DoesNotExist:
+            recommendation = None
+        context["recommendation"] = recommendation
     context["application"] = application
     return render(request, "admissions/detail.html", context)
 
