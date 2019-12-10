@@ -24,19 +24,28 @@ body {
   color: white;
 }
 
-.blur-bg{
-  height: 100%;
-  background-color: black;
-  opacity: 0.38;
-  filter: blur(2px);
-  margin-left: -15px;
-  margin-right: -15px;
+.overlay {
+    position: relative
+}
+
+.overlay:before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.6;
+    background: black;
+    filter: blur(2px);
 }
 
 .right-pane-container{
-  position: absolute;
-  top: 100px;
-  margin: 0 40px;
+    position: absolute;
+    top: 5%;
+    margin: 0 40px;
+    display: flex;
+    flex-direction: column;
 }
 
 .form-signin {

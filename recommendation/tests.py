@@ -95,7 +95,9 @@ class RecommendationFormTest(TestCase):
             "last_name": "Smith",
             "email_address": "fake@email.com",
         }
+        self.student = create_student(self)
         form = RecommendationForm(data=data)
+        form.user_id = self.student.pk
         self.assertTrue(form.is_valid())
 
     def test_invalid_form(self):
@@ -155,12 +157,44 @@ class RecommendationViewTest(TestCase):
         }
         url = reverse("recommendation:new_recommendation")
         response = self.client.post(url, data=data)
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 200)
         self.assertTrue(
             Recommendation.objects.filter(
                 first_name="James", last_name="Smith", email_address="fake@email.com"
             ).exists()
         )
+
+    def test_max(self):
+        self.count = 2
+        update_session(self.client, self.student)
+        data = {
+            "first_name": "James",
+            "last_name": "Smith",
+            "email_address": "fake4@email.com",
+        }
+        url = reverse("recommendation:new_recommendation")
+        response = self.client.post(url, data=data)
+        self.assertEqual(response.status_code, 302)
+
+    def test_max_count_recommendations(self):
+        update_session(self.client, self.student)
+        data = {
+            "first_name": "James",
+            "last_name": "Smith",
+            "email_address": "fake1@email.com",
+        }
+        url = reverse("recommendation:new_recommendation")
+        response = self.client.post(url, data=data)
+        self.assertEqual(response.status_code, 302)
+        data = {
+            "first_name": "James",
+            "last_name": "Smith",
+            "email_address": "fake2@email.com",
+        }
+        url = reverse("recommendation:new_recommendation")
+        response = self.client.post(url, data=data)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Recommendation.objects.count(), 2)
 
     def test_invalid_add_teacher(self):
         update_session(self.client, self.student)
