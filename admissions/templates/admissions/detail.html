@@ -80,6 +80,8 @@ inherit; width: 75%; margin: 0 auto 2em;">
                                 <td>Accepted</td>
                             {% elif application.application_status == 0 %}
                                 <td>Rejected</td>
+                            {% elif application.application_status == 3 %}
+                                <td>Withdrawn</td>
                             {% endif %}
                         </tr>
 
