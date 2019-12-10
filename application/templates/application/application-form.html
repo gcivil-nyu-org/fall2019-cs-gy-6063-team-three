@@ -12,7 +12,7 @@
         <h4 class="text-danger" style="font-weight: bold">{{ error_apply }}</h4>
     {% else %}
     <h2 style="font-weight: bold;">High School Application Form</h2>
-    <h5 style="color: red;margin-top: 10px;margin-bottom: 10px;">You can submit only 10 applications and only once.</h5>
+    <h5 style="color: red;margin-top: 10px;margin-bottom: 10px;">You can submit up to 10 applications and only one submission is allowed.</h5>
     <form action="{% url 'dashboard:application:new_application' %}" prog-data-url="{% url 'dashboard:application:ajax_load_programs' %}"
           method="post" id="applicationForm" class="form-signup" style="padding-top: 10px;">
         {% csrf_token %}
@@ -114,7 +114,7 @@
         <div class="rounded bg-secondary" style="margin-bottom:10px;margin-top:15px;">
             <h5 class="p-2">Selected Schools and Programs</h5>
         </div>
-        <p style="color:red; ">Schools will be listed from your favorites.</p>
+        <p style="color:red; ">Only your favorited schools will be available for selection.</p>
         {% if program_error %}
                 <ul class="errorlist"><li> {{ program_error }}</li></ul>
         {% endif %}
