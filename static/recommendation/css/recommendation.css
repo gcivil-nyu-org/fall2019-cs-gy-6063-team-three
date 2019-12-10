@@ -115,3 +115,22 @@ ul.errorlist {
     white-space:nowrap;
     display: inline-block;
 }
+
+#req_recs table{
+    border-collapse: collapse;
+    width: 100%;
+}
+#req_recs td{
+    border-color: #212529;
+    text-align: left;
+    padding: 8px;
+    font-style: normal;
+}
+#req_recs th{
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #07689f;
+    border-color: #212529;
+    color: white;
+}

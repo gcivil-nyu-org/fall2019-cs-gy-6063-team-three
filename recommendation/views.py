@@ -31,9 +31,7 @@ def new_recommendation(request):
         count = recommendations.count()
 
         if count == RECOMMENDATION_COUNT:
-            error_count_rec = (
-                "The maximum number of recommendations have been requested!"
-            )
+            error_count_rec = "You have already requested 2 recommendations, which is the maximum number of recommendations allowed."  # noqa: E501
             form = None
         elif request.method == "POST":
             form = RecommendationForm(request.POST)

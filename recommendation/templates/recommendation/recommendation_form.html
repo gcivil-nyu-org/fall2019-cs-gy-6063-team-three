@@ -4,13 +4,13 @@
 {#<link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">#}
 <link rel="stylesheet" type="text/css" href="{% static 'recommendation/css/recommendation.css' %}">
 
-<div style="margin-left:20%;height: 90%; margin-bottom: 5%; width:50%; margin-top: 2%;">
+<div style="margin: auto; height: 90%; width:50%; margin-top: 2%;">
     <h2>Teacher/Mentor Recommendations</h2>
-    <h6>Please enter the name and email address of the person that you are requesting to fill out your recommendation. </h6>
-    <h6>Please note that you can only send two recommendation requests out. </h6>
     {% if error_count_rec %}
         <h4 class="text-danger" style="font-weight: bold">{{ error_count_rec }}</h4>
     {% else %}
+    <h6>Please enter the name and email address of the person that you are requesting to fill out your recommendation. </h6>
+    <h6>Please note that you can only send two recommendation requests out. </h6>
         <form action="{% url 'dashboard:recommendation:new_recommendation' %}" method="post" class="form-signup" style="padding-top: 10px;">
             {% csrf_token %}
             <div class="form-row">
@@ -51,41 +51,31 @@
 </div>
 
 
-<style>
-table {
-  border-collapse: collapse;
-  width: 100%;
-}
-td, th {
-  border: 3px solid;
-  text-align: left;
-  padding: 8px;
-}
-</style>
 
-<div style="margin-left:20%;height: 90%; margin-bottom: 5%; width:50%; margin-top: 2%;">
+
+<div style="margin:auto; margin-top: 2%; height: 90%; width:50%;">
     <div class="list-group" style="margin-top:10px;">
         <h4> Requested Recommendations </h4>
         {% if recommendations %}
-            <table>
-            <tr>
-                <th>First Name</th>
-                <th> Last Name</th>
-                <th> Email Address</th>
-                <th> Status</th>
-            </tr>
-            {% for rec in recommendations %}
+            <table id="req_recs">
                 <tr>
-                    <th> {{ rec.first_name }} </th>
-                    <th> {{ rec.last_name }} </th>
-                    <th> {{ rec.email_address }} </th>
-                    {% if rec.submitted_date %}
-                        <th>Completed</th>
-                    {% else %}
-                        <th> In Progress</th>
-                    {% endif %}
+                    <th>First Name</th>
+                    <th> Last Name</th>
+                    <th> Email Address</th>
+                    <th> Status</th>
                 </tr>
-            {% endfor %}
+                {% for rec in recommendations %}
+                    <tr>
+                        <td> {{ rec.first_name }} </td>
+                        <td> {{ rec.last_name }} </td>
+                        <td> {{ rec.email_address }} </td>
+                        {% if rec.submitted_date %}
+                            <td>Completed</td>
+                        {% else %}
+                            <td> In Progress</td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
             </table>
         {% else %}
             <div class="d-flex w-100 justify-content-between mb-2">
