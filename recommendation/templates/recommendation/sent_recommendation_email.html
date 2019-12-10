@@ -2,7 +2,7 @@
 Hi {{ user.first_name }} {{ user.last_name }},
 {{ user.user.first_name}} {{user.user.last_name }} has requested that you fill out a recommendation form for them.
 Please visit the below link to fill out the form:
-http://{{ domain }}{% url 'recommendation_rating' uid1 %}
+http://{{ domain }}{% url 'recommendation_rating' uidb64=uid1 %}
 
 Thank you,
 One Apply Team

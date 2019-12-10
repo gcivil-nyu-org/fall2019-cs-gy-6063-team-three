@@ -1,5 +1,10 @@
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+{% if user_type and user_type == constant_ut_adminStaff %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/admin_theme.min.css' %}">
+{% else %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/student_theme.min.css' %}">
+{% endif %}
 <link rel="stylesheet" type="text/css" href="{% static 'register/css/register.css' %}">
 
 {{ form.media.css }}
@@ -7,16 +12,15 @@
 <body>
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-4 left-pane">
-            <div class="blur-bg"></div>
+        <div class="col-md-4 left-pane overlay">
             <div class="text-center mb-4 left-pane-container">
-                <h1 class="h3 font-weight-normal" style="margin-bottom: 20px;">Do we know you?</h1>
+                <h3 class="font-weight-normal mb-4">Do we know you?</h3>
                 {% if user_type == constant_ut_student %}
-                    <h4 class="h5 font-weight-light" style="text-align: justify;margin: 40px 10px 20px 10px;">If you're a high school kid (or a concerned guardian) starting your application process for the upcoming High School admission window and do not want the hassle of a big-yellow-book ...start with OneApply.</h4>
-                    <h4 class="h5 font-weight-light" style="text-align: justify;margin: 40px 10px 40px 10px;">OneApply is a one stop application portal which provides you with cool features like - sorting your high schools by boroughs, by their programs, their locations, adding them to the cart, one-click apply and more.</h4>
+                    <span class="font-weight-light" style="text-align: left;margin: 20px 10px;">If you're a high school kid (or a concerned guardian) starting your application process for the upcoming High School admission window and do not want the hassle of a big-yellow-book ...start with OneApply.</span>
+                    <span class="font-weight-light" style="text-align: left;margin: 20px 10px;">OneApply is a one stop application portal which provides you with cool features like - sorting your high schools by boroughs, by their programs, their locations, adding them to your favorites, one-click apply and more.</span>
                 {% elif user_type == constant_ut_adminStaff  %}
-                    <h4 class="h5 font-weight-light" style="text-align: justify;margin: 40px 10px 20px 10px;">If you're in charge (or an employee of) of your High School's admission department and want to avoid assessing the 1000s of applications manually... start with OneApply.</h4>
-                    <h4 class="h5 font-weight-light" style="text-align: justify;margin: 40px 10px 40px 10px;">OneApply is a one stop application portal which provides you with cool features like - a central access location for all the electronically received applications, sorting through the applications based on various programs, student's current school, their grades, adding them to the accepted-cart and rejected-cart, one-click notifications to students and more.</h4>
+                    <span class="font-weight-light" style="text-align: left;margin: 20px 10px;">If you're in charge (or an employee of) of your High School's admission department and want to avoid assessing the 1000s of applications manually... start with OneApply.</span>
+                    <span class="font-weight-light" style="text-align: left;margin: 20px 10px;">OneApply is a one stop application portal which provides you with cool features like - a central access location for all the electronically received applications, sorting through the applications based on various programs, student's current school, their grades, accepting and rejecting applications, one-click notifications to students and more.</span>
                 {% endif %}
                 <a href="{% url 'logIn:login_user' user_type %}"><button class="btn btn-outline-light mt-3">Your account</button></a>
 {#                <button class="btn btn-outline-light mt-3" onclick="location.href={% url 'logIn:login_user' user_type %}">Your account</button>#}

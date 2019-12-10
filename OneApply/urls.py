@@ -42,7 +42,7 @@ urlpatterns = [
         name="activate_admission_account",
     ),
     url(
-        r"^recommendation_rating/(?P<uid1>[0-9A-Za-z_\-]+)/$",  # noqa: E501
+        r"^recommendation_rating/(?P<uidb64>[0-9A-Za-z_\-]+)/$",  # noqa: E501
         recommendation_rating,
         name="recommendation_rating",
     ),
