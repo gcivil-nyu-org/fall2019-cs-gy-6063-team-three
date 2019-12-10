@@ -118,15 +118,18 @@ ul.errorlist {
 
 #req_recs table{
     border-collapse: collapse;
+    border: 2px solid;
     width: 100%;
 }
 #req_recs td{
     border-color: #212529;
+    border: 2px solid;
     text-align: left;
     padding: 8px;
     font-style: normal;
 }
 #req_recs th{
+    border: 2px solid;
     padding-top: 12px;
     padding-bottom: 12px;
     text-align: left;
