@@ -1,113 +1,406 @@
 {% extends "dashboard/index.html" %}
 {% load static %}
 {% block content %}
-    <link rel="stylesheet" type="text/css"
-              href="{% static 'high_schools/css/high_school.css' %}">
+<link rel="stylesheet" type="text/css"
+      href="{% static 'high_schools/css/high_school.css' %}">
 {% if application %}
-    <div style="width:60%; margin-top: 3%; margin-left: 7%;">
-        <a href="/dashboard/ut_admin_staff" class="btn btn-primary ">Go to List</a>
+<div style="width:60%; margin-top: 3%; margin-left: 7%;">
+    <a href="/dashboard/ut_admin_staff" class="btn btn-primary ">Go to List</a>
+</div>
+{% endif %}
+<div style="width: 100%;">
+    <div class="container-fluid">
+        {% if application %}
+        <h5 style="margin: 1em; text-align: center;"><b>Application Form</b>
+        </h5>
+        <table class="table table-striped" style="border: 1px solid black; border-collapse:
+inherit; width: 75%; margin: 0 auto 2em;">
+            <tbody>
+            <tr>
+                <th scope="row">Application Number</th>
+                <td>{{ application.application_number }}</td>
+            </tr>
+            <tr>
+                <th scope="row">First Name</th>
+                <td>{{ application.first_name }}</td>
+            </tr>
+            <tr>
+                <th scope="row">Last Name</th>
+                <td colspan="2">{{ application.last_name }}</td>
+            </tr>
+            <tr>
+                <th scope="row">Email Address</th>
+                <td>{{ application.email_address }}</td>
+            </tr>
+            <tr>
+                <th scope="row">Phone Number</th>
+                <td>{{ application.phoneNumber }}</td>
+            </tr>
+            <tr>
+                <th scope="row">Address</th>
+                <td>{{ application.address }}</td>
+            </tr>
+            <tr>
+                <th scope="row">Gender</th>
+                {% if application.gender.lower == "f" %}
+                <td>Female</td>
+                {% else %}
+                <td>Male</td>
+                {% endif %}
+            </tr>
+            <tr>
+                <th scope="row">Date of Birth</th>
+                <td>{{ application.date_of_birth }}</td>
+            </tr>
+            <tr>
+                <th scope="row">GPA</th>
+                <td>{{ application.gpa }}</td>
+            </tr>
+            <tr>
+                <th scope="row">Parent/Guardian Name</th>
+                <td>{{ application.parent_name }}</td>
+            </tr>
+            <tr>
+                <th scope="row">Parent/Guardian Phone Number</th>
+                <td>{{ application.parent_phoneNumber }}</td>
+            </tr>
+            <tr>
+                <th scope="row">Program Name</th>
+                <td colspan="2">{{ application.program }}</td>
+            </tr>
+            <tr>
+                <th scope="row">Date of Submission</th>
+                <td colspan="2">{{ application.submitted_date }}</td>
+            </tr>
+            <tr>
+                <th scope="row"> Status</th>
+                {% if application.application_status == 2 %}
+                <td>Pending</td>
+                {% elif application.application_status == 1 %}
+                <td>Accepted</td>
+                {% elif application.application_status == 0 %}
+                <td>Rejected</td>
+                {% elif application.application_status == 3 %}
+                <td>Withdrawn</td>
+                {% endif %}
+            </tr>
+
+            </tbody>
+
+        </table>
+    </div>
+    <div class="container-fluid">
+        <h5 style="margin: 1em; text-align: center;"><b>Recommendations</b></h5>
+        {% if recommendation %}
+        {% for rec in recommendation %}
+        {% if rec.submitted_date %}
+        <table class="table" style="border: 1px solid black; border-collapse:
+            inherit; width: 75%; margin: 0 auto 2em;">
+            <tbody>
+            <tr>
+                <th scope="row" colspan="2" style="text-align:center; background-color: #083358; color:white">Prepared
+                    By
+                </th>
+            </tr>
+            <tr>
+                <th scope="row">First Name</th>
+                <td>{{ rec.first_name }}</td>
+            </tr>
+            <tr>
+                <th scope="row">Last Name</th>
+                <td>{{ rec.last_name }}</td>
+            </tr>
+            <tr>
+                <th scope="row">Email Address</th>
+                <td>{{ rec.email_address }}</td>
+            </tr>
+            <tr>
+                <th scope="row" colspan="2" style="text-align:center; background-color: #083358; color:white">Knowledge
+                    of Student
+                </th>
+            </tr>
+            <tr>
+                <th scope="row">How long have you known the student?</th>
+                <td>{{ rec.known_length }} Years</td>
+            </tr>
+            <tr>
+                <th scope="row">How well do you know the student?</th>
+                <td>{% if rec.known_strength is 0 %}
+                    Casually
+                    {% elif rec.known_strength is 1 %}
+                    Well
+                    {% elif rec.known_strength is 2 %}
+                    Very Well
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">How do you know the student?</th>
+                <td>
+                    {% if rec.known_location is 0 %}
+                    I am/was their teacher in one class
+                    {% elif rec.known_location is 1 %}
+                    I am/was their teacher in multiple classes
+                    {% elif rec.known_location is 2 %}
+                    I am/was their advisor
+                    {% elif rec.known_location is 3 %}
+                    I am/was their mentor
+                    {% elif rec.known_location is 4 %}
+                    Not Specified
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th scope="row" colspan="2" style="text-align:center; background-color: #083358; color:white">Ratings
+                </th>
+            </tr>
+            <tr>
+                <th scope="row">Ability to grasp new concepts</th>
+                <td>
+                    {% if rec.rating_concepts is 0 %}
+                    Unable to rate
+                    {% elif rec.rating_concepts is 1 %}
+                    Top 1-2%
+                    {% elif rec.rating_concepts is 2 %}
+                    Top 5%
+                    {% elif rec.rating_concepts is 3 %}
+                    Top 10%
+                    {% elif rec.rating_concepts is 4 %}
+                    Top 25%
+                    {% elif rec.rating_concepts is 5 %}
+                    2nd 25%
+                    {% elif rec.rating_concepts is 6 %}
+                    3rd 25%
+                    {% elif rec.rating_concepts is 7 %}
+                    Last 25%
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">Originality, intellectual creativity</th>
+                <td>
+                    {% if rec.rating_creativity is 0 %}
+                    Unable to rate
+                    {% elif rec.rating_creativity is 1 %}
+                    Top 1-2%
+                    {% elif rec.rating_creativity is 2 %}
+                    Top 5%
+                    {% elif rec.rating_creativity is 3 %}
+                    Top 10%
+                    {% elif rec.rating_creativity is 4 %}
+                    Top 25%
+                    {% elif rec.rating_creativity is 5 %}
+                    2nd 25%
+                    {% elif rec.rating_creativity is 6 %}
+                    3rd 25%
+                    {% elif rec.rating_creativity is 7 %}
+                    Last 25%
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">Mathematical and logical thought</th>
+                <td>
+                    {% if rec.rating_mathematical is 0 %}
+                    Unable to rate
+                    {% elif rec.rating_mathematical is 1 %}
+                    Top 1-2%
+                    {% elif rec.rating_mathematical is 2 %}
+                    Top 5%
+                    {% elif rec.rating_mathematical is 3 %}
+                    Top 10%
+                    {% elif rec.rating_mathematical is 4 %}
+                    Top 25%
+                    {% elif rec.rating_mathematical is 5 %}
+                    2nd 25%
+                    {% elif rec.rating_mathematical is 6 %}
+                    3rd 25%
+                    {% elif rec.rating_mathematical is 7 %}
+                    Last 25%
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">Written expression</th>
+                <td>
+                    {% if rec.rating_written is 0 %}
+                    Unable to rate
+                    {% elif rec.rating_written is 1 %}
+                    Top 1-2%
+                    {% elif rec.rating_written is 2 %}
+                    Top 5%
+                    {% elif rec.rating_written is 3 %}
+                    Top 10%
+                    {% elif rec.rating_written is 4 %}
+                    Top 25%
+                    {% elif rec.rating_written is 5 %}
+                    2nd 25%
+                    {% elif rec.rating_written is 6 %}
+                    3rd 25%
+                    {% elif rec.rating_written is 7 %}
+                    Last 25%
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">Oral expression</th>
+                <td>
+                    {% if rec.rating_oral is 0 %}
+                    Unable to rate
+                    {% elif rec.rating_oral is 1 %}
+                    Top 1-2%
+                    {% elif rec.rating_oral is 2 %}
+                    Top 5%
+                    {% elif rec.rating_oral is 3 %}
+                    Top 10%
+                    {% elif rec.rating_oral is 4 %}
+                    Top 25%
+                    {% elif rec.rating_oral is 5 %}
+                    2nd 25%
+                    {% elif rec.rating_oral is 6 %}
+                    3rd 25%
+                    {% elif rec.rating_oral is 7 %}
+                    Last 25%
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">Perseverance toward goals</th>
+                <td>
+                    {% if rec.rating_goals is 0 %}
+                    Unable to rate
+                    {% elif rec.rating_goals is 1 %}
+                    Top 1-2%
+                    {% elif rec.rating_goals is 2 %}
+                    Top 5%
+                    {% elif rec.rating_goals is 3 %}
+                    Top 10%
+                    {% elif rec.rating_goals is 4 %}
+                    Top 25%
+                    {% elif rec.rating_goals is 5 %}
+                    2nd 25%
+                    {% elif rec.rating_goals is 6 %}
+                    3rd 25%
+                    {% elif rec.rating_goals is 7 %}
+                    Last 25%
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">Ability to get along with others</th>
+                <td>
+                    {% if rec.rating_socialization is 0 %}
+                    Unable to rate
+                    {% elif rec.rating_socialization is 1 %}
+                    Top 1-2%
+                    {% elif rec.rating_socialization is 2 %}
+                    Top 5%
+                    {% elif rec.rating_socialization is 3 %}
+                    Top 10%
+                    {% elif rec.rating_socialization is 4 %}
+                    Top 25%
+                    {% elif rec.rating_socialization is 5 %}
+                    2nd 25%
+                    {% elif rec.rating_socialization is 6 %}
+                    3rd 25%
+                    {% elif rec.rating_socialization is 7 %}
+                    Last 25%
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">Ability to analyze problems and formulate solutions</th>
+                <td>
+                    {% if rec.rating_analyzing is 0 %}
+                    Unable to rate
+                    {% elif rec.rating_analyzing is 1 %}
+                    Top 1-2%
+                    {% elif rec.rating_analyzing is 2 %}
+                    Top 5%
+                    {% elif rec.rating_analyzing is 3 %}
+                    Top 10%
+                    {% elif rec.rating_analyzing is 4 %}
+                    Top 25%
+                    {% elif rec.rating_analyzing is 5 %}
+                    2nd 25%
+                    {% elif rec.rating_analyzing is 6 %}
+                    3rd 25%
+                    {% elif rec.rating_analyzing is 7 %}
+                    Last 25%
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th scope="row" colspan="2" style="text-align:center; background-color: #083358; color:white">Additional
+                    Comments
+                </th>
+            </tr>
+            <tr>
+                <td colspan="2" style="word-wrap: break-word; width: 50%;">{{rec.rating_comment}}</td>
+            </tr>
+
+            </tbody>
+
+        </table>
+        {% else %}
+        <table class="table" style="border: 1px solid black; border-collapse:
+            inherit; width: 75%; margin: 0 auto 2em;">
+            <tbody>
+            <tr>
+                <th scope="row" colspan="2" style="text-align:center; background-color: #083358; color:white">Being
+                    Prepared
+                    By
+                </th>
+            </tr>
+            <tr>
+                <th scope="row">First Name</th>
+                <td>{{ rec.first_name }}</td>
+            </tr>
+            <tr>
+                <th scope="row">Last Name</th>
+                <td>{{ rec.last_name }}</td>
+            </tr>
+            <tr>
+                <th scope="row">Email Address</th>
+                <td>{{ rec.email_address }}</td>
+            </tr>
+            <tr>
+                <th scope="row">Status</th>
+                <td>In Progress</td>
+            </tr>
+            </tbody>
+        </table>
+        {% endif %}
+        {% endfor %}
+        {% else %}
+        <div class="container-fluid">
+            <h6 style="margin: 1em; text-align: center;">There have not been any recommendations completed for this
+                student yet!</h6>
+        </div>
+        {% endif %}
+    </div>
+    <div class="container-fluid">
+        {% else %}
+        {% if unauth %}
+        {% block broken %}
+        {% include 'admissions/broken.html' %}
+        {% endblock %}
+        {% elif not applications %}
+        {% block empty_list %}
+        {% include 'admissions/broken.html' %}
+        {% endblock %}
+        {% endif %}
+        {% endif %}
+    </div>
+    {% if application.application_status == 2 %}
+    <div class="container"
+         style="padding-bottom: 2em; text-align: center">
+        <a class="btn btn-lg btn-primary"
+           href="{% url 'dashboard:admissions:accept' application.id %}">Accept</a>
+        <a class="btn btn-lg btn-danger"
+           href="{% url 'dashboard:admissions:reject' application.id %}">Reject</a>
     </div>
     {% endif %}
-    <div style="width: 100%;">
-        <div class="container-fluid">
-                {% if application %}
-                    <h5 style="margin: 1em; text-align: center;"><b>Application Form</b>
-                    </h5>
-                    <table class="table table-striped" style="border: 1px solid black; border-collapse:
-inherit; width: 75%; margin: 0 auto 2em;">
-                        <tbody>
-                        <tr>
-                            <th scope="row">Application Number</th>
-                            <td>{{ application.application_number }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">First Name</th>
-                            <td>{{ application.first_name }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Last Name</th>
-                            <td colspan="2">{{ application.last_name }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Email Address</th>
-                            <td>{{ application.email_address }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Phone Number</th>
-                            <td>{{ application.phoneNumber }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Address</th>
-                            <td>{{ application.address }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Gender</th>
-                            {% if application.gender.lower == "f" %}
-                                <td>Female</td>
-                            {% else %}
-                                <td>Male</td>
-                            {% endif %}
-                        </tr>
-                        <tr>
-                            <th scope="row">Date of Birth</th>
-                            <td>{{ application.date_of_birth }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">GPA</th>
-                            <td>{{ application.gpa }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Parent/Guardian Name</th>
-                            <td>{{ application.parent_name }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Parent/Guardian Phone Number</th>
-                            <td>{{ application.parent_phoneNumber }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Program Name</th>
-                            <td colspan="2">{{ application.program }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Date of Submission</th>
-                            <td colspan="2">{{ application.submitted_date }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row"> Status</th>
-                            {% if application.application_status == 2 %}
-                                <td>Pending</td>
-                            {% elif application.application_status == 1 %}
-                                <td>Accepted</td>
-                            {% elif application.application_status == 0 %}
-                                <td>Rejected</td>
-                            {% elif application.application_status == 3 %}
-                                <td>Withdrawn</td>
-                            {% endif %}
-                        </tr>
-
-                        </tbody>
-
-                    </table>
-                {% else %}
-                    {% if unauth %}
-                        {% block broken %}
-                            {% include 'admissions/broken.html' %}
-                        {% endblock %}
-                    {% elif not applications %}
-                        {% block empty_list %}
-                            {% include 'admissions/broken.html' %}
-                        {% endblock %}
-                    {% endif %}
-                {% endif %}
-                {% if application.application_status == 2 %}
-                    <div class="container"
-                         style="padding-bottom: 2em; text-align: center">
-                        <a class="btn btn-lg btn-primary"
-                           href="{% url 'dashboard:admissions:accept' application.id %}">Accept</a>
-                        <a class="btn btn-lg btn-danger"
-                           href="{% url 'dashboard:admissions:reject' application.id %}">Reject</a>
-                    </div>
-                {% endif %}
-            </div>
-    </div>
+</div>
+</div>
 {% endblock %}
