@@ -14,18 +14,18 @@ develop
 *One stop solution for your high school applications*
 ------------------------
 OneApply eliminates the hassle associated with High School applications in
-New York by providing a secure, convenient, and customized portal for your application needs.
+New York City by providing a secure, convenient, and customized portal for your application needs.
 
-You can be a student and get access to all the High Schools across New York or you can be a member of the admission committee for your High School and get access to all the applications submitted for your school or be a mentor for a student filling out a recommendation.
+You can be a student and get access to all the High Schools across New York City, you can be a member of the admission committee for your High School and get access to all the applications submitted for your school, or you can be a mentor for a student filling out a recommendation.
 
 
 ## As a student 
-You can look through all the different high schools in NY, find out what programs they offer, favorite schools, and apply from the favorite schools all in one site. Once the application is submitted you will be able to monitor the status of each individual application, categorized by various schools and programs. Additionally, you can request a recommendation to be completed from a teacher or mentor by simply entering their first name, last name and email address.
+You can look through all the different high schools in NYC, find out what programs they offer, save your favorite schools, and apply from the favorite schools all in one site. Once the application is submitted you will be able to monitor the status of each individual application, categorized by various schools and programs. Additionally, you can request a recommendation to be completed from a teacher or mentor by simply entering their first name, last name and email address.
 
 ## As an admission staff
-As an admissions staff for a high school you have access to all the applications in one place. You can filter based on program type and accept or reject applications directly from the detailed view of the application. You can use advanced search filters, categorizing application based on their programs, status, student's gpa and more for easier navigation.
+As an admissions staff member for a high school you have access to all the applications in one place. You can filter based on program type and accept or reject applications directly from the detailed view of the application. You can use advanced search filters, categorizing application based on their programs, status, student's gpa and more for easier navigation.
 
 ## As a mentor
-You'll recieve an email with a link if a student requested your recommendation for their high school application. You'll have the ability to securely fill out the recommendation without even creating an account. 
+You'll recieve an email with a special link if a student requested your recommendation for their high school application. You'll have the ability to securely fill out the recommendation without even creating an account. 
 
 
