@@ -4,10 +4,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-        <!-- Load bootstrap css, jquery, bootstrap js -->
+    <!-- Load bootstrap css, jquery, bootstrap js -->
     <!-- common across all applications inheriting from dashboard -->
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
     <link href="{% static 'css/student_theme.min.css' %}" rel="stylesheet">
+    <link href="{% static 'changepass/css/changepass.css' %} " rel="stylesheet">
     <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
     <script src="{% static 'js/popper.js' %}"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
@@ -34,33 +35,31 @@
         </nav>
     </div>
 </div>
-<div class="d-flex justify-content-center " >
-            <form action="" method="post" class="form-signin" style="padding-top: 100px;">
-                {% csrf_token %}
+<div class="container-fluid d-flex justify-content-center col-md-6">
+    <div class="row col-md-6 ">
+    <form action="{% url 'changepass:index' %}" method="post" class="form-signin" style="padding-top: 100px;">
+        {% csrf_token %}
+            {% for field in form %}
+            <div class="form-label-group">
+                {{ field }}
+                <label for={{ field.id_for_label }}>{{ field.label }}</label>
+            </div>
+            {% endfor %}
+        {% if form.new_password.errors %}
+         <p class="errorlist" style="color: red">The password should be minimum 8 characters long and should contain at least 1 of each Uppercase, Lowercase, 1digit, 1 symbol(@#$%^&+=_-) </p>
+        {% endif %}
+        {% if form.confirm_password.errors %}
+        <p class="errorlist" style="color: red">Your new passwords do not match </p>
+        {% endif %}
+        {% if match_error %}
+            <p class="errorlist" style="color: red">Your old password doesn't match </p>
+        {% endif %}
+        <input class="btn btn-primary btn-block" type="submit" value="Update Password"/>
+        <a style="text-align:center; margin-top:10px;" href="{% url 'dashboard:dashboard' %}" >Back to Dashboard</a>
 
-                <div class="form-label-group">
-
-                      <input type="password", name ="old_password" class = "form-control" required id ="id_opass"
-                    <label for ="id_opass">Old Password</label>
-                </div>
-                <div class="form-label-group">
-
-                      <input type="password", name ="old_password" class = "form-control" required id ="id_npass"
-                    <label for ="id_npass">New Password</label>
-                </div>
-                <div class="form-label-group">
-
-                      <input type="password", name ="old_password" class = "form-control" required id ="id_cpass"
-                    <label for ="id_cpass">Confirm New Password</label>
-                </div>
-
-
-
-                <input class="btn btn-lg btn-primary btn-block" type="submit" value="Update Password"/>
-
-
-            </form>
-        </div>
+    </form>
+    </div>
+</div>
 
 </body>
 </html>
