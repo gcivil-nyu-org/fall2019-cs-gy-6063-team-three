@@ -12,7 +12,8 @@
 {% else %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/student_theme.min.css' %}">
 {% endif %}
-<link href="{% static 'changepass/css/changepass.css' %} " rel="stylesheet">
+    <link href="{% static 'changepass/css/changepass.css' %} " rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/floating_form_labels.css' %}">
     <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
     <script src="{% static 'js/popper.js' %}"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
@@ -39,7 +40,7 @@
     </div>
 </div>
 <div class="container-fluid d-flex justify-content-center col-md-6">
-    <div class="row col-md-6 ">
+    <div>
         {% if user_type == constant_ut_student %}
             <form action="{% url 'changepass:reset_password' constant_ut_student %}" method="post" class="form-signin" style="padding-top: 100px;">
                 {% csrf_token %}
@@ -48,12 +49,13 @@
                 {% csrf_token %}
         {% endif %}
                 <div class="text-center mb-4">
-                    <h1 class="h3 mb-3 font-weight-normal">Password Reset</h1>
-                    <h4 class="h5 mb-3 font-weight-light">to continue, enter your email address</h4>
+                    <h1 class="h3 mb-3 font-weight-normal">Let's reset your password...</h1>
+                    <h4 class="h5 mb-3 font-weight-light">to continue, we'll require your</h4>
                 </div>
                 {% for field in form %}
                     <div class="form-label-group">
                         {{ field }}
+                        <label for={{ field.id_for_label }}>{{ field.label }}</label>
                         {% if field.errors %}
                             {{ field.errors }}
                         {% endif %}

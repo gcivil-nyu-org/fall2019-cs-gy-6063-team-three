@@ -55,7 +55,7 @@ class resetPassFormStudent(ModelForm):
 
         for field in self.fields.values():
             field.widget.attrs.update(
-                {"class": "form-control", "placeholder": field.label, "required": True}
+                {"class": "form-control", "placeholder": field, "required": True}
             )
 
     def clean_email_address(self):
@@ -75,7 +75,7 @@ class resetPassFormAdmin(ModelForm):
 
         for field in self.fields.values():
             field.widget.attrs.update(
-                {"class": "form-control", "placeholder": field.label, "required": True}
+                {"class": "form-control", "placeholder": field, "required": True}
             )
 
     def clean_email_address(self):
