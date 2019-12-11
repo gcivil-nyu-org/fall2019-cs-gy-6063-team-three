@@ -20,7 +20,7 @@
 }
 #dashboard-tab>.nav-link.active{
   color: #1a252f !important;
-  background-color: whitesmoke !important;
+  background-color: #fafafa !important;
   border: 0 !important;
   border-bottom: 5px solid slategray !important;
   font-weight: bolder;

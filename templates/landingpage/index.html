@@ -1,134 +1,153 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
     <title>OneApply</title>
-
-    <!-- Bootstrap core CSS -->
+    <script src="{% static 'js/popper.js' %}"></script>
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
-
+    <link href="{% static 'css/student_theme.min.css' %}" rel="stylesheet">
     <!-- Custom styles for this template -->
-    <link href="{% static 'landingpage/carousel.css' %}" rel="stylesheet">
+    <link href="{% static 'landingpage/css/style.css' %}" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/fc24e2383c.js" crossorigin="anonymous"></script>
 </head>
 <body>
-
-<nav class="navbar navbar-toggleable-md navbar-inverse fixed-top bg-inverse">
-    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
-            data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false"
-            aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <a class="navbar-brand" href="#">OneApply</a>
-</nav>
-
-<div id="myCarousel" class="carousel slide" data-ride="carousel">
-    <ol class="carousel-indicators">
-        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-        <li data-target="#myCarousel" data-slide-to="1"></li>
-        <li data-target="#myCarousel" data-slide-to="2"></li>
-    </ol>
-    <div class="carousel-inner" role="listbox">
-    	
-        <div class="carousel-item active">
-            <img class="first-slide blur-bg"
-                 src="{% static 'landingpage/images/bg_1.jpg' %}"
-                 alt="First slide">
-    		<div class="blur-bg"></div>
-            <div class="container">
-                <div class="carousel-caption justify-content-center d-flex h-50 d-md-block text-left">
-                    <h1>Student/Parent</h1>
-                    <p>In search of your dream high school? Start now.</p>
-                    <a href="{% url 'logIn:login_user' constant_ut_student %}"><button class="btn btn-lg btn-primary">Begin Here</button></a>
+<div class="header-area">
+    <div class="container content justify-content-center text-left text-black-50">
+        <div style="margin-right: 25%">
+            <h1 class="mb-4"><b>OneApply</b></h1>
+            <h3 class="mb-3">One stop solution for your high school applications</h3>
+            <p class="mb-5" style="font-size: 18px;">OneApply eliminates the hassle associated with
+                High School applications
+                in <br>New York by providing a secure, convenient, and customized portal for your
+                application
+                needs.<br><br>You can be a student and get access to all the High Schools across New
+                York<br>or
+                you can be a member of the admission committee for your High School<br>and get
+                access to
+                all the applications submitted for your school.</p>
+            <div class="mb-4 mt-2" style="display: flex; flex-direction: row;">
+                <a href="{% url 'logIn:login_user' constant_ut_student %}">
+                    <button class="btn btn-lg btn-primary mr-4">I'm a student</button>
+                </a>
+                <a href="{% url 'logIn:login_user' constant_ut_adminStaff %}">
+                    <button class="btn btn-lg btn-primary ml-4">I'm an admission staff</button>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="site-section" id="programs-section">
+    <div class="container">
+        <div class="row mb-5 justify-content-center">
+            <div class="col-lg-7 text-center aos-init aos-animate" data-aos="fade-up"
+                 data-aos-delay="">
+                <h2 class="section-title">Features</h2>
+                <p>Whether you're a student, an admission staff member, or a student's mentor,
+                    OneApply has something in store for you.<br><br></p>
+            </div>
+        </div>
+        <div class="row mb-5 align-items-center">
+            <div class="col-lg-4 mb-5 aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
+                <img src="{% static 'landingpage/images/svg/005-classmates-1.svg' %}" alt="Students"
+                     class="img-fluid">
+            </div>
+            <div class="col-lg-7 ml-auto aos-init aos-animate" data-aos="fade-up"
+                 data-aos-delay="200">
+                <h2 class="text-black mb-4">As Student</h2>
+                <p class="mb-4">You will be able to select, apply, and get notified about your
+                    high school applications using OneApply.<br><br>Create an account to gain
+                    access to</p>
+                <div class="d-flex align-items-center custom-icon-wrap mb-3">
+                    <span class="custom-icon-inner mr-3"><i
+                            class="icon fa fa-school"></i></span>
+                    <span>400+ high schools and programs across New York</span>
+                </div>
+                <div class="d-flex align-items-center custom-icon-wrap mb-3">
+                    <span class="custom-icon-inner mr-3"><i
+                            class="icon fa fa-search"></i></span>
+                    <span>Customized results using tools like search, favorites, filters</span>
+                </div>
+                <div class="d-flex align-items-center custom-icon-wrap mb-3">
+                    <span class="custom-icon-inner mr-3"><i
+                            class="icon fa fa-file-text"></i></span>
+                    <span>1 application system for all your selected schools</span>
+                </div>
+                <div class="d-flex align-items-center custom-icon-wrap mb-3">
+                    <span class="custom-icon-inner mr-3"><i
+                            class="icon fa fa-files-o"></i></span>
+                    <span>List of all your applications, distributed over programs, in one place</span>
+                </div>
+                <div class="d-flex align-items-center custom-icon-wrap mb-3">
+                    <span class="custom-icon-inner mr-3"><i
+                            class="icon fa fa-envelope"></i></span>
+                    <span>Request and manage your mentor's recommendation</span>
+                </div>
+            </div>
+        </div>
+        <hr class="featurette-divider">
+        <div class="row mb-5 align-items-center">
+            <div class="col-lg-4 mb-5 order-1 order-lg-2 aos-init aos-animate" data-aos="fade-up"
+                 data-aos-delay="100">
+                <img src="{% static 'landingpage/images/svg/003-school.svg' %}" alt="Image"
+                     class="img-fluid">
+            </div>
+            <div class="col-lg-7 mr-auto order-2 order-lg-1 aos-init aos-animate" data-aos="fade-up"
+                 data-aos-delay="200">
+                <h2 class="text-black mb-4">As Admission Staff</h2>
+                <p class="mb-4">You'll be able to list, filter, and get detailed information of
+                    all submitted applications to your high school using OneApply.<br><br>Create
+                    an account to gain access to</p>
+                <div class="d-flex align-items-center custom-icon-wrap mb-3">
+                    <span class="custom-icon-inner mr-3"><i
+                            class="icon fa fa-files-o"></i></span>
+                    <span>All submitted applications in one place</span>
+                </div>
+                <div class="d-flex align-items-center custom-icon-wrap mb-3">
+                    <span class="custom-icon-inner mr-3"><i
+                            class="icon fa fa-file-text"></i></span>
+                    <span>Detailed information for any student's application</span>
+                </div>
+                <div class="d-flex align-items-center custom-icon-wrap mb-3">
+                    <span class="custom-icon-inner mr-3"><i
+                            class="icon fa fa-laptop"></i></span>
+                    <span>Accept/Reject, subsequently notifying, any student's application</span>
+                </div>
+                <div class="d-flex align-items-center custom-icon-wrap mb-3">
+                    <span class="custom-icon-inner mr-3"><i
+                            class="icon fa fa-filter"></i></span>
+                    <span>Customized results using filters over programs, gpa, and more</span>
                 </div>
             </div>
         </div>
 
-        <div class="carousel-item">
-            <img class="second-slide"
-                 src="{% static 'landingpage/images/bg_4.jpg' %}"
-                 alt="second slide">
-            <div class="container">
-                <div class="carousel-caption justify-content-center d-flex h-50 d-md-block text-left">
-                    <h1>Admission Staff</h1>
-                    <p>Looking to manage millions of applications? Start now.</p>
-
-                    <a href="{% url 'logIn:login_user' constant_ut_adminStaff %}"><button class="btn btn-lg btn-primary">Begin Here</button></a>
-                </div>
+        <hr class="featurette-divider">
+        <div class="row mb-5 align-items-center">
+            <div class="col-lg-4 mb-5 aos-init" data-aos="fade-up" data-aos-delay="100">
+                <img src="{% static 'landingpage/images/svg/004-teacher.svg' %}" alt="Image"
+                     class="img-fluid">
             </div>
-        </div>
-         <div class="carousel-item">
-            <img class="third-slide"
-                 src="{% static 'landingpage/images/bg_4.jpg' %}"
-                 alt="Third slide">
-            <div class="container">
-                <div class="carousel-caption justify-content-center d-flex h-50 d-md-block text-left">
-                    <h1>Teacher and Mentor</h1>
-                    <p>Write Recommendations</p>
+            <div class="col-lg-7 ml-auto aos-init" data-aos="fade-up" data-aos-delay="200">
+                <h2 class="text-black mb-4">As Mentor</h2>
+                <p class="mb-4">You will be able to access recommendation requests and submit
+                    detailed recommendations securely.<br><br>OneApply provides you</p>
+                <div class="d-flex align-items-center custom-icon-wrap mb-3">
+                    <span class="custom-icon-inner mr-3"><i
+                            class="icon fa fa-user"></i></span>
+                    <span>Access to student's requested recommendation without creating an account</span>
+                </div>
+                <div class="d-flex align-items-center custom-icon-wrap mb-3">
+                    <span class="custom-icon-inner mr-3"><i
+                            class="icon fa fa-lock"></i></span>
+                    <span>Secure submission of the requested recommendations</span>
                 </div>
             </div>
         </div>
     </div>
-    <a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="sr-only">Previous</span>
-    </a>
-    <a class="carousel-control-next" href="#myCarousel" role="button" data-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="sr-only">Next</span>
-    </a>
 </div>
 
-<!-- Marketing messaging and featurettes
-================================================== -->
-<!-- Wrap the rest of the page in another container to center all the content. -->
-
-<div class="container marketing">
-    <div class="row featurette ">
-        <div class="col-md-7">
-            <h2 class="featurette-heading">Student</h2>
-            <p class="lead">As a student, you will be able to search for high schools using various filters such as
-                location, safety, programs offered, school performance and much more. By filling out a simple
-                application form, you will be able to apply to as many schools as you wish to with just one click of a
-                button.</p>
-        </div>
-        <div class="col-md-5">
-            <img class="featurette-image img-fluid mx-auto justify-content-center d-flex h-100" src="{% static 'landingpage/students.jpeg' %}"
-                 alt="Generic placeholder image">
-        </div>
-    </div>
-    <hr class="featurette-divider">
-    <div class="row featurette">
-        <div class="col-md-7">
-            <h2 class="featurette-heading">Admission Staff<span class="text-muted"></span></h2>
-            <p class="lead">As an admissions staff of a high school, OneApply provides you with myriad of features to
-                view, sort and manage millions of applications. Sit back and relax while OneApply does everything for
-                you from managing applications to updating the number of seats available to enroll students.</p>
-        </div>
-        <div class="col-md-5">
-            <img class="featurette-image img-fluid mx-auto justify-content-center d-flex h-100" src="{% static 'landingpage/teacher.jpeg' %}"
-                 alt="Generic placeholder image">
-        </div>
-    </div>
-    <!-- FOOTER -->
-	<footer class="page-footer font-small blue">
-  		<div class="footer-copyright text-center py-5">
-  		</div>
-	</footer>
-</div><!-- /.container -->
-<!-- Bootstrap core JavaScript
-================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
 <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
-<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"
-        integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
-        crossorigin="anonymous"></script>
-<script src="{% static 'js/bootstrap.min.js'%}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
 </body>
 </html>

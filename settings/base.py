@@ -30,8 +30,9 @@ LOGIN_URL = "/"
 # Application definition
 
 INSTALLED_APPS = [
-    "landingpage",
-    "dashboard",
+    "landingpage.apps.LandingpageConfig",
+    "dashboard.apps.DashboardConfig",
+    "changepass.apps.ChangepassConfig",
     "logIn.apps.LogInConfig",
     "admissions.apps.AdmissionsConfig",
     "register.apps.RegisterConfig",
@@ -47,6 +48,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "django_select2",
+    "widget_tweaks",
+    "django_filters",
 ]
 
 

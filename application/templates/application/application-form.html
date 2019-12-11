@@ -5,15 +5,18 @@
 <link rel="stylesheet" type="text/css" href="{% static 'application/css/application.css' %}">
 {{ form.media.css }}
 
-<div style="margin-left:20%; height: 90%; margin-bottom: 5%; width:50%; margin-top: 2%;">
+<div style="margin-left:25%; height: 90%; margin-bottom: 2%; width:50%; margin-top: 2%;">
     {% if error_count_app %}
         <h4 class="text-danger" style="font-weight: bold">{{ error_count_app }}</h4>
     {% elif error_apply %}
         <h4 class="text-danger" style="font-weight: bold">{{ error_apply }}</h4>
     {% else %}
-    <h2>High School Application Form</h2>
-    <form action="{% url 'dashboard:application:new_application' %}" prog-data-url="{% url 'dashboard:application:ajax_load_programs' %}" method="post" class="form-signup" style="padding-top: 10px;">
+    <h2 style="font-weight: bold;">High School Application Form</h2>
+    <h5 style="color: red;margin-top: 10px;margin-bottom: 10px;">You can submit up to 10 applications and only one submission is allowed.</h5>
+    <form action="{% url 'dashboard:application:new_application' %}" prog-data-url="{% url 'dashboard:application:ajax_load_programs' %}"
+          method="post" id="applicationForm" class="form-signup" style="padding-top: 10px;">
         {% csrf_token %}
+        <p>Please fill out all the fields.</p>
         <div class="rounded bg-secondary" style="margin-bottom:10px;">
             <h5 class="p-2">Personal</h5>
         </div>
@@ -111,6 +114,7 @@
         <div class="rounded bg-secondary" style="margin-bottom:10px;margin-top:15px;">
             <h5 class="p-2">Selected Schools and Programs</h5>
         </div>
+        <p style="color:red; ">Only your favorited schools will be available for selection.</p>
         {% if program_error %}
                 <ul class="errorlist"><li> {{ program_error }}</li></ul>
         {% endif %}
@@ -139,6 +143,17 @@
         </div>
         <button id="addBtn" type="button" class="btn btn-secondary" style="width:80px;">Add</button>
         <button id="rmBtn" type="button" class="btn btn-secondary" style="margin-left:5px; width:80px;">Remove</button>
+        <div class="form-row" style="margin-top: 20px;">
+            <div class="custom-control custom-checkbox">
+                {{ form.confirmation }}
+                <label class="custom-control-label" for="{{ form.confirmation.id_for_label }}" style="font-weight: bold;">
+                    I confirm that this submission is final and I will not be able to make any changes to the applications after I submit them.
+                </label>
+            </div>
+        </div>
+        {% if confirmation_errors %}
+                <ul class="errorlist"><li> {{ confirmation_errors }}</li></ul>
+        {% endif %}
         <div class="form-row" style="margin-top:50px;">
             <div class="form-label-group col-md-6">
                 <input class="btn btn-lg btn-primary btn-block" type="submit" value="Save as Draft"

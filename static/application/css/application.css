@@ -130,7 +130,7 @@ ul.errorlist {
     color: #1a252f;
     font-size: 13.333px;
     font-weight: normal;
-    font-family: Arial;
+    font-family: inherit;
     width: inherit !important;
 }
 
@@ -153,7 +153,7 @@ select2 {
 
 .select2-container--default .select2-selection--single {
     color: #1a252f;
-    font-family: Arial;
+    font-family: inherit;
     font-weight: normal;
     font-size: 15px;
 }

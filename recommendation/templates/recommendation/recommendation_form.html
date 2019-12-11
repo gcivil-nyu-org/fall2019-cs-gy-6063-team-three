@@ -1,48 +1,88 @@
 {% extends 'recommendation/index.html' %}
 {% block recommend_form %}
-
 {% load static %}
-<link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+{#<link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">#}
 <link rel="stylesheet" type="text/css" href="{% static 'recommendation/css/recommendation.css' %}">
 
-<div style="margin-left:20%;height: 90%; margin-bottom: 5%; width:50%; margin-top: 2%;">
+<div style="margin: auto; height: 90%; width:50%; margin-top: 2%;">
     <h2>Teacher/Mentor Recommendations</h2>
+    {% if error_count_rec %}
+        <h4 class="text-danger" style="font-weight: bold">{{ error_count_rec }}</h4>
+    {% else %}
     <h6>Please enter the name and email address of the person that you are requesting to fill out your recommendation. </h6>
-    <form action="{% url 'dashboard:recommendation:new_recommendation' %}" method="post" class="form-signup" style="padding-top: 10px;">
-        {% csrf_token %}
-        <div class="form-row">
-            <div class="form-label-group col-md-6">
-                <label for={{ form.first_name.id_for_label }}>{{ form.first_name.label }}</label>
-                {{ form.first_name }}
-                {% if form.first_name.help_text %}
-                    <p class="help">{{ form.first_name.help_text|safe }}</p>
+    <h6>Please note that you can only send two recommendation requests out. </h6>
+        <form action="{% url 'dashboard:recommendation:new_recommendation' %}" method="post" class="form-signup" style="padding-top: 10px;">
+            {% csrf_token %}
+            <div class="form-row">
+                <div class="form-label-group col-md-6">
+                    <label for={{ form.first_name.id_for_label }}>{{ form.first_name.label }}</label>
+                    {{ form.first_name }}
+                    {% if form.first_name.help_text %}
+                        <p class="help">{{ form.first_name.help_text|safe }}</p>
+                    {% endif %}
+                </div>
+                <div class="form-label-group col-md-6">
+                    <label for={{ form.last_name.id_for_label }}>{{ form.last_name.label }}</label>
+                    {{ form.last_name }}
+                    {% if form.last_name.help_text %}
+                        <p class="help">{{ form.last_name.help_text|safe }}</p>
+                    {% endif %}
+                </div>
+                <div class="form-label-group col-md-12">
+                    <br>
+                    <label for={{ form.email_address.id_for_label }}>{{ form.email_address.label }}</label>
+                    {{ form.email_address }}
+                    {% if form.email_address.errors %}
+                        {{ form.email_address.errors }}
+                    {% endif %}
+                </div>
+            </div>
+            <br>
+            <input class="btn btn-primary" type="submit" value="Submit" name="submit"/>
+            <div class="form-row" style="margin-top:50px;">
+                 {% if messages %}
+                    {% for message in messages %}
+                         <h4 class="messages">{{ message }}</h4>
+                    {% endfor %}
                 {% endif %}
             </div>
-            <div class="form-label-group col-md-6">
-                <label for={{ form.last_name.id_for_label }}>{{ form.last_name.label }}</label>
-                {{ form.last_name }}
-                {% if form.last_name.help_text %}
-                    <p class="help">{{ form.last_name.help_text|safe }}</p>
-                {% endif %}
-            </div>
-            <div class="form-label-group col-md-12">
-                <br>
-                <label for={{ form.email_address.id_for_label }}>{{ form.email_address.label }}</label>
-                {{ form.email_address }}
-                {% if form.email_address.errors %}
-                    {{ form.email_address.errors }}
-                {% endif %}
-            </div>
-        </div>
-        <br>
-        <input class="btn btn-primary" type="submit" value="Submit" name="submit"/>
-        <div class="form-row" style="margin-top:50px;">
-             {% if messages %}
-                {% for message in messages %}
-                     <h4 class="messages">{{ message }}</h4>
-                {% endfor %}
-            {% endif %}
-        </div>
-    </form>
+        </form>
+    {% endif %}
 </div>
+
+
+
+
+<div style="margin:auto; margin-top: 2%; margin-bottom: 2%; height: 90%; width:50%;">
+    <div class="list-group" style="margin-top:10px;">
+        <h4> Requested Recommendations </h4>
+        {% if recommendations %}
+            <table id="req_recs">
+                <tr>
+                    <th>First Name</th>
+                    <th> Last Name</th>
+                    <th> Email Address</th>
+                    <th> Status</th>
+                </tr>
+                {% for rec in recommendations %}
+                    <tr>
+                        <td> {{ rec.first_name }} </td>
+                        <td> {{ rec.last_name }} </td>
+                        <td> {{ rec.email_address }} </td>
+                        {% if rec.submitted_date %}
+                            <td>Completed</td>
+                        {% else %}
+                            <td> In Progress</td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <div class="d-flex w-100 justify-content-between mb-2">
+                <h6 class="mb-1" style="width: 75%">You have not yet requested any recommendations.</h6>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
 {% endblock %}

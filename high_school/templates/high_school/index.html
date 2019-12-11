@@ -16,15 +16,11 @@
     <div class="all-school-root">
         <div class="container-fluid">
             <div class="row">
-                {% if empty_list %}
-                    {% block empty_list %}
-                        {% include 'high_school/broken.html' %}
-                    {% endblock %}
-                {% elif unauth %}
+                {% if unauth %}
                     {% block unauth %}
                         {% include 'high_school/broken.html' %}
                     {% endblock %}
-                {% elif high_schools %}
+                {% elif high_schools or empty_list %}
                     <div class="col-md-6 left-pane">
                         {% block school_list %}
                             {% include 'high_school/school_list.html' %}
@@ -36,10 +32,6 @@
                         {% endblock %}
                     </div>
                 {% endif %}
-                <div>
-                    {% block save_highschool %}
-                    {% endblock %}
-                </div>
             </div>
         </div>
         <div class="toast" style="position: absolute; top: 15%; right: 43%;">
@@ -161,11 +153,11 @@
             $.ajax({
                 url: url,
                 type: "POST",
-                headers:{"X-CSRFToken": $('[name="csrfmiddlewaretoken"]').attr('value')},
+                headers: {"X-CSRFToken": $('[name="csrfmiddlewaretoken"]').attr('value')},
                 success: function (data) {
-                    if(data.status === 403){
+                    if (data.status === 403) {
                         window.location.href = "{% url 'dashboard:logout' %}";
-                    }else if(data.status === 200) {
+                    } else if (data.status === 200) {
                         let i_tag = school_fav_btn.find("i");
                         i_tag.removeClass("fa-heart-o");
                         i_tag.removeClass("fa-heart");
@@ -179,6 +171,9 @@
                     }
                 },
                 error: function (data) {
+                  if (data.status === 403) {
+                        window.location.href = "{% url 'dashboard:logout' %}";
+                    }
                 }
             });
         });

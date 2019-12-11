@@ -1,6 +1,5 @@
 from django.db import models
 from django.core import validators
-from .validators import validate_not_used_student_email, validate_not_used_admin_email
 from high_school.models import HighSchool
 
 
@@ -30,10 +29,7 @@ class User(models.Model):
 @auto_str
 class Student(User):
     email_address = models.EmailField(
-        max_length=200,
-        null=True,
-        blank=False,
-        validators=[validators.validate_email, validate_not_used_student_email],
+        max_length=200, null=True, blank=False, validators=[validators.validate_email]
     )
     current_school = models.CharField(max_length=100, null=True, blank=True)
     borough = models.CharField(max_length=2)
@@ -43,10 +39,7 @@ class Student(User):
 @auto_str
 class Admin_Staff(User):
     email_address = models.EmailField(
-        max_length=200,
-        null=True,
-        blank=False,
-        validators=[validators.validate_email, validate_not_used_admin_email],
+        max_length=200, null=True, blank=False, validators=[validators.validate_email]
     )
     school = models.ForeignKey(HighSchool, on_delete=models.CASCADE)
     is_verified_employee = models.BooleanField(default=False)

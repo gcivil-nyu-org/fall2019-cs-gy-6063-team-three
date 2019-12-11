@@ -1,0 +1,41 @@
+{% load static %}
+<link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    {% if user_type and user_type == constant_ut_adminStaff %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/admin_theme.min.css' %}">
+{% else %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/student_theme.min.css' %}">
+{% endif %}
+    <div style="width: 100%;">
+        <div class="container-fluid" style="text-align: center; padding: 0 !important;">
+            <div class="nav-container">
+                <nav class="navbar navbar-expand-md navbar-dark bg-primary">
+                    <a class="navbar-brand"
+                       href="{% url 'dashboard:dashboard' %}">OneApply</a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse"
+                            data-target="#navbarCollapse" aria-controls="navbarCollapse"
+                            aria-expanded="false"
+                            aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                </nav>
+            </div>
+
+    <div class="card"
+         style="margin-top: 3em; padding: 2em; width: 100%; background-color: #F9F7F3">
+        <div class="card-header"
+             style="background-color: #CDE6EC; width: fit-content; margin: auto;"><b>
+                Your password has been reset! Please check your email for further instructions.
+        </b>
+        </div>
+        <div class="card-body" style="margin: 0 auto; padding: 1em;">
+            <div style="width:100%;">
+                {% if user_type %}
+                    <a href="{% url 'logIn:login_user' user_type %}"
+                       class="btn btn-primary">Back to Login</a>
+                {% else %}
+                    <a href="{% url 'landingpage:index' %}"
+                       class="btn btn-primary">Back to Home</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>

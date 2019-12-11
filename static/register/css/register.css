@@ -19,19 +19,28 @@ body {
   color: white;
 }
 
-.blur-bg{
-  height: 100%;
-  background-color: black;
-  opacity: 0.7;
-  filter: blur(2px);
-  margin-left: -15px;
-  margin-right: -15px;
+.overlay {
+    position: relative
+}
+
+.overlay:before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.7;
+    background: black;
+    filter: blur(2px);
 }
 
 .left-pane-container{
-  position: absolute;
-  top: 100px;
-  margin: 0 40px;
+    position: absolute;
+    top: 5%;
+    margin: 0 40px;
+    display: flex;
+    flex-direction: column;
 }
 
 .right-pane{
@@ -45,88 +54,6 @@ body {
   padding: 15px;
   margin: auto;
 }
-
-.form-label-group {
-  position: relative;
-  margin-bottom: 1rem;
-}
-
-.form-label-group > input,
-.form-label-group > label {
-  height: 3.125rem;
-  padding: .75rem;
-}
-
-.form-label-group > label {
-  position: absolute;
-  top: 0;
-  left: 0;
-  display: block;
-  width: 100%;
-  margin-bottom: 0; /* Override default `<label>` margin */
-  line-height: 1.5;
-  color: #495057;
-  pointer-events: none;
-  cursor: text; /* Match the input under the label */
-  border: 1px solid transparent;
-  border-radius: .25rem;
-  transition: all .1s ease-in-out;
-}
-
-.form-label-group input::-webkit-input-placeholder {
-  color: transparent;
-}
-
-.form-label-group input:-ms-input-placeholder {
-  color: transparent;
-}
-
-.form-label-group input::-ms-input-placeholder {
-  color: transparent;
-}
-
-.form-label-group input::-moz-placeholder {
-  color: transparent;
-}
-
-.form-label-group input::placeholder {
-  color: transparent;
-}
-
-.form-label-group input:not(:placeholder-shown) {
-  padding-top: 1.25rem;
-  padding-bottom: .25rem;
-}
-
-.form-label-group input:not(:placeholder-shown) ~ label {
-  padding-top: .25rem;
-  padding-bottom: .25rem;
-  font-size: 12px;
-  color: #777;
-}
-
-/* Fallback for Edge
--------------------------------------------------- */
-@supports (-ms-ime-align: auto) {
-  .form-label-group > label {
-    display: none;
-  }
-  .form-label-group input::-ms-input-placeholder {
-    color: #777;
-  }
-}
-
-/* Fallback for IE
--------------------------------------------------- */
-@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
-  .form-label-group > label {
-    display: none;
-  }
-  .form-label-group input:-ms-input-placeholder {
-    color: #777;
-  }
-}
-
 
  ul.errorlist {
     margin: 0;

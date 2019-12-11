@@ -1,6 +1,8 @@
 from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
 from .forms import RecommendationForm, RecommendationRatingForm
 from .models import Recommendation
 from register.models import Student
@@ -93,8 +95,25 @@ class RecommendationFormTest(TestCase):
             "last_name": "Smith",
             "email_address": "fake@email.com",
         }
+        self.student = create_student(self)
         form = RecommendationForm(data=data)
+        form.user_id = self.student.pk
         self.assertTrue(form.is_valid())
+
+    def test_invalid_form(self):
+        data = {"first_name": "James", "last_name": "Smith", "email_address": "fake"}
+        form = RecommendationForm(data=data)
+        self.assertFalse(form.is_valid())
+
+    def test_email_is_students(self):
+        create_student(self)
+        data = {
+            "first_name": "James",
+            "last_name": "Smith",
+            "email_address": "hrx@gmail.com",
+        }
+        form = RecommendationForm(data=data)
+        self.assertFalse(form.is_valid())
 
 
 class RecommendationRatingFormTest(TestCase):
@@ -138,12 +157,44 @@ class RecommendationViewTest(TestCase):
         }
         url = reverse("recommendation:new_recommendation")
         response = self.client.post(url, data=data)
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 200)
         self.assertTrue(
             Recommendation.objects.filter(
                 first_name="James", last_name="Smith", email_address="fake@email.com"
             ).exists()
         )
+
+    def test_max(self):
+        self.count = 2
+        update_session(self.client, self.student)
+        data = {
+            "first_name": "James",
+            "last_name": "Smith",
+            "email_address": "fake4@email.com",
+        }
+        url = reverse("recommendation:new_recommendation")
+        response = self.client.post(url, data=data)
+        self.assertEqual(response.status_code, 302)
+
+    def test_max_count_recommendations(self):
+        update_session(self.client, self.student)
+        data = {
+            "first_name": "James",
+            "last_name": "Smith",
+            "email_address": "fake1@email.com",
+        }
+        url = reverse("recommendation:new_recommendation")
+        response = self.client.post(url, data=data)
+        self.assertEqual(response.status_code, 302)
+        data = {
+            "first_name": "James",
+            "last_name": "Smith",
+            "email_address": "fake2@email.com",
+        }
+        url = reverse("recommendation:new_recommendation")
+        response = self.client.post(url, data=data)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Recommendation.objects.count(), 2)
 
     def test_invalid_add_teacher(self):
         update_session(self.client, self.student)
@@ -172,7 +223,8 @@ class RecommendationViewTest(TestCase):
             "rating_analyzing": 0,
             "rating_comment": "He is smart",
         }
-        url = reverse("recommendation_rating", args=[self.recommendation.pk])
+        uid64 = urlsafe_base64_encode(force_bytes(self.recommendation.pk))
+        url = reverse("recommendation_rating", args=[uid64])
         response = self.client.post(url, data=data)
         self.assertEqual(response.status_code, 200)
 
@@ -191,7 +243,8 @@ class RecommendationViewTest(TestCase):
             "rating_analyzing": 0,
             "rating_comment": "He is smart",
         }
-        url = reverse("recommendation_rating", args=[self.recommendation.pk])
+        uid64 = urlsafe_base64_encode(force_bytes(self.recommendation.pk))
+        url = reverse("recommendation_rating", args=[uid64])
         response = self.client.post(url, data=data)
         self.assertEqual(response.status_code, 200)
 
@@ -210,13 +263,15 @@ class RecommendationViewTest(TestCase):
             "rating_analyzing": 0,
             "rating_comment": "He is smart",
         }
-        url = reverse("recommendation_rating", args=[self.recommendation.pk + 1000])
+        uid64 = urlsafe_base64_encode(force_bytes(self.recommendation.pk))
+        url = reverse("recommendation_rating", args=[uid64 + "B"])
         response = self.client.post(url, data=data)
         self.assertEqual(response.status_code, 200)
 
     def test_already_completed_rating(self):
         self.recommendation.submitted_date = timezone.now()
-        url = reverse("recommendation_rating", args=[self.recommendation.pk])
+        uid64 = urlsafe_base64_encode(force_bytes(self.recommendation.pk))
+        url = reverse("recommendation_rating", args=[uid64])
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 

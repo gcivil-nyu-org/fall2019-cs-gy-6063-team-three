@@ -1,6 +1,7 @@
 
 {% load static %}
 <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+<link href="{% static 'css/student_theme.min.css' %}" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="{% static 'recommendation/css/recommendation.css' %}">
 <!-- Load bootstrap css, jquery, bootstrap js -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -22,7 +23,7 @@
     </nav>
 </div>
 
-<div style="margin-left:20%;height: 90%; margin-bottom: 5%; width:50%; margin-top: 2%">
+<div style="margin: auto; height: 90%; width:50%; margin-top: 2%">
     {% if empty_list %}
                     {% block empty_list %}
                         {% include 'recommendation/broken.html' %}
@@ -30,7 +31,7 @@
     {% elif teacher_recommendation %}
     <h3>Teacher Recommendation for <u>{{teacher_recommendation.user.first_name}} {{teacher_recommendation.user.last_name}}</u></h3>
     <h4>Name of Reviewer: {{teacher_recommendation.first_name}} {{teacher_recommendation.last_name}}</h4>
-    <form action="{% url 'recommendation_rating' teacher_recommendation.pk %}" method="post" class="form-signup" style="padding-top: 10px;">
+    <form action="{% url 'recommendation_rating' teacher_pk %}" method="post" class="form-signup" style="padding-top: 10px;">
         {% csrf_token %}
         <div class="rounded bg-secondary" style="height:35px;margin-bottom:10px;">
             <h5 class="p-2">I. Knowledge of Applicant</h5>
@@ -123,7 +124,7 @@
                     {% endfor %}
                 </tr>
                 <tr>
-                    <th> Perserverance toward goals </th>
+                    <th> Perseverance toward goals </th>
                     {% for radio in form.rating_goals %}
                         <th>{{ radio.tag }}</th>
                     {% endfor %}

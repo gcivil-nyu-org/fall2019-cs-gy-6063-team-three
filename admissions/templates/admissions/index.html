@@ -1,37 +1,83 @@
 {% extends "dashboard/index.html" %}
 {% load static %}
+{% load widget_tweaks %}
+{% load mytags %}
+
 {% block content %}
+    <link rel="stylesheet" type="text/css"
+          href="{% static 'admissions/admissions.css' %}">
+    <script type="text/javascript" src="{% static 'admissions/js/admission.js' %}"></script>
+    <div class="container card py-4"
+         style="background-color: #BFCDD8; width: 60%; align-items: center">
+        <h3 class="turquoise-dark mb-4" style="text-align: center; padding-bottom: 7px">
+            Advanced Search</h3>
+
+        <form name="filter_form" method="GET"
+              action="{% url 'dashboard:admissions:index' %}"
+              onsubmit="if(!validate()){event.preventDefault();}">
+            <table style="border: #0f0f0f 10px" class="my-table-admission">
+                <tr>
+                    <td>{{ form.first_name.label_tag }}</td>
+                    <td>{% render_field form.first_name %}</td>
+                </tr>
+
+                <tr>
+                    <td>{{ form.last_name.label_tag }}</td>
+                    <td>{% render_field form.last_name %}</td>
+                </tr>
+
+                <tr>
+                    <td> {{ form.application_number.label_tag }} </td>
+                    <td>{% render_field form.application_number %}</td>
+                </tr>
+
+                <tr>
+                    <td>{{ form.gpa.label_tag }}</td>
+                    <td>{% render_field form.gpa %}</td>
+                </tr>
+
+                <tr>
+                    <td>{{ form.application_status.label_tag }}</td>
+                    <td>{% render_field form.application_status %}</td>
+                </tr>
+
+
+                {% if programs %}
+                    <tr id="programs">
+                        <td>{{ form.program.label_tag }}</td>
+                        <td><select name="program" id="id_program">
+                            <option value selected>All</option>
+                            {% for program in programs %}
+                                {% if current_program and program == current_program %}
+                                    <option value="{{ program.id }}"
+                                            selected>{{ program.name }}</option>
+                                {% else %}
+                                    <option value="{{ program.id }}">{{ program.name }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select></td>
+                    </tr>
+                {% endif %}
+                <td>
+                    <button type="submit" class="btn btn-primary mx-auto">
+                        Search
+                    </button>
+                </td>
+            </table>
+
+            <div style="padding-top: 5px" id="gpa_error"></div>
+        </form>
+    </div>
     <link rel="stylesheet" type="text/css"
           href="{% static 'high_schools/css/high_school.css' %}">
     <div style="width: 100%;">
-        <div class="container-fluid">
+        <div style="padding-bottom: 20px">
             {% if applications %}
-                <div class="dropdown" style="text-align: right; line-height: 2.5;"><b>Filter
-                    by
-                    Program:</b>
-                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button"
-                       id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
-                       aria-expanded="false"
-                       style="float: right; margin-right: 2em; margin-left: 1em">
-                        {{ current_program }}
-                    </a>
-
-                    {% if programs %}
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                            <a class="dropdown-item"
-                               href="{% url "dashboard:admissions:index" %}">ALL</a>
-                            {% for program in programs %}
-                                <a class="dropdown-item"
-                                   href="{% url "dashboard:admissions:index" %}?p={{ program.id }}">{{ program.name }}</a>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                </div>
                 {% for app in applications %}
                     {% if app.application_status == 2 %}
                         <div class="card"
-                             style="margin-top: 3em; margin-left: 17em; margin-right: 17em; background-color: #F9F7F3">
-                            <div class="card-header" style="background-color: #CDE6EC">
+                             style="margin-top: 3em; width: 60%; margin-left: auto; margin-right: auto; background-color: #F9F7F3">
+                            <div class="card-header" style="background-color: #BFCDD8">
                                 <b>
                                     {{ app.first_name }} {{ app.last_name }}
                                     <span style="float: right">{{ app.application_number }}/Pending
@@ -57,8 +103,8 @@
                         </div>
                     {% elif app.application_status == 1 %}
                         <div class="card"
-                             style="margin-top: 3em; margin-left: 17em; margin-right: 17em; background-color: #F9F7F3">
-                            <div class="card-header" style="background-color: #b3e6b3">
+                             style="margin-top: 3em; width: 60%;margin-left: auto; margin-right: auto;background-color: #F9F7F3">
+                            <div class="card-header" style="background-color: #67B467">
                                 <b>
                                     {{ app.first_name }} {{ app.last_name }}
                                     <span style="float: right">{{ app.application_number }}/Accepted
@@ -84,11 +130,38 @@
                         </div>
                     {% elif app.application_status == 0 %}
                         <div class="card"
-                             style="margin-top: 3em; margin-left: 17em; margin-right: 17em; background-color: #F9F7F3">
-                            <div class="card-header" style="background-color: #ffcccc">
+                             style="margin-top: 3em; width: 60%;margin-left: auto; margin-right: auto;background-color: #F9F7F3">
+                            <div class="card-header" style="background-color: #F16F6F">
                                 <b>
                                     {{ app.first_name }} {{ app.last_name }}
                                     <span style="float: right">{{ app.application_number }}/Rejected
+                    </span>
+                                </b>
+                            </div>
+                            <div class="card-body">
+                                <div class="card-text" style="align-items: center;">
+                            <span>
+                                Program: {{ app.program }}
+                            </span>
+                                    <span style="float: right">
+                                <a href="{% url 'dashboard:admissions:detail' app.id %}"
+                                   class="btn btn-primary"
+                                >View Application</a>
+                            </span>
+                                    <footer class="blockquote-footer"
+                                            style="margin-top:1em;">Date of Submission:
+                                        {{ app.submitted_date }}
+                                    </footer>
+                                </div>
+                            </div>
+                        </div>
+                    {% elif app.application_status == 3 %}
+                        <div class="card"
+                             style="margin-top: 3em; width: 60%;margin-left: auto; margin-right: auto;background-color: #F9F7F3">
+                            <div class="card-header" style="background-color: #BDBABA">
+                                <b>
+                                    {{ app.first_name }} {{ app.last_name }}
+                                    <span style="float: right">{{ app.application_number }}/Withdrawn
                     </span>
                                 </b>
                             </div>
@@ -119,10 +192,43 @@
                     {% endblock %}
                 {% elif not applications %}
                     <div style="width: 100%;">
-                        <div class="container-fluid" style="text-align: center">
+                        <div class="container-fluid"
+                             style="text-align: center; padding: 10px; color: #1e347b; font-style: italic">
                             There are no applications available.
                         </div>
                     </div>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+    <div class="mt-3 py-4" id="wrapper" style="text-align:center">
+        <div id="container" style="display:inline-block;text-align:left">
+            {% if is_paginated %}
+                {% if page_obj.has_previous %}
+                    <a class="btn btn-primary"
+                       href="?{% query_transform request page=1 %}"> First </a>
+                    <a class="btn btn-primary"
+                       href="?{% query_transform request page=page_obj.previous_page_number %}">
+                        Previous </a>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <a class="btn btn-light"
+                           href="?{% query_transform request page=num %}"> {{ num }} </a>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <a class="btn btn-primary"
+                           href="?{% query_transform request page=num %}"> {{ num }} </a>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <a class="btn btn-primary"
+                       href="?{% query_transform request page=page_obj.next_page_number %}">
+                        Next </a>
+                    <a class="btn btn-primary"
+                       href="?{% query_transform request page=page_obj.paginator.num_pages %}">
+                        Last </a>
                 {% endif %}
             {% endif %}
         </div>

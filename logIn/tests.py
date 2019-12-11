@@ -1,5 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
+from django.contrib.auth.hashers import make_password
+
 from high_school.models import HighSchool
 from .forms import LoginForm
 from OneApply.constants import UserType
@@ -25,7 +27,7 @@ class LoginStudentViewTest(TestCase):
             last_name="Roshan",
             email_address="hrx@gmail.com",
             username="hritik",
-            password="hritikRoshan@10",
+            password=make_password("hritikRoshan@10"),
             current_school="NYU",
             borough="MN",
             is_active=True,
@@ -37,9 +39,16 @@ class LoginStudentViewTest(TestCase):
     def test_valid_login_student(self):
         data = {"username": "hritik", "password": "hritikRoshan@10"}
         url = reverse("logIn:login_user", args=[UserType.STUDENT])
+        response = self.client.get(url)
+        self.assertTrue(response, 200)
         response = self.client.post(url, data=data)
         self.assertEqual(response.status_code, 302)
         self.assertIsNotNone(Student.objects.get(username="hritik"))
+        # test session redirection from login to dashboard
+        response = self.client.get(url)
+        self.assertRedirects(
+            response, reverse("dashboard:dashboard"), target_status_code=302
+        )
 
     def test_invalid_login_student(self):
         data = {"username": "hritik", "password": "hritikRoshan@230"}
@@ -47,6 +56,15 @@ class LoginStudentViewTest(TestCase):
         response = self.client.post(url, data=data)
         self.assertEqual(response.status_code, 200)
         self.assertIsNotNone(Student.objects.get(username="hritik"))
+        # test invalid user login for inactive user
+        obj = Student.objects.get(username=self.student.username)
+        obj.is_active = False
+        obj.save()
+        data = {"username": "hritik", "password": "hritikRoshan@10"}
+        url = reverse("logIn:login_user", args=[UserType.STUDENT])
+        response = self.client.post(url, data=data)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue("verif_error" in response.context)
 
     def test_invalid_username_login_student(self):
         data = {"username": "hritick", "password": "hritikRoshan@10"}
@@ -84,7 +102,7 @@ class LoginAdminStaffViewTest(TestCase):
             last_name="Roshan",
             email_address="hrx@gmail.com",
             username="hritik",
-            password="hritikRoshan@10",
+            password=make_password("hritikRoshan@10"),
             school=hs,
             supervisor_email="hrx@gmail.com",
             is_verified_employee=True,
@@ -107,6 +125,21 @@ class LoginAdminStaffViewTest(TestCase):
         response = self.client.post(url, data=data)
         self.assertEqual(response.status_code, 200)
         self.assertIsNotNone(Admin_Staff.objects.get(username="hritik"))
+        # test invalid user login for not verified user
+        obj = Admin_Staff.objects.get(username=self.admin_staff.username)
+        obj.is_verified_employee = False
+        obj.is_active = False
+        obj.save()
+        data = {"username": "hritik", "password": "hritikRoshan@10"}
+        response = self.client.post(url, data=data)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue("verif_error" in response.context)
+        # test invalid user login for inactive user
+        obj.is_verified_employee = True
+        obj.save()
+        response = self.client.post(url, data=data)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue("valid_error" in response.context)
 
     def test_invalid_username_admin_staff(self):
         data = {"username": "hritick", "password": "hritikRoshan@12"}

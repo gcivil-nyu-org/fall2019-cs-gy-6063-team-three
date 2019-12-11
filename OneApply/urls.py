@@ -24,6 +24,7 @@ urlpatterns = [
     path("dashboard/", include("dashboard.urls")),
     path("high_school/", include("high_school.urls")),
     path("recommendation/", include("recommendation.urls")),
+    path("changepass/", include("changepass.urls")),
     path("admin/", admin.site.urls),
     url(
         r"^activate_student_account/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$",  # noqa: E501
@@ -41,7 +42,7 @@ urlpatterns = [
         name="activate_admission_account",
     ),
     url(
-        r"^recommendation_rating/(?P<uid1>[0-9A-Za-z_\-]+)/$",  # noqa: E501
+        r"^recommendation_rating/(?P<uidb64>[0-9A-Za-z_\-]+)/$",  # noqa: E501
         recommendation_rating,
         name="recommendation_rating",
     ),

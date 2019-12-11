@@ -1,0 +1,98 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Load bootstrap css, jquery, bootstrap js -->
+    <!-- common across all applications inheriting from dashboard -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+    {% if user_type and user_type == constant_ut_adminStaff %}
+        <link rel="stylesheet" type="text/css" href="{% static 'css/admin_theme.min.css' %}">
+    {% else %}
+        <link rel="stylesheet" type="text/css" href="{% static 'css/student_theme.min.css' %}">
+    {% endif %}
+    <link href="{% static 'changepass/css/changepass.css' %} " rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/floating_form_labels.css' %}">
+    <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'js/popper.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="https://kit.fontawesome.com/fc24e2383c.js" crossorigin="anonymous"></script>
+    <!-- Custom styles for this template -->
+    <title>OneApply</title>
+</head>
+<body>
+
+<div style="display: flex; flex-direction: column; width: 100%; height: 100%;">
+    <div class="nav-container">
+        <nav class="navbar navbar-expand-md navbar-dark bg-primary">
+            <a class="navbar-brand" href="{% url 'dashboard:dashboard' %}">OneApply</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse"
+                    data-target="#navbarCollapse" aria-controls="navbarCollapse"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="navbar-nav mr-auto">
+                </ul>
+            </div>
+        </nav>
+    </div>
+</div>
+<div class="container-fluid d-flex justify-content-center col-md-6 mb-5">
+    <form action="{% url 'changepass:index' %}" method="post" class="form-signin"
+          style="padding-top: 70px;">
+        {% csrf_token %}
+        <div class="text-center mb-4">
+            <h1 class="h3 mb-3 font-weight-normal">Let's change your password...</h1>
+            <h4 class="h5 mb-5 font-weight-light">to continue, we'll require your</h4>
+        </div>
+        {% for field in form %}
+            {% if field.label == "New password" %}
+                <div class="mt-4" style="font-size: 15px;">
+                    Password should contain at least-
+                    <div class="form-row">
+                        <div class="col-md-6">
+                            <ul>
+                                <li>8 characters</li>
+                                <li>1 Lowercase character</li>
+                                <li>1 special character [@#$%^&+=_-]</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul>
+                                <li>1 Uppercase character</li>
+                                <li>1 digit</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            <div class="form-label-group">
+                {{ field }}
+                <label for={{ field.id_for_label }}>{{ field.label }}</label>
+            </div>
+        {% endfor %}
+        {% if form.new_password.errors %}
+            <p class="errorlist" style="color: red">Your new password doesn't match the
+                requirements</p>
+        {% endif %}
+        {% if form.confirm_password.errors %}
+            <p class="errorlist" style="color: red">Your new passwords do not match </p>
+        {% endif %}
+        {% if match_error %}
+            <p class="errorlist" style="color: red">Your old password doesn't match </p>
+        {% endif %}
+        <div style="display: flex; flex-flow: row wrap; justify-content: center">
+            <a href="{% url 'dashboard:dashboard' %}" class="btn btn-danger mt-3 mr-3">Back
+                to Dashboard
+            </a>
+            <input class="btn btn-primary mt-3 ml-3" type="submit" value="Update Password"/>
+        </div>
+    </form>
+</div>
+</div>
+
+</body>
+</html>

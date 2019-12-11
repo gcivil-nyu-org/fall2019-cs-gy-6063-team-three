@@ -38,10 +38,15 @@ class StudentRegisterForm(ModelForm):
 
     def clean_username(self):
         username = self.cleaned_data["username"]
-        # TODO change below to get instead of filter and update test cases for the same
         if Student.objects.filter(username=username).exists():
             raise ValidationError("Username already in use")
         return username
+
+    def clean_email_address(self):
+        email_address = self.cleaned_data["email_address"]
+        if Student.objects.filter(email_address=email_address).exists():
+            raise ValidationError("Email already in use")
+        return email_address
 
     def clean_input_password(self):
         input_password = self.cleaned_data["input_password"]
@@ -49,10 +54,7 @@ class StudentRegisterForm(ModelForm):
         if re.search(pattern, input_password):
             return input_password
         else:
-            raise ValidationError(
-                "The password should be minimum 8 characters long and should contain "
-                "at least 1 of each\nUppercase, Lowercase, 1digit, 1 symbol(@#$%^&+=_-)"
-            )
+            raise ValidationError("Password requirements don't match")
 
     def clean_confirm_password(self):
         if "input_password" not in self.cleaned_data:
@@ -112,16 +114,19 @@ class AdminStaffRegisterForm(ModelForm):
             raise ValidationError("Username already in use")
         return username
 
+    def clean_email_address(self):
+        email_address = self.cleaned_data["email_address"]
+        if Admin_Staff.objects.filter(email_address=email_address).exists():
+            raise ValidationError("Email already in use")
+        return email_address
+
     def clean_input_password(self):
         input_password = self.cleaned_data["input_password"]
         pattern = re.compile(REG_EX)
         if re.search(pattern, input_password):
             return input_password
         else:
-            raise ValidationError(
-                "The password should be minimum 8 characters long and should contain "
-                "at least 1 of each\nUppercase, Lowercase, 1digit, 1 symbol(@#$%^&+=_-)"
-            )
+            raise ValidationError("Password requirements don't match")
 
     def clean_confirm_password(self):
         if "input_password" not in self.cleaned_data:
