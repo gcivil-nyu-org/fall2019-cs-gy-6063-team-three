@@ -6,7 +6,7 @@ from .forms import HighSchoolApplicationForm
 from .models import HighSchoolApplication, GENDER
 from register.models import Student
 from high_school.models import HighSchool, Program
-from .views import generate_application_number
+from .views import generate_application_number, save_application, build_draft_form
 from OneApply.constants import UserType
 
 
@@ -159,6 +159,24 @@ class HighSchoolApplicationFormTest(TestCase):
         form = HighSchoolApplicationForm(data=data, user=self.student)
         self.assertTrue(form.is_valid())
 
+    def test_invalid_initial_form(self):
+        data = {
+            "first_name": "Hritik",
+            "last_name": "Roshan",
+            "email_address": "hrx@gmail.com",
+            "phoneNumber": "(956) 780-1234",
+            "address": "Brooklyn, NY",
+            "gender": GENDER[0],
+            "date_of_birth": "2019-10-31",
+            "gpa": 3.88,
+            "parent_name": "Rakesh Roshan",
+            "parent_phoneNumber": "(587) 987-9870",
+            "school0": self.school.pk,
+            "program0": self.program.pk,
+        }
+        form = HighSchoolApplicationForm(initial=data, max_count=10, user=self.student)
+        self.assertFalse(form.is_valid())
+
     def test_invalid_phoneNumber(self):
         data = {
             "first_name": "Hritik",
@@ -183,13 +201,13 @@ class HighSchoolApplicationFormTest(TestCase):
             "first_name": "Hritik",
             "last_name": "Roshan",
             "email_address": "hrx@gmail.com",
-            "phoneNumber": "9567801234",  # missing country code
+            "phoneNumber": "(956) 780-1234",
             "address": "Brooklyn, NY",
             "gender": GENDER[0],
             "date_of_birth": "1995-10-31",
             "gpa": 3.88,
             "parent_name": "Rakesh Roshan",
-            "parent_phoneNumber": "+15879879870",
+            "parent_phoneNumber": "(587) 987-9870",
             "school0": self.school.pk,
             "program0": self.program.pk,
         }
@@ -202,12 +220,13 @@ class HighSchoolApplicationFormTest(TestCase):
             "first_name": "Hritik",
             "last_name": "Roshan",
             "email_address": "hrx@gmail.com",
-            "phoneNumber": "9567801234",  # missing country code
+            "phoneNumber": "(956) 780-1234",
             "address": "Brooklyn, NY",
             "gender": GENDER[0],
-            "date_of_birth": "1995-10-31",
+            "gpa": 5.66,
+            "date_of_birth": "2007-10-31",
             "parent_name": "Rakesh Roshan",
-            "parent_phoneNumber": "+15879879870",
+            "parent_phoneNumber": "(587) 987-9870",
             "school0": self.school.pk,
             "program0": self.program.pk,
         }
@@ -252,29 +271,34 @@ class HighSchoolApplicationViewTest(TestCase):
         update_session(self.client, self.student)
 
     def test_new_application(self):
+        HighSchoolApplication.objects.filter(
+            application_number=self.application.application_number
+        ).delete()
         data = {
             "first_name": "Hritik",
             "last_name": "Roshan",
             "email_address": "hrx@gmail.com",
-            "phoneNumber": "+19567801234",
+            "phoneNumber": "(956) 780-1234",
             "address": "Brooklyn, NY",
             "gender": GENDER[0],
-            "date_of_birth": "2005-10-31",
+            "date_of_birth": "2007-10-31",
             "gpa": 3.88,
             "parent_name": "Rakesh Roshan",
-            "parent_phoneNumber": "+15879879870",
-            "school": self.school.pk,
-            "program": self.program.pk,
+            "parent_phoneNumber": "(158) 798-7970",
+            "school0": self.school.pk,
+            "program0": self.program.pk,
         }
         url = reverse("dashboard:application:new_application")
         response = self.client.post(url, data=data)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
+        app_num = generate_application_number(
+            self.student.pk, self.school.pk, self.program.pk
+        )
         self.assertIsNotNone(
-            HighSchoolApplication.objects.get(
-                application_number=generate_application_number(
-                    self.student.pk, self.school.pk, self.program.pk
-                )
-            )
+            HighSchoolApplication.objects.get(application_number=app_num)
+        )
+        self.application = HighSchoolApplication.objects.filter(
+            application_number=app_num
         )
 
     def test_save_existing_application(self):
@@ -282,13 +306,13 @@ class HighSchoolApplicationViewTest(TestCase):
             "first_name": "Hritik",
             "last_name": "Roshan",
             "email_address": "hrx@gmail.com",
-            "phoneNumber": "+19567801234",
+            "phoneNumber": "(956) 780-1234",
             "address": "Brooklyn, NY",
             "gender": GENDER[0],
             "date_of_birth": "2005-10-31",
             "gpa": 4.00,  # changed GPA
             "parent_name": "Rakesh Roshan",
-            "parent_phoneNumber": "+15879879870",
+            "parent_phoneNumber": "(587) 987-9870",
             "school": self.school.pk,
             "program": self.program.pk,
         }
@@ -319,10 +343,16 @@ class HighSchoolApplicationViewTest(TestCase):
         self.assertContains(response, self.application.pk)
 
     def test_load_programs(self):
-        data = {"selected_school_id": self.school.pk}
+        data = {"selected_school_id": self.school.dbn, "prog": "[]"}
         url = reverse("dashboard:application:ajax_load_programs")
         response = self.client.post(url, data=data)
-        self.assertEqual(response.status_code, 200)
+        self.assertIn(self.program.name, str(response.content))
+
+    def test_invalid_load_programs(self):
+        data = {"selected_school_id": self.school.dbn}
+        url = reverse("dashboard:application:ajax_load_programs")
+        response = self.client.post(url, data=data)
+        self.assertIn('value=""', str(response.content))
 
     def test_withdraw_application(self):
         url = reverse("dashboard:application:withdraw", args=[self.application.pk])
@@ -334,6 +364,38 @@ class HighSchoolApplicationViewTest(TestCase):
             ).application_status,
             3,
         )
+
+    def test_invalid_withdraw_application(self):
+        url = reverse("dashboard:application:withdraw", args=[self.application.pk + 1])
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_save_application(self):
+        data = {
+            "first_name": "Hritik",
+            "last_name": "Roshan",
+            "email_address": "hrx@gmail.com",
+            "phoneNumber": "(956) 780-1234",
+            "address": "Brooklyn, NY",
+            "gender": GENDER[0],
+            "date_of_birth": "2007-10-31",
+            "gpa": 3.88,
+            "parent_name": "Rakesh Roshan",
+            "parent_phoneNumber": "(587) 987-9870",
+            "school0": self.school.pk,
+            "program0": self.program.pk,
+        }
+        form = HighSchoolApplicationForm(data=data, user=self.student)
+        self.assertTrue(form.is_valid())
+        form = form.save(commit=False)
+        obj = save_application(self.student, form)
+        self.assertIsNotNone(obj)
+
+    def test_build_draft_form(self):
+        create_application(self)
+        object_list = HighSchoolApplication.objects.all()
+        obj = build_draft_form(self.student, object_list)
+        self.assertIsNotNone(obj)
 
     def tearDown(self):
         self.application.delete()
