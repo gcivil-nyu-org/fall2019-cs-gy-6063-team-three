@@ -6,6 +6,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/student_theme.min.css' %}">
 {% endif %}
 <link rel="stylesheet" type="text/css" href="{% static 'register/css/register.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/floating_form_labels.css' %}">
 
 {{ form.media.css }}
 
@@ -34,10 +35,10 @@
         </div>
         <div class="col-md-8 right-pane">
         {% if user_type == constant_ut_student %}
-             <form action="{% url 'register:register_user' constant_ut_student %}" method="post" class="form-signup" style="padding-top: 100px;">
+             <form action="{% url 'register:register_user' constant_ut_student %}" method="post" class="form-signup" style="padding-top: 70px;">
                 {% csrf_token %}
         {% elif user_type == constant_ut_adminStaff %}
-            <form action="{% url 'register:register_user' constant_ut_adminStaff %}" method="post" class="form-signup" style="padding-top: 100px;">
+            <form action="{% url 'register:register_user' constant_ut_adminStaff %}" method="post" class="form-signup" style="padding-top: 70px;">
                 {% csrf_token %}
         {% endif %}
                 <div class="text-center mb-4">
@@ -112,6 +113,24 @@
                     </div>
                 {% endif %}
 {#                 input and confirm password blocks#}
+                <div class="mt-2" style="font-size: 15px;">
+                    Password should contain at least-
+                    <div class="form-row">
+                        <div class="col-md-6">
+                            <ul>
+                                <li>8 characters</li>
+                                <li>1 Lowercase character</li>
+                                <li>1 special character [@#$%^&+=_-]</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul>
+                                <li>1 Uppercase character</li>
+                                <li>1 digit</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
                 <div class="form-row">
                     <div class="form-label-group col-md-6">
                         {{ form.input_password }}

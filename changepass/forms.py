@@ -19,7 +19,7 @@ class changepassForm(ModelForm):
 
         for field in self.fields.values():
             field.widget.attrs.update(
-                {"class": "form-control", "placeholder": "", "required": True}
+                {"class": "form-control", "placeholder": field, "required": True}
             )
 
     def clean_new_password(self):
@@ -28,10 +28,7 @@ class changepassForm(ModelForm):
         if re.search(pattern, new_password):
             return new_password
         else:
-            raise ValidationError(
-                "The password should be minimum 8 characters long and should contain "
-                "at least 1 of each Uppercase, Lowercase, 1digit, 1 symbol(@#$%^&+=_-)"
-            )
+            raise ValidationError("Password requirements don't match")
 
     def clean_confirm_password(self):
         if "new_password" not in self.cleaned_data:

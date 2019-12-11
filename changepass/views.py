@@ -15,6 +15,7 @@ def index(request):
     }
     if not request.session.get("is_login", None):
         return redirect("landingpage:index")
+    context["user_type"] = request.session.get("user_type", None)
     form = None
     if request.method == "POST":
         form = changepassForm(request.POST)
@@ -46,7 +47,6 @@ def index(request):
         else:
             context = {"form": form, "match_error": match_error}
             return render(request, "changepass/index.html", context)
-        print
     return render(request, "changepass/index.html", context)
 
 
