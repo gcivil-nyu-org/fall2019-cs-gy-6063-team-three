@@ -38,7 +38,7 @@
                     <p class="errorlist" style="color: red">Invalid credentials</p>
                 {% endif %}
                 <input class="btn btn-lg btn-primary btn-block" type="submit" value="Login"/>
-                <a style="margin:auto;" href="{% url 'changepass:reset_password' user_type %}">Forgot Password?</a>
+                <a class="mt-3" href="{% url 'changepass:reset_password' user_type %}">Forgot Password?</a>
             </form>
         </div>
         <div class="col-md-4 right-pane overlay">
