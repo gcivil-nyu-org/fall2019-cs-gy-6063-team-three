@@ -1,0 +1,17 @@
+{% autoescape off %}
+Hi {{ user.username }},
+You have requested to reset your password.
+We have created a temporary password which you can use to login.
+
+Temporary Password: {{password}}
+
+Please use the temporary password to login using the link below and then change your password:
+{% if user_type and user_type == constant_ut_student %}
+http://{{ domain }}{% url 'logIn:login_user' constant_ut_student %}
+{% else %}
+http://{{ domain }}{% url 'logIn:login_user' constant_ut_adminStaff %}
+{% endif %}
+
+Thank you,
+One Apply Team
+{% endautoescape %}

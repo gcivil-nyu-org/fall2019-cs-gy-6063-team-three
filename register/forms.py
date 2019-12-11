@@ -38,10 +38,15 @@ class StudentRegisterForm(ModelForm):
 
     def clean_username(self):
         username = self.cleaned_data["username"]
-        # TODO change below to get instead of filter and update test cases for the same
         if Student.objects.filter(username=username).exists():
             raise ValidationError("Username already in use")
         return username
+
+    def clean_email_address(self):
+        email_address = self.cleaned_data["email_address"]
+        if Student.objects.filter(email_address=email_address).exists():
+            raise ValidationError("Email already in use")
+        return email_address
 
     def clean_input_password(self):
         input_password = self.cleaned_data["input_password"]
@@ -111,6 +116,12 @@ class AdminStaffRegisterForm(ModelForm):
         if Admin_Staff.objects.filter(username=username).exists():
             raise ValidationError("Username already in use")
         return username
+
+    def clean_email_address(self):
+        email_address = self.cleaned_data["email_address"]
+        if Admin_Staff.objects.filter(email_address=email_address).exists():
+            raise ValidationError("Email already in use")
+        return email_address
 
     def clean_input_password(self):
         input_password = self.cleaned_data["input_password"]
