@@ -31,9 +31,8 @@
                           aria-expanded="false" style="cursor: pointer;">
                        <i class="fa fa-gear ml-2"></i>
                     </span>
-                    <div class="dropdown-menu dropdown-menu-right"
-                         style="z-index: 2000;">
-                        <button class="dropdown-item">Change Password</button>
+                    <div class="dropdown-menu dropdown-menu-right" style="z-index: 2000;">
+                        <a class="dropdown-item" href="{% url 'changepass:index' %} ">Change Password</a>
                         <a class="dropdown-item" href="{% url 'dashboard:logout' %}">Logout</a>
                     </div>
                 </div>

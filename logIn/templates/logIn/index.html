@@ -41,7 +41,7 @@
             </form>
         </div>
         <div class="col-md-4 right-pane overlay">
-{#            <div class="blur-bg"></div>#}
+{#          <div class="blur-bg"></div> #}
             <div class="text-center mb-4 right-pane-container">
                 <h3 class="font-weight-normal mb-4">New here?</h3>
                 {% if user_type == constant_ut_student %}
@@ -51,9 +51,10 @@
                     <span class="font-weight-light" style="text-align: left;margin: 20px 10px;">If you're in charge (or an employee of) of your High School's admission department and want to avoid assessing the 1000s of applications manually... start with OneApply.</span>
                     <span class="font-weight-light" style="text-align: left;margin: 20px 10px;">OneApply is a one stop application portal which provides you with cool features like - a central access location for all the electronically received applications, sorting through the applications based on various programs, student's current school, their grades, accepting and rejecting applications, one-click notifications to students and more.</span>
                 {% endif %}
+                <br>
                 <a href="{% url 'register:register_user' user_type %}"><button class="btn btn-outline-light mt-3">Create account</button></a>
 {#                <button class="btn btn-outline-light mt-3" onclick="location.href={% url 'register:register_user' user_type %}">Your account</button>#}
-
+                <a href="{% url 'landingpage:index' %}"><button class="btn btn-outline-light mt-3">Back to Home</button></a>
             </div>
         </div>
     </div>
