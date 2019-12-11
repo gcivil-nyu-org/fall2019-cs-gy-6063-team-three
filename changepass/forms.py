@@ -1,10 +1,8 @@
 from django.forms import ModelForm
 from register.models import User
 from django import forms
-from django.forms import ValidationError, ModelChoiceField
+from django.forms import ValidationError
 import re
-from django_select2.forms import Select2Widget
-from register.models import Student, Admin_Staff
 
 REG_EX = (
     "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&_-]{8,20}$"
