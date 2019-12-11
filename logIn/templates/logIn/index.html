@@ -25,22 +25,23 @@
                 <h1 class="h3 mb-3 font-weight-normal">Hello again...</h1>
                 <h4 class="h5 mb-3 font-weight-light">to continue, login with your</h4>
             </div>
-            {% for field in form %}
-                <div class="form-label-group">
-                    {{ field }}
-                    <label for={{ field.id_for_label }}>{{ field.label }}</label>
-                </div>
-            {% endfor %}
-            {% if verif_error %}
-                <p class="errorlist" style="color: red">Supervisor verification is required</p>
-            {% endif %}
-            {% if valid_error %}
-                <p class="errorlist" style="color: red">Account has not been verified</p>
-            {% endif %}
-            {% if login_error %}
-                <p class="errorlist" style="color: red">Invalid credentials</p>
-            {% endif %}
-            <input class="btn btn-lg btn-primary btn-block" type="submit" value="Login"/>
+                {% for field in form %}
+                    <div class="form-label-group">
+                        {{ field }}
+                        <label for={{ field.id_for_label }}>{{ field.label }}</label>
+                    </div>
+                {% endfor %}
+                {% if verif_error %}
+                    <p class="errorlist" style="color: red">Supervisor verification is required</p>
+                {% endif %}
+                {% if valid_error %}
+                    <p class="errorlist" style="color: red">Account has not been verified</p>
+                {% endif %}
+                {% if login_error %}
+                    <p class="errorlist" style="color: red">Invalid credentials</p>
+                {% endif %}
+                <input class="btn btn-lg btn-primary btn-block" type="submit" value="Login"/>
+                <a class="mt-3" href="{% url 'changepass:reset_password' user_type %}">Forgot Password?</a>
             </form>
         </div>
         <div class="col-md-4 right-pane overlay">

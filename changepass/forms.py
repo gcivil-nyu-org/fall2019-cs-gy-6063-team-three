@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from register.models import User
+from register.models import User, Student, Admin_Staff
 from django import forms
 from django.forms import ValidationError
 import re
@@ -47,3 +47,43 @@ class changepassForm(ModelForm):
     class Meta:
         model = User
         fields = ["old_password", "new_password", "confirm_password"]
+
+
+class resetPassFormStudent(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for field in self.fields.values():
+            field.widget.attrs.update(
+                {"class": "form-control", "placeholder": field.label, "required": True}
+            )
+
+    def clean_email_address(self):
+        email = self.cleaned_data["email_address"]
+        if not Student.objects.filter(email_address=email).exists():
+            raise ValidationError("There is no account with this email address!")
+        return email
+
+    class Meta:
+        model = Student
+        fields = ["email_address"]
+
+
+class resetPassFormAdmin(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for field in self.fields.values():
+            field.widget.attrs.update(
+                {"class": "form-control", "placeholder": field.label, "required": True}
+            )
+
+    def clean_email_address(self):
+        email = self.cleaned_data["email_address"]
+        if not Admin_Staff.objects.filter(email_address=email).exists():
+            raise ValidationError("There is no account with this email address!")
+        return email
+
+    class Meta:
+        model = Admin_Staff
+        fields = ["email_address"]

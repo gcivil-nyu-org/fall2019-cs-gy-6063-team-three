@@ -32,6 +32,7 @@ LOGIN_URL = "/"
 INSTALLED_APPS = [
     "landingpage.apps.LandingpageConfig",
     "dashboard.apps.DashboardConfig",
+    "changepass.apps.ChangepassConfig",
     "logIn.apps.LogInConfig",
     "admissions.apps.AdmissionsConfig",
     "register.apps.RegisterConfig",
