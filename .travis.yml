@@ -13,7 +13,7 @@ before_script:
 script:
   - black --check .
   - flake8 .
-  - coverage run --source=OneApply,landingpage,logIn,register,admissions,high_school,application,recommendation,changepass manage.py test
+  - coverage run --source=OneApply,landingpage,dashboard,logIn,register,admissions,high_school,application,recommendation,changepass manage.py test
 
 after_script:
   - coveralls

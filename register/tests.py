@@ -11,23 +11,6 @@ from .tokens import account_activation_token
 
 
 class AdmissionStaffViewTest(TestCase):
-    def create_school(self):
-        return HighSchool.objects.create(
-            dbn="06M540",
-            school_name="GMU",
-            boro="B",
-            overview_paragraph="Overview1",
-            neighborhood="Neighborhood1",
-            location="1, ABCD Street",
-            phone_number=9173924885,
-            school_email="school@gmu.com",
-            website="www.gmu.com",
-            total_students=1000,
-            start_time=123,
-            end_time=124,
-            graduation_rate=80,
-        )
-
     def setUp(self):
         self.adminStaff = {
             "username": "jwang",
@@ -42,9 +25,15 @@ class AdmissionStaffViewTest(TestCase):
 
     def test_valid_register_admin(self):
         url = reverse("register:register_user", args=[UserType.ADMIN_STAFF])
+        response = self.client.get(url)
+        self.assertTrue(response.status_code, 200)
         response = self.client.post(url, self.adminStaff)
         self.assertEqual(response.status_code, 200)
         self.assertIsNotNone(Admin_Staff.objects.get(username="jwang"))
+        # test invalid register for same user name
+        response = self.client.post(url, self.adminStaff)
+        self.assertTrue(response.status_code, 200)
+        self.assertTrue(Admin_Staff.objects.count(), 1)
 
     def test_invalid_register_admin(self):
         self.adminStaff = {
@@ -59,7 +48,7 @@ class AdmissionStaffViewTest(TestCase):
         url = reverse("register:register_user", args=[UserType.ADMIN_STAFF])
         response = self.client.post(url, self.adminStaff)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(Admin_Staff.objects.filter(username="jwang").count(), 0)
+        self.assertEqual(Admin_Staff.objects.filter(username="JWANG").count(), 0)
 
     def tearDown(self):
         Admin_Staff.objects.all().delete()
@@ -333,9 +322,15 @@ class StudentViewTest(TestCase):
             "borough": "MN",
         }
         url = reverse("register:register_user", args=[UserType.STUDENT])
+        response = self.client.get(url)
+        self.assertTrue(response.status_code, 200)
         response = self.client.post(url, data=data)
         self.assertEqual(response.status_code, 200)
         self.assertIsNotNone(Student.objects.get(username="hritik"))
+        # test invalid register for same user name
+        response = self.client.post(url, data=data)
+        self.assertTrue(response.status_code, 200)
+        self.assertTrue(Student.objects.count(), 1)
 
     def test_invalid_register_student(self):
         data = {

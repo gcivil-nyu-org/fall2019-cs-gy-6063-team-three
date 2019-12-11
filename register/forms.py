@@ -54,10 +54,7 @@ class StudentRegisterForm(ModelForm):
         if re.search(pattern, input_password):
             return input_password
         else:
-            raise ValidationError(
-                "The password should be minimum 8 characters long and should contain "
-                "at least 1 of each\nUppercase, Lowercase, 1digit, 1 symbol(@#$%^&+=_-)"
-            )
+            raise ValidationError("Password requirements don't match")
 
     def clean_confirm_password(self):
         if "input_password" not in self.cleaned_data:
@@ -129,10 +126,7 @@ class AdminStaffRegisterForm(ModelForm):
         if re.search(pattern, input_password):
             return input_password
         else:
-            raise ValidationError(
-                "The password should be minimum 8 characters long and should contain "
-                "at least 1 of each\nUppercase, Lowercase, 1digit, 1 symbol(@#$%^&+=_-)"
-            )
+            raise ValidationError("Password requirements don't match")
 
     def clean_confirm_password(self):
         if "input_password" not in self.cleaned_data:

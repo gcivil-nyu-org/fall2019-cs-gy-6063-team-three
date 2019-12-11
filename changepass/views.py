@@ -21,6 +21,7 @@ def index(request):
     }
     if not request.session.get("is_login", None):
         return redirect("landingpage:index")
+    context["user_type"] = request.session.get("user_type", None)
     form = None
     if request.method == "POST":
         form = changepassForm(request.POST)
