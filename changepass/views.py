@@ -38,7 +38,7 @@ def index(request):
                     p.save()
                 else:
                     match_error = True
-            if match_error == False:
+            if match_error is False:
                 return redirect("landingpage:index")
             else:
                 context = {"form": form, "match_error": match_error}

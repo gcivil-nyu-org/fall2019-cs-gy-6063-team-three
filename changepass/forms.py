@@ -29,7 +29,8 @@ class changepassForm(ModelForm):
             return new_password
         else:
             raise ValidationError(
-                "The password should be minimum 8 characters long and should contain at least 1 of each Uppercase, Lowercase, 1digit, 1 symbol(@#$%^&+=_-)"
+                "The password should be minimum 8 characters long and should contain at "
+                "least 1 of each Uppercase, Lowercase, 1digit, 1 symbol(@#$%^&+=_-)"
             )
 
     def clean_confirm_password(self):
