@@ -87,6 +87,10 @@ $(document).ready(function () {
     // This is used to load programs for selected school
     let k;
     for (k = 0; k < 10; k++) {
+        if($('#school' + k).children('option:selected').val() == "") {
+            $('#program' + k).html("<option value=\"\" selected>---------</option>");
+        }
+
         $('#school' + k).on('change', function() {
             let id = this.id.substring(6);
             let url = $('form').attr('prog-data-url');
